@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Innovators Tech Forum | Microsoft Club, M. Kumarasamy College of Engineering</title>
+  <meta name="description"
+    content="Innovators Tech Forum is a student-driven Microsoft Club at M. Kumarasamy College of Engineering. Think. Create. Innovate.">
+  <meta property="og:title" content="Innovators Tech Forum - A Microsoft Club">
+  <meta property="og:description"
+    content="Think. Create. Innovate. Student tech community empowered by Microsoft ecosystem.">
+  <meta property="og:image" content="assets/logo.png">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Ambient Interactive Canvas -->
+  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation Bar -->
+  <header class="nav" id="nav">
+    <div class="nav-brand-group">
+      <a class="brand-link" href="#home">
+        <img src="assets/aaroh-logo.jpg" alt="AAROH Student Club Logo" class="brand-logo"
+          title="AAROH Student Club - Overall Club">
+        <div class="logo-divider" aria-hidden="true"></div>
+        <img src="assets/itf-logo.jpg" alt="Innovators Tech Forum Logo" class="brand-logo itf-logo"
+          title="Innovators Tech Forum - Microsoft Club">
+        <div class="brand-text-container">
+          <span class="brand-title">Innovators Tech Forum</span>
+          <span class="brand-subtitle">A Microsoft Club · AAROH</span>
+        </div>
+      </a>
+    </div>
+
+    <nav class="links" id="links">
+      <a href="#home" class="active">Home</a>
+      <a href="#about">About</a>
+      <a href="#objectives">Objectives</a>
+      <a href="#what">What We Do</a>
+      <a href="#techx">TECH-X</a>
+      <a href="#events">Events</a>
+      <a href="#achievements">Achievements</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#team">Team</a>
+      <a href="#contact">Contact</a>
+      <a class="btn sm join-link" href="https://mkceclub.vercel.app/">Join Club</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="theme-btn" id="theme-toggle" aria-label="Toggle dark/light mode" title="Switch Theme">🌙</button>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="hero-affiliation-badge">
+            <img src="assets/aaroh-logo.jpg" alt="AAROH Student Club Logo" class="hero-mini-logo">
+            <span>AAROH Student Club</span>
+            <span class="hero-badge-sep">×</span>
+            <img src="assets/itf-logo.jpg" alt="Innovators Tech Forum Logo" class="hero-mini-logo">
+            <span>Innovators Tech Forum</span>
+          </div>
+          <h1>Innovators Tech Forum</h1>
+          <p class="sub">A Microsoft Student Club</p>
+          <p class="motto">Think. Create. Innovate.</p>
+          <p class="lead">Empowering students to explore cutting-edge Microsoft technologies, solve real-world problems,
+            build scalable software, and evolve into tomorrow's tech leaders.</p>
+          <div class="row">
+            <a class="btn" href="#events">Explore Events</a>
+            <a class="btn ghost join-link" href="https://mkceclub.vercel.app/">Join the Club</a>
+          </div>
+        </div>
+        <div class="orbit-wrapper">
+          <div class="orbit" aria-hidden="true">
+            <div class="core">ITF</div>
+            <span style="--a:0deg" title="Artificial Intelligence">AI</span>
+            <span style="--a:60deg" title="Cloud Computing">Cloud</span>
+            <span style="--a:120deg" title="Coding & Development">Code</span>
+            <span style="--a:180deg" title="UI/UX & Product Design">Design</span>
+            <span style="--a:240deg" title="Hackathons & Ideation">Ideas</span>
+            <span style="--a:300deg" title="Student Community">Team</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Statistics -->
+    <section class="stats">
+      <div class="wrap grid4">
+        <div>
+          <span><b data-count="12">0</b>+</span>
+          <p>Events Conducted</p>
+        </div>
+        <div>
+          <span><b data-count="500">0</b>+</span>
+          <p>Students Engaged</p>
+        </div>
+        <div>
+          <span><b data-count="15">0</b>+</span>
+          <p>Hands-on Workshops</p>
+        </div>
+        <div>
+          <span><b data-count="25">0</b>+</span>
+          <p>Projects &amp; Prototypes</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Where Curiosity Becomes Innovation</h2>
+          <p class="lead">Innovators Tech Forum is a student-driven Microsoft Club fostering a high-velocity culture of
+            technology, design, innovation, and continuous peer learning.</p>
+        </div>
+        <div class="grid3">
+          <article class="card reveal">
+            <h3>🚀 Learn</h3>
+            <p>Master emerging technologies including Azure Cloud, GitHub tools, modern web architectures, and AI
+              integrations.</p>
+          </article>
+          <article class="card reveal">
+            <h3>⚡ Build</h3>
+            <p>Turn abstract ideas into tangible prototypes, cross-department collaborative apps, and open-source
+              contributions.</p>
+          </article>
+          <article class="card reveal">
+            <h3>🏆 Lead</h3>
+            <p>Organize events, mentor junior peers, present solutions to industry judges, and develop essential
+              leadership traits.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Objectives Section -->
+    <section id="objectives" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Our Core Objectives</h2>
+          <p class="lead">Structured pathways engineered to transition students from classroom theory to practical
+            mastery.</p>
+        </div>
+        <ol class="objs">
+          <li class="reveal">
+            <h3>Technology Awareness</h3>
+            <p>Expose members to modern cloud architectures, developer platforms, and industry-grade engineering
+              practices.</p>
+          </li>
+          <li class="reveal">
+            <h3>Practical Hands-On Learning</h3>
+            <p>Deep-dive interactive workshops emphasizing real code over passive slides, with guided mentorship.</p>
+          </li>
+          <li class="reveal">
+            <h3>Inter-Department Collaboration</h3>
+            <p>Unite passionate problem-solvers across Computer Science, Core Engineering, and Design departments.</p>
+          </li>
+          <li class="reveal">
+            <h3>Hackathons &amp; Competitions</h3>
+            <p>Host high-energy hackathons, coding sprints, algorithmic duels, and technical logic games.</p>
+          </li>
+          <li class="reveal">
+            <h3>Microsoft Ecosystem Mastery</h3>
+            <p>Direct exposure to Microsoft Azure, GitHub Enterprise, Power Platform, Azure AI, and developer tools.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- What We Do -->
+    <section id="what">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>What We Do</h2>
+          <p class="lead">A diverse spectrum of initiatives powering skill acceleration across multiple domains.</p>
+        </div>
+        <div class="grid4 tiles">
+          <div class="card reveal">
+            <h3>Technical Workshops</h3>
+            <p>Hands-on sessions on Cloud, Web, Python, and Microsoft Azure ecosystem.</p>
+          </div>
+          <div class="card reveal">
+            <h3>Coding Challenges</h3>
+            <p>Competitive programming, data structures, algorithms, and logical quizzes.</p>
+          </div>
+          <div class="card reveal">
+            <h3>AI &amp; Emerging Tech</h3>
+            <p>Exploring LLMs, intelligent agents, Azure Cognitive Services, and automation.</p>
+          </div>
+          <div class="card reveal">
+            <h3>Hackathons</h3>
+            <p>Collaborative multi-hour sprint sessions building solutions for real-world issues.</p>
+          </div>
+          <div class="card reveal">
+            <h3>UI/UX &amp; Product Design</h3>
+            <p>Crafting intuitive user interfaces, wireframes, and modern design systems in Figma.</p>
+          </div>
+          <div class="card reveal">
+            <h3>Innovation Challenges</h3>
+            <p>Transforming student concepts into deployable MVP prototypes and research papers.</p>
+          </div>
+          <div class="card reveal">
+            <h3>Tech Quizzes</h3>
+            <p>Fast-paced trivia on hardware, software architecture, and tech history.</p>
+          </div>
+          <div class="card reveal">
+            <h3>Tech Games</h3>
+            <p>Engaging technical icebreakers, puzzle rooms, and team bonding sessions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flagship Feature Event: TECH-X with Live Countdown -->
+    <section class="feature" id="techx">
+      <div class="wrap">
+        <h2>TECH-X 2026</h2>
+        <p class="motto">The Ultimate Inter-Department Tech Marathon</p>
+        <p class="lead">Different Departments. One Common Passion. Engineering a Smarter Tomorrow.</p>
+
+        <!-- Dynamic Live Countdown -->
+        <div class="countdown-box" id="event-countdown">
+          <div class="countdown-info">
+            <h3>⏳ Event Starts In:</h3>
+            <p>November 2026 &amp; Labs</p>
+          </div>
+          <div class="countdown-digits">
+            <div class="countdown-item"><span id="cd-days">00</span><label>Days</label></div>
+            <div class="countdown-item"><span id="cd-hours">00</span><label>Hours</label></div>
+            <div class="countdown-item"><span id="cd-mins">00</span><label>Mins</label></div>
+            <div class="countdown-item"><span id="cd-secs">00</span><label>Secs</label></div>
+          </div>
+        </div>
+
+        <ul class="facts">
+          <li>📅 November 2026</li>
+          <li>⏱️ 6-Hour Challenge</li>
+          <li>👥 Team Size: 1–4 Members</li>
+          <li>🎓 Open for All Departments &amp; Years</li>
+        </ul>
+        <ol class="stages">
+          <li>Tech Quiz</li>
+          <li>Logic Puzzle</li>
+          <li>Tech Games</li>
+          <li>Code Sprint</li>
+        </ol>
+        <div class="row">
+          <button class="btn light" onclick="openEventDetails('techx')">View Challenge Brief</button>
+          <button class="btn light"
+            onclick="openBrochure('assets/poster/TechX (2).png', 'TECH-X Official Event Brochure')">View
+            Brochure</button>
+          <a class="btn ghost-l" href="https://forms.gle/REPLACE_TECHX" target="_blank" rel="noopener">Register Team
+            Now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Event Roadmap -->
+    <section id="roadmap">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>TECH-X Roadmap</h2>
+          <p class="lead">A step-by-step walkthrough of what awaits participants during the challenge.</p>
+        </div>
+        <button class="btn light"
+          onclick="openBrochure('assets/Poster/TECH-X ROADMAP.png', 'TECH-X  Event ROADMAP')">View
+          RoadMap</button>
+        <ol class="road">
+          <li class="reveal"><i>1</i>
+            <h3>Registration</h3>
+            <p>Assemble team &amp; secure slot</p>
+          </li>
+          <li class="reveal"><i>2</i>
+            <h3>Tech Quiz</h3>
+            <p>Rapid-fire buzzer round (30 min)</p>
+          </li>
+          <li class="reveal"><i>3</i>
+            <h3>Tech Puzzle</h3>
+            <p>Cryptic logic &amp; riddle clues (45 min)</p>
+          </li>
+          <li class="reveal"><i>4</i>
+            <h3>Tech Games</h3>
+            <p>Dynamic collaborative task (45 min)</p>
+          </li>
+          <li class="reveal"><i>5</i>
+            <h3>Code Sprint</h3>
+            <p>Build, test &amp; debug MVP (2 hrs)</p>
+          </li>
+          <li class="reveal"><i>6</i>
+            <h3>Judging</h3>
+            <p>Jury review &amp; live scoring (30 min)</p>
+          </li>
+          <li class="reveal"><i>7</i>
+            <h3>Ceremony</h3>
+            <p>Prizes &amp; recognition awards</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Events Grid with Interactive Details Popup -->
+    <section id="events" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Club Events</h2>
+          <p class="lead">Join our upcoming workshops and review past sessions.</p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter events">
+          <button class="on" data-f="all">All Events</button>
+          <button data-f="upcoming">Upcoming</button>
+          <button data-f="past">Past</button>
+        </div>
+
+        <div class="grid3" id="eventGrid">
+          <article class="event" data-type="upcoming">
+            <div class="poster">
+              <img src="assets/poster/TechX (1).png" alt="INNOVATE-X Hackathon">
+              <div class="poster-overlay">TECH-X</div>
+            </div>
+            <div class="body">
+              <span class="tag">Flagship Competition</span>
+              <h3>TECH-X</h3>
+              <p>Inter-Department Technical Challenge</p>
+              <small>Nov 2026 · 6 hours · Open to all</small>
+              <button class="btn sm" onclick="openEventDetails('techx')">View Details</button>
+            </div>
+          </article>
+
+          <article class="event" data-type="upcoming">
+            <div class="poster">
+              <img src="assets/coming soon.jpg" alt="COMMING SOON">
+              <div class="poster-overlay">Design2Build</div>
+            </div>
+            <div class="body">
+              <span class="tag">Innovation Marathon</span>
+              <h3>Design2Build</h3>
+              <p>Cross-Disciplinary Product Prototyping</p>
+              <small>December 2026 · Team Event</small>
+              <button class="btn sm">Upcoming</button>
+            </div>
+          </article>
+
+          <article class="event" data-type="upcoming">
+            <div class="poster">
+              <img src="assets/coming soon.jpg" alt="COMMING SOON">
+              <div class="poster-overlay">Azure Cloud &amp; AI</div>
+            </div>
+            <div class="body">
+              <span class="tag">Workshop</span>
+              <h3>Microsoft Azure &amp; AI</h3>
+              <p>Hands-on Cloud Infrastructure and GenAI Tools</p>
+              <small>Date TBA · Half day · Hands-on</small>
+              <button class="btn sm">Upcoming </button>
+            </div>
+          </article>
+
+
+
+          <article class="event" data-type="past">
+            <div class="poster">
+              <img src="assets/poster/innovate-x.jpeg" alt="INNOVATE-X Hackathon">
+              <div class="poster-overlay">INNOVATE-X</div>
+            </div>
+
+            <div class="body">
+              <span class="tag">Past · Hackathon</span>
+              <h3>INNOVATE-X</h3>
+              <p>8-hour student hackathon solving campus automation challenges.</p>
+              <small>Completed · 10+ Teams</small>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Milestones &amp; Achievements</h2>
+          <p class="lead">Celebrating our collective impact, competition triumphs, and community growth.</p>
+        </div>
+        <div class="grid3">
+          <div class="card ach reveal"><b data-count="8">0</b>
+            <h3>Competition Wins</h3>
+            <p>Inter-college symposiums &amp; national coding hackathons.</p>
+          </div>
+          <div class="card ach reveal"><b data-count="14">0</b>
+            <h3>Project Prototypes</h3>
+            <p>Real-world web, AI, and campus utility apps built by members.</p>
+          </div>
+          <div class="card ach reveal"><b data-count="95">0</b>
+            <h3>Certifications Earned</h3>
+            <p>Microsoft Learn and Azure student certifications achieved.</p>
+          </div>
+          <div class="card ach reveal"><b data-count="12">0</b>
+            <h3>Specialized Bootcamps</h3>
+            <p>Focused workshops in UI/UX, Cloud architecture, and Code.</p>
+          </div>
+          <div class="card ach reveal"><b data-count="450">0</b>
+            <h3>Hours of Learning</h3>
+            <p>Interactive peer-programming and mentorship sessions.</p>
+          </div>
+          <div class="card ach reveal"><b data-count="5">0</b>
+            <h3>Industry Collaborations</h3>
+            <p>Guest keynotes, tech talks, and professional alumni reviews.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section with Filterable Masonry & Lightbox -->
+    <section id="gallery" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Moments &amp; Memories</h2>
+          <p class="lead">A glance at our sessions, workshops, competitive battles, and team spirit.</p>
+        </div>
+        <div class="filters" id="gFilters" role="group" aria-label="Filter gallery">
+          <button class="on" data-f="all">All Photos</button>
+          <button data-f="events">Events</button>
+          <button data-f="workshops">Workshops</button>
+          <button data-f="competitions">Competitions</button>
+          <button data-f="team">Team</button>
+        </div>
+        <div class="masonry">
+          <div class="gallery-item" data-cat="events">
+            <img loading="lazy" src="assets/gallery/innovate-x-poster.jpeg"
+              alt="INNOVATE-X Idea to Prototype Challenge Poster">
+            <div class="gallery-caption">INNOVATE-X · Idea to Prototype Challenge</div>
+          </div>
+          <div class="gallery-item" data-cat="competitions">
+            <img loading="lazy" src="assets/gallery/hackathon-team-coding.jpeg" alt="Students coding during hackathon">
+            <div class="gallery-caption">INNOVATE-X · Live Team Sprint</div>
+          </div>
+          <div class="gallery-item" data-cat="workshops">
+            <img loading="lazy" src="assets/gallery/hackathon-session-1.jpeg"
+              alt="Hands-on development at CSE APJ Block Lab">
+            <div class="gallery-caption">APJ Block CSE Lab · Hands-on Coding</div>
+          </div>
+          <div class="gallery-item" data-cat="competitions">
+            <img loading="lazy" src="assets/gallery/hackathon-session-2.jpeg"
+              alt="Problem solving and algorithm development">
+            <div class="gallery-caption">Problem Formulation &amp; Logic Sprint</div>
+          </div>
+          <div class="gallery-item" data-cat="team">
+            <img loading="lazy" src="assets/gallery/hackathon-lab-review.jpeg" alt="Student teams in lab review">
+            <div class="gallery-caption">Team Synergy &amp; Mentorship</div>
+          </div>
+          <div class="gallery-item" data-cat="workshops">
+            <img loading="lazy" src="assets/gallery/hackathon-evaluation.jpeg"
+              alt="Technical review and project validation">
+            <div class="gallery-caption">Prototype Evaluation &amp; Testing</div>
+          </div>
+          <div class="gallery-item" data-cat="team">
+            <img loading="lazy" src="assets/gallery/hackathon-teams.jpeg" alt="Innovators Tech Forum participants">
+            <div class="gallery-caption">Innovators Tech Forum Challenge Teams</div>
+          </div>
+          <div class="gallery-item" data-cat="team">
+            <img loading="lazy" src="assets/gallery/1792300081913.jpg" alt="INNOVATE-X WINNER">
+            <div class="gallery-caption">INNOVATE-X WINNING Team</div>
+          </div>
+          <div class="gallery-item" data-cat="team">
+            <img loading="lazy" src="assets/gallery/1792300081482.jpg" alt="INNOVATE-X RUNNER">
+            <div class="gallery-caption">INNOVATE-X RUNNER-UP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lb" hidden>
+      <div class="lightbox-content">
+        <button aria-label="Close Lightbox">×</button>
+        <img alt="Enlarged photo preview">
+      </div>
+    </div>
+
+    <!-- Team Section -->
+    <section id="team">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Meet the Leadership</h2>
+          <p class="lead">Passionate student leads and mentor faculty driving innovation forward.</p>
+        </div>
+
+        <h3 class="grp">Faculty Coordinator</h3>
+        <div class="grid4">
+          <div class="card member reveal">
+            <div class="member-avatar">
+              <img loading="lazy" src="assets/team/faculty.jpg" alt="Faculty Coordinator - Innovators Tech Forum">
+            </div>
+            <h4>Faculty Coordinator</h4>
+            <p>Faculty Mentor &amp; Advisor</p>
+            <small>M. Kumarasamy College of Engineering</small>
+            <span class="soc"><a href="mailto:itf@mkce.ac.in" title="Email Faculty Coordinator">✉</a><a
+                href="https://linkedin.com/" target="_blank" rel="noopener" title="LinkedIn Profile">in</a></span>
+          </div>
+        </div>
+
+        <h3 class="grp">Office Bearers</h3>
+        <div class="grid4">
+          <div class="card member reveal">
+            <div class="member-avatar">
+              <img loading="lazy" src="assets/team/PRESIDENT.png" alt="President - Innovators Tech Forum">
+            </div>
+            <h4>President</h4>
+            <p>Club President</p>
+            <small>Innovators Tech Forum</small>
+            <span class="soc"><a href="https://linkedin.com/" target="_blank" rel="noopener" title="LinkedIn">in</a><a
+                href="https://github.com/" target="_blank" rel="noopener" title="GitHub">gh</a></span>
+          </div>
+
+          <div class="card member reveal">
+            <div class="member-avatar">
+              <img loading="lazy" src="assets/team/VICEPRESIDENT.png" alt="Vice President - Innovators Tech Forum">
+            </div>
+            <h4>Vice President</h4>
+            <p>Operations &amp; Strategy</p>
+            <small>Innovators Tech Forum</small>
+            <span class="soc"><a href="https://linkedin.com/" target="_blank" rel="noopener" title="LinkedIn">in</a><a
+                href="https://github.com/" target="_blank" rel="noopener" title="GitHub">gh</a></span>
+          </div>
+
+          <div class="card member reveal">
+            <div class="member-avatar">
+              <img loading="lazy" src="assets/team/SECRETARY.png" alt="Secretary - Innovators Tech Forum">
+            </div>
+            <h4>Secretary</h4>
+            <p>General Secretary</p>
+            <small>Innovators Tech Forum</small>
+            <span class="soc"><a href="https://linkedin.com/" target="_blank" rel="noopener" title="LinkedIn">in</a><a
+                href="https://github.com/" target="_blank" rel="noopener" title="GitHub">gh</a></span>
+          </div>
+
+          <div class="card member reveal">
+            <div class="member-avatar">
+              <img loading="lazy" src="assets/team/PRCOORDINATOR.jpg" alt="PR Coordinator - Innovators Tech Forum"
+                onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80'">
+            </div>
+            <h4>PR Coordinator</h4>
+            <p>Public Relations &amp; Media</p>
+            <small>Innovators Tech Forum</small>
+            <span class="soc"><a href="https://linkedin.com/" target="_blank" rel="noopener" title="LinkedIn">in</a><a
+                href="https://instagram.com/" target="_blank" rel="noopener" title="Instagram">ig</a></span>
+          </div>
+
+          <div class="card member reveal">
+            <div class="member-avatar">
+              <img loading="lazy" src="assets/team/TREASURER.png" alt="Treasurer - Innovators Tech Forum"
+                onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80'">
+            </div>
+            <h4>Treasurer</h4>
+            <p>Finance &amp; Budget Lead</p>
+            <small>Innovators Tech Forum</small>
+            <span class="soc"><a href="https://linkedin.com/" target="_blank" rel="noopener" title="LinkedIn">in</a><a
+                href="mailto:itf@mkce.ac.in" title="Email">✉</a></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Join Call-to-action Section -->
+    <section id="join" class="feature">
+      <div class="wrap">
+        <h2>Your Next Big Idea Starts Here.</h2>
+        <p class="lead">Whether you code, design, build, research, organize, or simply love technology — there is a
+          place for you at Innovators Tech Forum.</p>
+        <ul class="facts">
+          <li>💻 Full-Stack Coding</li>
+          <li>🤖 Artificial Intelligence</li>
+          <li>🎨 UI/UX Design</li>
+          <li>☁️ Cloud Technologies</li>
+          <li>💡 Innovation Lab</li>
+          <li>🎪 Event Management</li>
+        </ul>
+        <a class="btn light join-link" href="#" target="_blank" rel="noopener">Join Innovators Tech Forum</a>
+      </div>
+    </section>
+
+    <!-- Why Join Us -->
+    <section id="why">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Why Join ITF?</h2>
+          <p class="lead">Unlock endless possibilities for career acceleration and technical empowerment.</p>
+        </div>
+        <ul class="grid4 why">
+          <li>Learn industry-ready skills</li>
+          <li>Build functional portfolio projects</li>
+          <li>Represent the college in hackathons</li>
+          <li>Network with driven peers &amp; mentors</li>
+          <li>Leadership &amp; event management experience</li>
+          <li>Master the modern Microsoft tech stack</li>
+          <li>Free workshops &amp; developer sessions</li>
+          <li>Direct pathway to tech internships</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Technology Ecosystem -->
+    <section id="eco" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Microsoft Technology Ecosystem</h2>
+          <p class="lead">Tools and platforms we leverage to engineer robust digital solutions.</p>
+        </div>
+        <div class="eco">
+          <div class="hub">Microsoft<br>Ecosystem</div>
+          <span style="--a:0deg" title="Microsoft Azure Cloud">Azure</span>
+          <span style="--a:51deg" title="GitHub Code & DevOps">GitHub</span>
+          <span style="--a:103deg" title="Visual Studio Code">VS Code</span>
+          <span style="--a:154deg" title="Power Platform">Power Apps</span>
+          <span style="--a:206deg" title="Azure AI & Copilot">Azure AI</span>
+          <span style="--a:257deg" title="Figma UI/UX Design">Figma</span>
+          <span style="--a:309deg" title="Modern Web & Typescript">Web Dev</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Student Testimonials -->
+    <section id="voices">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Student Voices</h2>
+          <p class="lead">What our club members say about their journey with Innovators Tech Forum.</p>
+        </div>
+        <div class="grid3">
+          <blockquote class="card reveal">
+            <p>"Being part of ITF bridged the gap between classroom theory and real cloud deployments. I shipped my
+              first full-stack Azure app here!"</p>
+            <cite>— Computer Science Student, 3rd Year</cite>
+          </blockquote>
+          <blockquote class="card reveal">
+            <p>"Even coming from a core engineering branch, the hands-on workshops made programming and AI accessible
+              and exhilarating."</p>
+            <cite>— Mechanical Engineering Student, 2nd Year</cite>
+          </blockquote>
+          <blockquote class="card reveal">
+            <p>"The collaborative spirit in hackathons gave me the confidence to pitch our ideas to industry juries and
+              win top honors."</p>
+            <cite>— CSBS Student, Third Year</cite>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="alt">
+      <div class="wrap narrow">
+        <div class="section-head">
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <details>
+          <summary>Who is eligible to join the club?</summary>
+          <p>Any student currently enrolled in M. Kumarasamy College of Engineering, across any department and any
+            academic year, is warmly invited to apply.</p>
+        </details>
+        <details>
+          <summary>Can students from core engineering departments participate?</summary>
+          <p>Absolutely! Innovation flourishes when diverse disciplines collaborate. Mechanical, Civil, Electrical, and
+            Bio students actively participate in design, automation, hardware-software projects, and competitions.</p>
+        </details>
+        <details>
+          <summary>Do I need prior coding knowledge?</summary>
+          <p>Not at all! We provide beginner-friendly onboarding bootcamps. Furthermore, our club features active
+            non-coding domains like UI/UX Design, Event Organizing, Media, and Content Creation.</p>
+        </details>
+        <details>
+          <summary>What kind of events does ITF conduct?</summary>
+          <p>We organize hands-on technical workshops, competitive hackathons, algorithmic sprints, tech quizzes, puzzle
+            rooms, and industry expert guest talks.</p>
+        </details>
+        <details>
+          <summary>How can I register for club events?</summary>
+          <p>You can register directly via the "View Details" and "Register Now" buttons on any event card, or via our
+            announcements channel.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Get in Touch</h2>
+          <p class="lead">Have questions, proposals, or ideas? We'd love to hear from you.</p>
+        </div>
+        <div class="grid3">
+          <div class="card reveal">
+            <h3>📍 Venue</h3>
+            <p>Innovators Tech Forum<br>M. Kumarasamy College of Engineering<br>Thalavapalayam, Karur, Tamil Nadu 639113
+            </p>
+            <a class="btn sm" href="https://maps.google.com/?q=M.+Kumarasamy+College+of+Engineering" target="_blank"
+              rel="noopener">Open in Google Maps</a>
+          </div>
+          <div class="card reveal">
+            <h3>✉️ Direct Connect</h3>
+            <ul class="contact">
+              <li>Email: <a href="mailto:itf@mkce.ac.in">itf@mkce.ac.in</a></li>
+              <li>Patron: Faculty In-Charge, Microsoft Club</li>
+            </ul>
+          </div>
+          <div class="card reveal">
+            <h3>🌐 Social Channels</h3>
+            <ul class="contact">
+              <li><a href="https://www.linkedin.com/in/innovators-tech-forum-043284387/" target="_blank"
+                  rel="noopener">Follow us on LinkedIn</a></li>
+              <li><a href="https://www.instagram.com/innovators_mkce?obrf=MWg0M3VnZ2R5Zjdxdg==" target="_blank"
+                  rel="noopener">Follow us on Instagram</a></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Interactive Event Detail Modal -->
+  <div class="modal" id="event-modal" aria-hidden="true" role="dialog">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close" aria-label="Close modal">×</button>
+      <h3 id="modal-title" style="margin-bottom: 12px; font-size: 1.4rem;">Event Title</h3>
+      <p id="modal-date" style="color: var(--blue); font-weight: 600; margin-bottom: 16px;">Date &amp; Details</p>
+      <p id="modal-desc" style="line-height: 1.7; margin-bottom: 24px; color: var(--text-muted);">Event details and
+        breakdown will appear here.</p>
+      <div class="row">
+        <a class="btn" id="modal-register" href="#" target="_blank" rel="noopener">Register Online</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap foot">
+      <div class="foot-brand-box">
+        <div class="foot-logos">
+          <img src="assets/aaroh-logo.jpg" alt="AAROH Student Club Logo" class="foot-logo" title="AAROH Student Club">
+          <img src="assets/itf-logo.jpg" alt="Innovators Tech Forum Logo" class="foot-logo"
+            title="Innovators Tech Forum">
+        </div>
+        <div>
+          <b>Innovators Tech Forum</b>
+          <p>A Microsoft Student Club · Under AAROH Student Club</p>
+          <p class="motto">Think. Create. Innovate.</p>
+        </div>
+      </div>
+      <nav aria-label="Footer Navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#events">Events</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#team">Team</a>
+        <a href="#join">Join Us</a>
+      </nav>
+      <div>
+        <b>Community Hub</b>
+        <p style="margin-top: 8px; font-size: 0.95rem; color: #9ab4e4;">Join our community of student innovators,
+          developers, and designers.</p>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>© 2026 Innovators Tech Forum · M. Kumarasamy College of Engineering. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Floating Controls -->
+  <button class="top" id="top" aria-label="Back to top" title="Scroll to top">↑</button>
+  <div class="glow" id="glow" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
