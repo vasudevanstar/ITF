@@ -476,53 +476,73 @@
           </div>
         </div>
 
-        <!-- Event Gallery Subsection -->
+        <!-- Event Gallery Subsection: Infinite Two-Row Marquee Gallery -->
         <div class="gallery-sub-block">
           <div class="sub-section-head">
             <span class="sub-head-icon" aria-hidden="true">🖼️</span>
             <h3>Event Gallery</h3>
           </div>
 
-          <div class="filters" id="gFilters" role="group" aria-label="Filter gallery">
-            <button class="on" data-f="all">All Photos</button>
-            <button data-f="events">Events</button>
-            <button data-f="workshops">Workshops</button>
-            <button data-f="competitions">Competitions</button>
-            <button data-f="team">Team</button>
-          </div>
+          <!-- Infinite Two-Row Gallery Container -->
+          <div class="infinite-gallery-wrapper" id="infiniteGallery">
+            <!-- ============================================================
+                 ADD / REMOVE EVENT PHOTOS HERE
+                 You only need to put photos in this list. No duplication needed!
+                 You can use either <div class="gallery-item">...</div> or simple <img> tags.
+                 ============================================================ -->
+            <div class="gallery-source" id="gallerySource">
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/innovate-x-poster.jpeg"
+                  alt="INNOVATE-X Idea to Prototype Challenge Poster">
+                <div class="gallery-caption">INNOVATE-X · Idea to Prototype Challenge</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/hackathon-team-coding.jpeg" alt="Students coding during hackathon">
+                <div class="gallery-caption">Live Team Coding Sprint</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/hackathon-session-1.jpeg"
+                  alt="Hands-on development at CSE APJ Block Lab">
+                <div class="gallery-caption">APJ Block CSE Lab · Hands-on Coding</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/hackathon-session-2.jpeg"
+                  alt="Problem solving and algorithm development">
+                <div class="gallery-caption">Problem Formulation &amp; Logic Sprint</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/hackathon-lab-review.jpeg" alt="Student teams in lab review">
+                <div class="gallery-caption">Team Synergy &amp; Mentorship</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/hackathon-evaluation.jpeg"
+                  alt="Technical review and project validation">
+                <div class="gallery-caption">Prototype Evaluation &amp; Testing</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/hackathon-teams.jpeg" alt="Innovators Tech Forum participants">
+                <div class="gallery-caption">Innovators Tech Forum Challenge Teams</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/1792300081913.jpg" alt="1st Prize Winners - Team Zephyra">
+                <div class="gallery-caption">1st Prize Winners · Team Zephyra (CSBS)</div>
+              </div>
+              <div class="gallery-item">
+                <img loading="lazy" src="assets/gallery/1792300081482.jpg" alt="2nd Prize Runner-Up - Team TechVibe">
+                <div class="gallery-caption">2nd Prize Runner-Up · Team TechVibe (CSBS)</div>
+              </div>
+            </div>
 
-          <div class="gallery-grid">
-            <div class="gallery-item" data-cat="events">
-              <img loading="lazy" src="assets/gallery/innovate-x-poster.jpeg"
-                alt="INNOVATE-X Idea to Prototype Challenge Poster">
-              <div class="gallery-caption">INNOVATE-X · Idea to Prototype Challenge</div>
-            </div>
-            <div class="gallery-item" data-cat="competitions">
-              <img loading="lazy" src="assets/gallery/hackathon-team-coding.jpeg" alt="Students coding during hackathon">
-              <div class="gallery-caption">Live Team Coding Sprint</div>
-            </div>
-            <div class="gallery-item" data-cat="workshops">
-              <img loading="lazy" src="assets/gallery/hackathon-session-1.jpeg"
-                alt="Hands-on development at CSE APJ Block Lab">
-              <div class="gallery-caption">APJ Block CSE Lab · Hands-on Coding</div>
-            </div>
-            <div class="gallery-item" data-cat="competitions">
-              <img loading="lazy" src="assets/gallery/hackathon-session-2.jpeg"
-                alt="Problem solving and algorithm development">
-              <div class="gallery-caption">Problem Formulation &amp; Logic Sprint</div>
-            </div>
-            <div class="gallery-item" data-cat="team">
-              <img loading="lazy" src="assets/gallery/hackathon-lab-review.jpeg" alt="Student teams in lab review">
-              <div class="gallery-caption">Team Synergy &amp; Mentorship</div>
-            </div>
-            <div class="gallery-item" data-cat="workshops">
-              <img loading="lazy" src="assets/gallery/hackathon-evaluation.jpeg"
-                alt="Technical review and project validation">
-              <div class="gallery-caption">Prototype Evaluation &amp; Testing</div>
-            </div>
-            <div class="gallery-item" data-cat="team">
-              <img loading="lazy" src="assets/gallery/hackathon-teams.jpeg" alt="Innovators Tech Forum participants">
-              <div class="gallery-caption">Innovators Tech Forum Challenge Teams</div>
+            <!-- Dynamic Infinite Scrolling Display (Auto-generated by JavaScript) -->
+            <div class="gallery-marquee-viewport" aria-label="Event Photos Infinite Gallery">
+              <!-- Row 1: Right to Left -->
+              <div class="gallery-marquee-row row-left" id="galleryRow1">
+                <div class="gallery-marquee-track"></div>
+              </div>
+              <!-- Row 2: Left to Right -->
+              <div class="gallery-marquee-row row-right" id="galleryRow2">
+                <div class="gallery-marquee-track"></div>
+              </div>
             </div>
           </div>
         </div>

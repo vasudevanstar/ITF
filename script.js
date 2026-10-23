@@ -204,18 +204,112 @@ function setupFilter(container, items, attr) {
   });
 }
 setupFilter($("#events .filters"), $$("#eventGrid .event"), "type");
-setupFilter($("#gFilters"), $$(".gallery-grid .gallery-item, .masonry .gallery-item"), "cat");
+
+// ==========================================================================
+// Two-Row Infinite Scrolling Photo Gallery (Automatic division & seamless looping)
+// ==========================================================================
+function initInfiniteGallery() {
+  const source = $("#gallerySource");
+  const row1 = $("#galleryRow1");
+  const row2 = $("#galleryRow2");
+  if (!source || !row1 || !row2) return;
+
+  // Read all child elements from source (supports both <div class="gallery-item"> and simple <img> tags)
+  const rawItems = Array.from(source.children).filter(el => el.nodeType === 1);
+  if (rawItems.length === 0) return;
+
+  const normalizedItems = rawItems.map(item => {
+    if (item.classList.contains("gallery-item")) {
+      return item.cloneNode(true);
+    }
+    // If user provided a raw <img> tag, wrap it nicely
+    const wrap = document.createElement("div");
+    wrap.className = "gallery-item";
+    const img = item.cloneNode(true);
+    wrap.appendChild(img);
+    const captionText = item.getAttribute("data-caption") || item.alt;
+    if (captionText) {
+      const cap = document.createElement("div");
+      cap.className = "gallery-caption";
+      cap.textContent = captionText;
+      wrap.appendChild(cap);
+    }
+    return wrap;
+  });
+
+  // Divide items alternately between Row 1 and Row 2
+  const row1Items = [];
+  const row2Items = [];
+  normalizedItems.forEach((item, index) => {
+    if (index % 2 === 0) {
+      row1Items.push(item);
+    } else {
+      row2Items.push(item);
+    }
+  });
+
+  // Ensure both rows have items even if only 1 item was provided
+  if (row2Items.length === 0 && row1Items.length > 0) {
+    row2Items.push(row1Items[0].cloneNode(true));
+  }
+
+  // Populate row track with duplicate set for seamless infinite loop
+  function populateTrack(rowEl, items) {
+    const track = rowEl.querySelector(".gallery-marquee-track");
+    if (!track) return;
+    track.innerHTML = "";
+
+    // Repeat items in base set until track comfortably exceeds viewport width
+    let baseSet = [...items];
+    while (baseSet.length < 6) {
+      baseSet = baseSet.concat(items.map(it => it.cloneNode(true)));
+    }
+
+    // First Half: 0% to -50%
+    baseSet.forEach(it => {
+      track.appendChild(it.cloneNode(true));
+    });
+
+    // Second Half (Exact Duplicate): seamlessly loops back to 0% at -50%
+    baseSet.forEach(it => {
+      const clone = it.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+    });
+  }
+
+  populateTrack(row1, row1Items);
+  populateTrack(row2, row2Items);
+
+  // Attach Lightbox click handlers to all generated gallery images
+  attachGalleryLightbox();
+}
+
+// Lightbox click handler attachment
+function attachGalleryLightbox() {
+  const lb = $("#lb"), lbImg = $("img", lb);
+  if (!lb || !lbImg) return;
+
+  const clickableImgs = $$(
+    ".gallery-marquee-viewport .gallery-item img, .winner-card-img, .gallery-item img"
+  );
+
+  clickableImgs.forEach(img => {
+    img.onclick = (e) => {
+      e.stopPropagation();
+      lbImg.src = img.src;
+      lbImg.alt = img.alt || "Event Photo";
+      lb.hidden = false;
+    };
+  });
+}
+
+// Initialize infinite gallery on DOM load
+initInfiniteGallery();
 
 // Gallery Lightbox Modal
 const lb = $("#lb"), lbImg = $("img", lb);
 if (lb && lbImg) {
-  $$(".gallery-grid .gallery-item img, .masonry .gallery-item img, .winner-card-img").forEach(img => {
-    img.onclick = () => {
-      lbImg.src = img.src;
-      lbImg.alt = img.alt || "Gallery image";
-      lb.hidden = false;
-    };
-  });
   lb.onclick = e => {
     if (e.target === lb || e.target.tagName === "BUTTON") lb.hidden = true;
   };

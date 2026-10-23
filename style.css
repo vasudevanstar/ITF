@@ -1419,64 +1419,213 @@ section {
   color: var(--ms-blue);
 }
 
-/* Event Gallery Grid (3 columns, responsive, smooth rounded corners) */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-  gap: 24px;
-  margin-top: 1.5rem;
+/* ==========================================================================
+   Infinite Two-Row Marquee Photo Gallery
+   ========================================================================== */
+
+/* User source list (hidden from view, used dynamically by JavaScript) */
+.gallery-source {
+  display: none !important;
 }
 
-.gallery-grid .gallery-item {
+.infinite-gallery-wrapper {
   position: relative;
+  width: 100%;
+  margin-top: 1rem;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+/* Viewport with smooth edge gradient fade masks */
+.gallery-marquee-viewport {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 4%,
+    black 96%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 4%,
+    black 96%,
+    transparent 100%
+  );
+}
+
+/* Individual Marquee Row */
+.gallery-marquee-row {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Track containing the duplicated items moving with GPU-accelerated translate3d */
+.gallery-marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Row 1: Right to Left (smooth, slow, continuous loop) */
+.gallery-marquee-row.row-left .gallery-marquee-track {
+  animation: marqueeScrollLeft 48s linear infinite;
+}
+
+/* Row 2: Left to Right (slightly different speed for premium organic feel) */
+.gallery-marquee-row.row-right .gallery-marquee-track {
+  animation: marqueeScrollRight 56s linear infinite;
+}
+
+/* Pause animation smoothly on hover */
+.gallery-marquee-row:hover .gallery-marquee-track {
+  animation-play-state: paused;
+}
+
+/* GPU-accelerated Keyframe Animations */
+@keyframes marqueeScrollLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marqueeScrollRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Gallery Item Card Styling inside Marquee */
+.gallery-marquee-track .gallery-item {
+  position: relative;
+  flex: 0 0 350px;
+  aspect-ratio: 16 / 11;
   border-radius: 18px;
   overflow: hidden;
   cursor: zoom-in;
   box-shadow: var(--shadow-sm);
   background: var(--bg-card);
   border: 1px solid var(--border);
-  aspect-ratio: 16/11;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.gallery-grid .gallery-item:hover {
-  transform: translateY(-5px);
+.gallery-marquee-track .gallery-item:hover {
+  transform: translateY(-5px) scale(1.02);
   box-shadow: var(--shadow-md);
-  border-color: rgba(0, 120, 212, 0.35);
+  border-color: rgba(0, 120, 212, 0.4);
+  z-index: 5;
 }
 
-.gallery-grid .gallery-item img {
+.gallery-marquee-track .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.45s ease;
+  pointer-events: auto;
+  transition: transform 0.5s ease;
 }
 
-.gallery-grid .gallery-item:hover img {
-  transform: scale(1.05);
+.gallery-marquee-track .gallery-item:hover img {
+  transform: scale(1.08);
 }
 
 .gallery-caption {
   position: absolute;
   inset: auto 0 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  color: #fff;
-  padding: 24px 14px 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 85%);
+  color: #ffffff;
+  padding: 24px 16px 12px;
   font-size: 0.88rem;
   font-weight: 600;
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(8px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 }
 
-.gallery-item:hover img {
-  transform: scale(1.06);
-}
-
-.gallery-item:hover .gallery-caption {
+.gallery-marquee-track .gallery-item:hover .gallery-caption {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 920px) {
+  .gallery-marquee-viewport {
+    gap: 18px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+  }
+  .gallery-marquee-track {
+    gap: 18px;
+  }
+  .gallery-marquee-track .gallery-item {
+    flex: 0 0 280px;
+    border-radius: 16px;
+  }
+  .gallery-marquee-row.row-left .gallery-marquee-track {
+    animation-duration: 40s;
+  }
+  .gallery-marquee-row.row-right .gallery-marquee-track {
+    animation-duration: 46s;
+  }
+}
+
+@media (max-width: 580px) {
+  .gallery-marquee-viewport {
+    gap: 14px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%);
+  }
+  .gallery-marquee-track {
+    gap: 14px;
+  }
+  .gallery-marquee-track .gallery-item {
+    flex: 0 0 220px;
+    border-radius: 14px;
+  }
+  .gallery-marquee-row.row-left .gallery-marquee-track {
+    animation-duration: 32s;
+  }
+  .gallery-marquee-row.row-right .gallery-marquee-track {
+    animation-duration: 38s;
+  }
+  .gallery-caption {
+    font-size: 0.78rem;
+    padding: 16px 10px 8px;
+  }
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-marquee-track {
+    animation: none !important;
+  }
+  .gallery-marquee-row {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+  }
+  .gallery-marquee-track .gallery-item {
+    scroll-snap-align: start;
+  }
 }
 
 /* Lightbox Modal */
