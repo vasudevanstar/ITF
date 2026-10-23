@@ -651,11 +651,35 @@ window.addEventListener('appinstalled', () => {
     });
   }
 
-  // Mobile Hub Tabs Switcher (Synchronizes view on mobile screens)
+  // Mobile Hub Tabs Switcher (Show/hide cards on mobile, both visible on desktop)
   const hubMobileNav = $("#hubMobileNav");
   const hubNavTabs = $$(".hub-nav-tab", hubMobileNav);
   const hubQuizCard = $("#hubQuizCard");
   const memberPassCard = $("#memberPassCard");
+
+  const MOBILE_BREAKPOINT = 1023;
+
+  function applyTabVisibility(activeTab) {
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+      if (activeTab === "quiz") {
+        hubQuizCard && hubQuizCard.classList.remove("tab-hidden");
+        memberPassCard && memberPassCard.classList.add("tab-hidden");
+      } else {
+        memberPassCard && memberPassCard.classList.remove("tab-hidden");
+        hubQuizCard && hubQuizCard.classList.add("tab-hidden");
+      }
+    } else {
+      // Desktop: always show both
+      hubQuizCard && hubQuizCard.classList.remove("tab-hidden");
+      memberPassCard && memberPassCard.classList.remove("tab-hidden");
+    }
+  }
+
+  // Get the currently active tab key
+  function getActiveTabKey() {
+    const activeTab = hubNavTabs.find(t => t.classList.contains("active"));
+    return activeTab ? activeTab.getAttribute("data-tab") : "quiz";
+  }
 
   if (hubMobileNav && hubNavTabs.length) {
     hubNavTabs.forEach(tab => {
@@ -663,12 +687,20 @@ window.addEventListener('appinstalled', () => {
         hubNavTabs.forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
         const target = tab.getAttribute("data-tab");
-        if (target === "quiz" && hubQuizCard) {
-          hubQuizCard.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else if (target === "pass" && memberPassCard) {
-          memberPassCard.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        applyTabVisibility(target);
       });
+    });
+
+    // Initialize on load
+    applyTabVisibility(getActiveTabKey());
+
+    // Re-evaluate on resize (debounced)
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        applyTabVisibility(getActiveTabKey());
+      }, 100);
     });
   }
 
@@ -689,9 +721,10 @@ window.addEventListener('appinstalled', () => {
         holoDomain.classList.add("badge-updated");
       }
 
-      // Activate Pass tab on mobile
+      // Activate Pass tab on mobile (show/hide cards properly)
       if (hubNavTabs && hubNavTabs.length) {
         hubNavTabs.forEach(t => t.classList.toggle("active", t.getAttribute("data-tab") === "pass"));
+        applyTabVisibility("pass");
       }
 
       // Smooth scroll to member pass card

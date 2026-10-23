@@ -2944,11 +2944,12 @@ footer {
   overflow: hidden;
 }
 
-/* Mobile Segmented Switcher (Shown on <= 992px) */
+/* Mobile Segmented Switcher (Shown on < 1024px) */
 .hub-mobile-nav {
   display: none;
   margin: 0 auto 28px;
-  max-width: 380px;
+  max-width: 400px;
+  width: 100%;
   background: var(--bg-card);
   padding: 5px;
   border-radius: 999px;
@@ -2958,7 +2959,7 @@ footer {
   box-shadow: var(--shadow-sm);
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1023px) {
   .hub-mobile-nav {
     display: grid;
   }
@@ -2980,6 +2981,7 @@ footer {
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
 }
 
 .hub-nav-tab.active {
@@ -2993,20 +2995,76 @@ footer {
   font-size: 1.15rem;
 }
 
+/* Hub layout: base — two equal columns, full width of parent */
 .hub-interactive-grid {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 32px;
-  align-items: stretch;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-@media (max-width: 1140px) {
+/* Cards must never overflow their column */
+.hub-quiz-card,
+.hub-pass-card {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Desktop (≥ 1024px): use 94vw up to 1800px ── */
+@media (min-width: 1024px) {
+  .hub-wrap {
+    width: 94vw !important;
+    max-width: 1800px !important;
+    padding: 0 24px !important;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hub-interactive-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 36px;
+  }
+}
+
+/* ── Large desktop (≥ 1440px): slightly wider gap ── */
+@media (min-width: 1440px) {
+  .hub-wrap {
+    width: 94vw !important;
+    max-width: 1800px !important;
+    padding: 0 32px !important;
+  }
+
+  .hub-interactive-grid {
+    gap: 40px;
+  }
+}
+
+/* ── Tablet: single column, centered — UNCHANGED ── */
+@media (max-width: 1023px) {
   .hub-interactive-grid {
     grid-template-columns: 1fr;
-    max-width: 640px;
-    gap: 28px;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 24px;
+  }
+
+  /* Mobile tab hiding: hide inactive card on narrow screens */
+  .hub-quiz-card.tab-hidden,
+  .hub-pass-card.tab-hidden {
+    display: none;
+  }
+}
+
+/* ── Mobile phones — UNCHANGED ── */
+@media (max-width: 600px) {
+  .hub-interactive-grid {
+    max-width: 100%;
+    gap: 18px;
   }
 }
 
@@ -3014,12 +3072,15 @@ footer {
 .hub-pass-card {
   display: flex;
   flex-direction: column;
-  padding: 32px 28px;
+  padding: clamp(20px, 3vw, 32px) clamp(16px, 2.5vw, 28px);
   border-radius: 20px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  min-width: 0;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .hub-quiz-card:hover,
@@ -3345,11 +3406,12 @@ footer {
   perspective: 1200px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 10px 0 16px;
+  align-items: flex-start;
+  padding: 8px 0 14px;
   user-select: none;
   width: 100%;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 /* ==========================================================================
@@ -3358,7 +3420,7 @@ footer {
 .cyber-pass-card {
   position: relative;
   width: 100%;
-  max-width: 450px;
+  max-width: 100%;
   box-sizing: border-box;
   border-radius: 26px;
   overflow: hidden;
@@ -3530,7 +3592,7 @@ footer {
 /* 2. UPPER-MIDDLE SECTION (2 COLUMNS) */
 .cyber-upper-grid {
   display: grid;
-  grid-template-columns: 130px 1fr;
+  grid-template-columns: clamp(100px, 28%, 132px) 1fr;
   gap: 12px;
   align-items: start;
   width: 100%;
@@ -3721,7 +3783,7 @@ footer {
 /* 3. LOWER SECTION (2 COLUMNS: Campus Frame + QR Code) */
 .cyber-lower-grid {
   display: grid;
-  grid-template-columns: 1fr 126px;
+  grid-template-columns: 1fr clamp(100px, 28%, 130px);
   gap: 12px;
   align-items: stretch;
   width: 100%;
@@ -3818,17 +3880,18 @@ footer {
   padding: 5px;
   border: 2px solid rgba(255, 255, 255, 0.95);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 14px rgba(0, 210, 255, 0.45);
-  width: 120px;
-  height: 120px;
+  width: clamp(100px, 30%, 130px);
+  aspect-ratio: 1 / 1;
   box-sizing: border-box;
   display: grid;
   place-items: center;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .cyber-qr-img {
-  width: 106px;
-  height: 106px;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
   object-fit: contain;
   display: block;
   image-rendering: -webkit-optimize-contrast;
@@ -3905,69 +3968,60 @@ footer {
 
 /* Mobile Responsive Tweaks for the Cyber Pass */
 @media (max-width: 480px) {
-  .hub-pass-card {
-    padding: 20px 14px;
-  }
   .cyber-pass-card {
     border-radius: 20px;
   }
   .cyber-pass-inner {
-    padding: 14px 12px;
+    padding: 12px 10px;
     gap: 10px;
   }
   .cyber-club-badge {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
   .cyber-aaroh-circle {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
   .cyber-upper-grid {
-    grid-template-columns: 112px 1fr;
+    grid-template-columns: 100px 1fr;
     gap: 8px;
   }
   .cyber-member-pill {
-    font-size: 0.56rem;
-    padding: 2px 7px;
-    bottom: 5px;
+    font-size: 0.54rem;
+    padding: 2px 6px;
+    bottom: 4px;
   }
   .cyber-student-name {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
   }
   .cyber-stat-icon {
     font-size: 0.82rem;
   }
   .cyber-stat-label {
-    font-size: 0.44rem;
+    font-size: 0.42rem;
   }
   .cyber-stat-val {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
   }
   .cyber-lower-grid {
-    grid-template-columns: 1fr 105px;
     gap: 8px;
   }
   .cyber-qr-wrapper {
-    width: 102px;
-    height: 102px;
-  }
-  .cyber-qr-img {
-    width: 90px;
-    height: 90px;
+    width: clamp(85px, 26%, 110px);
   }
   .cyber-campus-frame {
-    height: 72px;
+    height: 68px;
   }
   .cyber-bottom-banner {
     gap: 6px;
   }
   .cyber-official-badge {
-    padding: 6px 12px;
-    font-size: 0.68rem;
+    padding: 6px 10px;
+    font-size: 0.66rem;
   }
   .cyber-hazard-hashes {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     letter-spacing: 2px;
   }
 }
@@ -4024,12 +4078,6 @@ footer {
    ========================================================================== */
 
 @media (max-width: 768px) {
-  .hub-quiz-card,
-  .hub-pass-card {
-    padding: 24px 20px;
-    border-radius: 20px;
-  }
-
   .quiz-opt {
     padding: 12px 14px;
   }
