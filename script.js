@@ -1038,7 +1038,8 @@ window.addEventListener('appinstalled', () => {
   }
 
   // ========================================================================
-  // Ultra-HD 300+ DPI Pass Canvas Engine (2640 x 1668 px Razor Sharp Replica)
+  // Ultra-HD 300+ DPI Pass Canvas Engine (1800 x 2520 px Razor-Sharp Portrait Replica)
+  // Perfectly reproduces the holographic member pass with zero HTML2Canvas artifacts
   // ========================================================================
   async function generatePassCanvas() {
     const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
@@ -1051,9 +1052,10 @@ window.addEventListener('appinstalled', () => {
     // Parallel preload of club logo & high-res QR code
     const [logoImg, qrImg] = await Promise.all([loadLogoImage(), loadQrImage()]);
 
-    const baseW = 880;
-    const baseH = 556;
-    const scale = 3; // 3x Supersampling for 300+ DPI print & Retina clarity
+    const baseW = 600;
+    const baseH = 840;
+    const scale = 3; // 3x Supersampling for 300+ DPI print & Retina clarity (1800 x 2520 px)
+    const cardRadius = 32;
 
     const canvas = document.createElement("canvas");
     canvas.width = baseW * scale;
@@ -1064,209 +1066,221 @@ window.addEventListener('appinstalled', () => {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
 
-    const padL = 54;
-    const padR = 826;
+    const padX = 42;
+    const padR = baseW - padX;
 
-    // 1. Base Card Background (Deep Luxury Acrylic Navy)
+    // 1. Base Card Background (Deep Luxury Acrylic Navy with Rounded Corner Clipping)
+    ctx.save();
+    roundRect(ctx, 4, 4, baseW - 8, baseH - 8, cardRadius);
+    ctx.clip();
+
     const bgGrad = ctx.createLinearGradient(0, 0, baseW, baseH);
-    bgGrad.addColorStop(0, "#091224");
+    bgGrad.addColorStop(0, "#081022");
     bgGrad.addColorStop(0.5, "#0d1a38");
     bgGrad.addColorStop(1, "#0a1329");
-
-    ctx.save();
-    roundRect(ctx, 4, 4, baseW - 8, baseH - 8, 28);
     ctx.fillStyle = bgGrad;
-    ctx.fill();
+    ctx.fillRect(0, 0, baseW, baseH);
 
-    // Outer Prismatic Holographic Rim
+    // Subtle holographic light sheen across the upper section
+    const sheenGrad = ctx.createLinearGradient(0, 0, baseW, baseH * 0.7);
+    sheenGrad.addColorStop(0, "rgba(255, 255, 255, 0.04)");
+    sheenGrad.addColorStop(0.3, "rgba(0, 183, 195, 0.08)");
+    sheenGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.12)");
+    sheenGrad.addColorStop(0.7, "rgba(0, 120, 212, 0.05)");
+    sheenGrad.addColorStop(1, "transparent");
+    ctx.fillStyle = sheenGrad;
+    ctx.fillRect(0, 0, baseW, baseH);
+    ctx.restore();
+
+    // 2. Outer Prismatic Holographic Rim
+    ctx.save();
+    roundRect(ctx, 4, 4, baseW - 8, baseH - 8, cardRadius);
     const borderGrad = ctx.createLinearGradient(0, 0, baseW, baseH);
-    borderGrad.addColorStop(0, "rgba(0, 183, 195, 0.85)");
-    borderGrad.addColorStop(0.25, "rgba(0, 120, 212, 0.7)");
-    borderGrad.addColorStop(0.5, "rgba(242, 80, 34, 0.75)");
-    borderGrad.addColorStop(0.75, "rgba(127, 186, 0, 0.75)");
-    borderGrad.addColorStop(1, "rgba(255, 185, 0, 0.85)");
-    ctx.lineWidth = 3;
+    borderGrad.addColorStop(0, "rgba(0, 183, 195, 0.95)");
+    borderGrad.addColorStop(0.25, "rgba(0, 120, 212, 0.85)");
+    borderGrad.addColorStop(0.5, "rgba(242, 80, 34, 0.85)");
+    borderGrad.addColorStop(0.75, "rgba(127, 186, 0, 0.85)");
+    borderGrad.addColorStop(1, "rgba(255, 185, 0, 0.95)");
+    ctx.lineWidth = 3.5;
     ctx.strokeStyle = borderGrad;
     ctx.stroke();
     ctx.restore();
 
-    // 2. Row 1: Header (Logo + Title + MKCE Pill)
-    // Pure white rounded pill container for ITF Logo
-    roundRect(ctx, padL, 46, 52, 52, 12);
+    // 3. Row 1: Top Header (ITF Logo + Title + MKCE Badge)
+    const logoBoxX = padX;
+    const logoBoxY = 44;
+    const logoBoxSize = 56;
+
+    // White rounded container for ITF Logo
+    roundRect(ctx, logoBoxX, logoBoxY, logoBoxSize, logoBoxSize, 12);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
 
     if (logoImg) {
       ctx.save();
-      roundRect(ctx, padL + 3, 49, 46, 46, 10);
+      roundRect(ctx, logoBoxX + 4, logoBoxY + 4, logoBoxSize - 8, logoBoxSize - 8, 8);
       ctx.clip();
-      ctx.drawImage(logoImg, padL + 3, 49, 46, 46);
+      ctx.drawImage(logoImg, logoBoxX + 4, logoBoxY + 4, logoBoxSize - 8, logoBoxSize - 8);
       ctx.restore();
     }
 
     // Title & Subtitle beside Logo
+    const titleX = logoBoxX + logoBoxSize + 16;
     ctx.textAlign = "left";
     ctx.font = "800 24px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#ffffff";
-    ctx.fillText("INNOVATORS TECH FORUM", padL + 66, 70);
+    ctx.fillText("INNOVATORS TECH FORUM", titleX, logoBoxY + 25);
 
     ctx.font = "600 15px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#94a3b8";
-    ctx.fillText("A Microsoft Club · Under AAROH", padL + 66, 93);
+    ctx.fillText("A Microsoft Club · Under AAROH", titleX, logoBoxY + 48);
 
     // MKCE Tag Pill on Top Right
     const mkceW = 82;
     const mkceH = 38;
     const mkceX = padR - mkceW;
-    roundRect(ctx, mkceX, 50, mkceW, mkceH, 10);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+    const mkceY = logoBoxY + 9;
+    roundRect(ctx, mkceX, mkceY, mkceW, mkceH, 8);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
     ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
     ctx.lineWidth = 1.2;
     ctx.stroke();
 
-    ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
+    ctx.font = "800 18px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
-    ctx.fillText("MKCE", mkceX + mkceW / 2, 75);
+    ctx.fillText("MKCE", mkceX + mkceW / 2, mkceY + 25);
 
-    // 3. Row 2: Metallic Smart NFC Chip (Left) & Serial Number (Right)
-    const chipX = padL;
-    const chipY = 144;
-    const chipW = 76;
-    const chipH = 56;
+    // 4. Row 2: Member ID Pill
+    const pillH = 46;
+    const pillW = 500;
+    const pillX = (baseW - pillW) / 2;
+    const pillY = 135;
 
-    const chipGrad = ctx.createLinearGradient(chipX, chipY, chipX + chipW, chipY + chipH);
-    chipGrad.addColorStop(0, "#ffd700");
-    chipGrad.addColorStop(0.35, "#f59e0b");
-    chipGrad.addColorStop(0.7, "#b45309");
-    chipGrad.addColorStop(1, "#f59e0b");
-
-    ctx.save();
-    ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
-    ctx.shadowBlur = 8;
-    roundRect(ctx, chipX, chipY, chipW, chipH, 12);
-    ctx.fillStyle = chipGrad;
+    roundRect(ctx, pillX, pillY, pillW, pillH, pillH / 2);
+    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
     ctx.fill();
-    ctx.restore();
-
-    ctx.strokeStyle = "rgba(180, 83, 9, 0.75)";
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    // Chip internal circuit lines
-    ctx.strokeStyle = "rgba(115, 41, 0, 0.5)";
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
     ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(chipX + 6, chipY + 20); ctx.lineTo(chipX + chipW - 6, chipY + 20);
-    ctx.moveTo(chipX + 6, chipY + 36); ctx.lineTo(chipX + chipW - 6, chipY + 36);
     ctx.stroke();
 
-    // Serial Number (Far Right on same line)
-    ctx.textAlign = "right";
-    ctx.font = "800 22px 'Consolas', 'Courier New', monospace";
+    ctx.textAlign = "left";
+    ctx.font = "800 14px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#38bdf8";
-    ctx.shadowColor = "rgba(56, 189, 248, 0.65)";
-    ctx.shadowBlur = 10;
-    ctx.fillText(serial, padR, chipY + 37);
-    ctx.shadowBlur = 0;
+    ctx.fillText("MEMBER ID", pillX + 24, pillY + 29);
 
-    // 4. Row 3: Member Full Name
-    ctx.textAlign = "left";
-    ctx.font = "800 42px 'Segoe UI', Arial, sans-serif";
+    ctx.textAlign = "right";
+    ctx.font = "700 21px 'Consolas', 'Courier New', monospace";
     ctx.fillStyle = "#ffffff";
-    ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+    ctx.shadowColor = "rgba(56, 189, 248, 0.6)";
     ctx.shadowBlur = 8;
-    ctx.fillText(name.toUpperCase(), padL, 270);
+    ctx.fillText(serial, pillX + pillW - 24, pillY + 30);
     ctx.shadowBlur = 0;
 
-    // 5. Row 4: Department & Year + Domain Pill on the SAME LINE
-    const deptText = `${dept} · ${year}`;
-    ctx.font = "700 22px 'Segoe UI', Arial, sans-serif";
-    ctx.fillStyle = "#cbd5e1";
+    // 5. Row 3: Member Full Name (Centered Horizontally)
+    const nameY = 258;
+    ctx.textAlign = "center";
+    ctx.font = "900 36px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
+    ctx.shadowBlur = 14;
+    ctx.fillText(name.toUpperCase(), baseW / 2, nameY);
+    ctx.shadowBlur = 0;
+
+    // 6. Row 4: Department & Academic Year + Domain Pill (Centered Row)
+    const deptYearText = `${dept}  •  ${year}  •`;
+    ctx.font = "700 20px 'Segoe UI', Arial, sans-serif";
+    const deptW = ctx.measureText(deptYearText).width;
+
+    ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
+    const domW = ctx.measureText(domain).width;
+    const domPillW = domW + 32;
+    const domPillH = 36;
+
+    const totalDetailsW = deptW + 12 + domPillW;
+    const startDetailsX = (baseW - totalDetailsW) / 2;
+    const detailsBaselineY = 328;
+
     ctx.textAlign = "left";
-    ctx.fillText(deptText, padL, 340);
+    ctx.font = "700 20px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillText(deptYearText, startDetailsX, detailsBaselineY + 6);
 
-    const deptWidth = ctx.measureText(deptText).width;
-    const domainText = domain;
-    ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
-    const domainWidth = ctx.measureText(domainText).width;
-
-    const pillH = 40;
-    const pillW = domainWidth + 36;
-    const pillX = padL + deptWidth + 18;
-    const pillY = 312;
-
-    const pillGrad = ctx.createLinearGradient(pillX, pillY, pillX + pillW, pillY + pillH);
+    // Domain Pill
+    const domPillX = startDetailsX + deptW + 12;
+    const domPillY = detailsBaselineY - 18;
+    roundRect(ctx, domPillX, domPillY, domPillW, domPillH, domPillH / 2);
+    const pillGrad = ctx.createLinearGradient(domPillX, domPillY, domPillX + domPillW, domPillY + domPillH);
     pillGrad.addColorStop(0, "#0078D4");
     pillGrad.addColorStop(1, "#00B7C3");
-
-    ctx.save();
-    ctx.shadowColor = "rgba(0, 183, 195, 0.55)";
-    ctx.shadowBlur = 14;
-    roundRect(ctx, pillX, pillY, pillW, pillH, pillH / 2);
     ctx.fillStyle = pillGrad;
     ctx.fill();
-    ctx.restore();
-
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
     ctx.lineWidth = 1.2;
     ctx.stroke();
 
+    ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
-    ctx.fillText(domainText, pillX + pillW / 2, pillY + 26);
+    ctx.fillText(domain, domPillX + domPillW / 2, domPillY + 23);
 
-    // 6. Row 5: Horizontal Thin Divider Line
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
-    ctx.lineWidth = 1.2;
+    // 7. Row 5: Thin Divider Line
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(padL, 396);
-    ctx.lineTo(padR, 396);
+    ctx.moveTo(padX, 390);
+    ctx.lineTo(padR, 390);
     ctx.stroke();
 
-    // 7. Row 6: Footer Institution (Left) + Substantially Enlarged Scannable QR Matrix (Right)
-    ctx.textAlign = "left";
-    ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
-    ctx.fillStyle = "#e2e8f0";
-    ctx.fillText("M. KUMARASAMY COLLEGE OF ENGINEERING", padL, 452);
-
-    ctx.font = "500 13px 'Segoe UI', Arial, sans-serif";
-    ctx.fillStyle = "#94a3b8";
-    ctx.fillText("Autonomous · Affiliated to Anna University", padL, 478);
-
-    // Substantially Enlarged Scannable QR Code Box (115x115 px for instant phone camera scanning)
-    const qrSize = 115;
+    // 8. Row 6: Bottom Section (College Info on Left, Large QR Code on Right)
+    // Substantially Enlarged Scannable QR Code Box (250x250 px, crisp white background & padding)
+    const qrSize = 250;
     const qrX = padR - qrSize;
-    const qrY = 405;
+    const qrY = 440;
 
-    roundRect(ctx, qrX, qrY, qrSize, qrSize, 14);
+    roundRect(ctx, qrX, qrY, qrSize, qrSize, 22);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.95)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
 
     if (qrImg) {
       ctx.save();
-      roundRect(ctx, qrX + 6, qrY + 6, qrSize - 12, qrSize - 12, 8);
+      roundRect(ctx, qrX + 16, qrY + 16, qrSize - 32, qrSize - 32, 12);
       ctx.clip();
-      ctx.drawImage(qrImg, qrX + 6, qrY + 6, qrSize - 12, qrSize - 12);
-      ctx.restore();
-    } else {
-      // Fallback clean vector QR pattern
-      ctx.save();
-      ctx.translate(qrX + 6, qrY + 6);
-      const innerSize = qrSize - 12;
-      ctx.scale(innerSize / 40, innerSize / 40);
-      ctx.fillStyle = "#091224";
-      ctx.fillRect(4, 4, 12, 12);
-      ctx.fillRect(24, 4, 12, 12);
-      ctx.fillRect(4, 24, 12, 12);
-      ctx.fillRect(24, 24, 6, 6);
-      ctx.fillRect(32, 24, 4, 4);
-      ctx.fillRect(28, 30, 6, 6);
-      ctx.fillRect(24, 34, 4, 4);
-      ctx.fillRect(32, 34, 4, 4);
+      ctx.drawImage(qrImg, qrX + 16, qrY + 16, qrSize - 32, qrSize - 32);
       ctx.restore();
     }
+
+    // College Information (Left side)
+    const colX = padX;
+    const colY = 510;
+    ctx.textAlign = "left";
+    ctx.font = "800 21px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#f1f5f9";
+    ctx.fillText("M. KUMARASAMY", colX, colY);
+    ctx.fillText("COLLEGE OF", colX, colY + 28);
+    ctx.fillText("ENGINEERING", colX, colY + 56);
+
+    ctx.font = "500 15px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText("Autonomous · Affiliated", colX, colY + 98);
+    ctx.fillText("to Anna University", colX, colY + 120);
+
+    // Official Verified Pass Badge (Bottom Left)
+    const badgeY = colY + 155;
+    roundRect(ctx, colX, badgeY, 160, 34, 17);
+    ctx.fillStyle = "rgba(0, 183, 195, 0.15)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(0, 183, 195, 0.45)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.font = "800 13px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillText("✓ OFFICIAL MEMBER", colX + 14, badgeY + 22);
 
     return { canvas, name, reg, serial };
   }
@@ -1284,73 +1298,8 @@ window.addEventListener('appinstalled', () => {
     setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
   }
 
-  // ========================================================================
-  // html2canvas Card Capture Engine (High-Resolution 3x Pixel Density)
-  // ========================================================================
-  async function renderPassWithHtml2Canvas() {
-    const card = document.getElementById("holoCard");
-    if (!card) throw new Error("Card element not found");
-
-    // Make sure QR code image is fully loaded
-    if (holoQrImg && holoQrImg.src && !holoQrImg.complete) {
-      await new Promise(res => {
-        holoQrImg.onload = res;
-        holoQrImg.onerror = res;
-        setTimeout(res, 800);
-      });
-    }
-
-    if (document.fonts && document.fonts.ready) {
-      await document.fonts.ready;
-    }
-
-    // Elements that html2canvas cannot render properly (mix-blend-mode and mask-composite)
-    const shimmer = card.querySelector(".holo-shimmer");
-    const specBorder = card.querySelector(".holo-spectrum-border");
-    const origShimmerDisp = shimmer ? shimmer.style.display : "";
-    const origSpecDisp = specBorder ? specBorder.style.display : "";
-    const origBorder = card.style.border;
-    const origTransform = card.style.transform;
-    const origTransition = card.style.transition;
-
-    // Temporarily reset styles for pristine, unclipped capture
-    if (shimmer) shimmer.style.display = "none";
-    if (specBorder) specBorder.style.display = "none";
-    card.style.border = "2px solid #00B7C3";
-    card.style.transform = "none";
-    card.style.transition = "none";
-
-    // Brief delay for DOM reflow
-    await new Promise(r => setTimeout(r, 60));
-
-    try {
-      const canvas = await html2canvas(card, {
-        scale: 3, // 3x density for razor-sharp 300+ DPI clarity
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#091224", // Clean Deep Acrylic Navy
-        logging: false,
-        imageTimeout: 6000
-      });
-      return canvas;
-    } finally {
-      if (shimmer) shimmer.style.display = origShimmerDisp;
-      if (specBorder) specBorder.style.display = origSpecDisp;
-      card.style.border = origBorder;
-      card.style.transform = origTransform;
-      card.style.transition = origTransition;
-    }
-  }
-
-  // Helper to get pass canvas either via html2canvas or high-res direct canvas engine
+  // Get high-resolution rendered pass canvas for downloads
   async function getRenderedPassCanvas() {
-    if (typeof html2canvas !== "undefined") {
-      try {
-        return await renderPassWithHtml2Canvas();
-      } catch (err) {
-        console.warn("html2canvas capture error, falling back to direct canvas engine:", err);
-      }
-    }
     const { canvas } = await generatePassCanvas();
     return canvas;
   }
