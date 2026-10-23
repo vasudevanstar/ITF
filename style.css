@@ -2934,3 +2934,810 @@ footer {
   font-weight: 700;
   font-size: 0.95rem;
 }
+
+/* ==========================================================================
+   Student Innovation Hub: Domain Quiz & Holographic Member Pass Generator
+   ========================================================================== */
+
+#interactive-hub {
+  position: relative;
+  overflow: hidden;
+}
+
+.hub-interactive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 32px;
+  align-items: stretch;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 992px) {
+  .hub-interactive-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.hub-quiz-card,
+.hub-pass-card {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 28px;
+  border-radius: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hub-quiz-card:hover,
+.hub-pass-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(0, 120, 212, 0.3);
+}
+
+.hub-card-header {
+  margin-bottom: 24px;
+}
+
+.hub-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(0, 120, 212, 0.1);
+  color: var(--blue);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid rgba(0, 120, 212, 0.25);
+  margin-bottom: 10px;
+}
+
+.hub-badge.gold {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .hub-badge.gold {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.hub-card-header h3 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.015em;
+  margin-bottom: 6px;
+}
+
+.hub-sub {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Quiz Steps & Animations */
+.quiz-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.quiz-step {
+  display: none;
+  animation: quizStepFade 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quiz-step.active {
+  display: block;
+}
+
+@keyframes quizStepFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quiz-step-indicator {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.quiz-question {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.45;
+  margin-bottom: 18px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-opt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  font-family: inherit;
+}
+
+.quiz-opt:hover,
+.quiz-opt:focus-visible {
+  border-color: var(--blue);
+  background: rgba(0, 120, 212, 0.07);
+  transform: translateX(6px);
+  box-shadow: 0 4px 14px rgba(0, 120, 212, 0.12);
+  outline: none;
+}
+
+.quiz-opt:active {
+  transform: translateX(3px) scale(0.99);
+}
+
+.opt-emoji {
+  font-size: 1.55rem;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.opt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.opt-info strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.opt-info small {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+/* Quiz Result Panel */
+.quiz-result {
+  text-align: center;
+  padding: 18px 12px;
+  animation: quizStepFade 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quiz-result[hidden] {
+  display: none !important;
+}
+
+.result-celebration {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  background: rgba(0, 120, 212, 0.1);
+  padding: 5px 16px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  display: inline-block;
+}
+
+.result-domain-icon {
+  font-size: 3.2rem;
+  margin-bottom: 8px;
+  animation: iconBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes iconBounce {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.result-domain-title {
+  font-size: 1.38rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.result-domain-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 440px;
+  margin: 0 auto 16px;
+}
+
+.result-tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.result-tech-stack span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--blue);
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   Virtual Member Pass Generator & 3D Tilt Card
+   ========================================================================== */
+
+.pass-form {
+  margin-bottom: 20px;
+}
+
+.pass-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 540px) {
+  .pass-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.pass-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.pass-form label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.02em;
+}
+
+.pass-form input,
+.pass-form select {
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-main);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  outline: none;
+}
+
+.pass-form input:focus,
+.pass-form select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.18);
+  background: var(--bg-card);
+}
+
+/* Hologram 3D Stage */
+.hologram-stage {
+  perspective: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0 20px;
+  user-select: none;
+}
+
+/* The Holographic Card itself */
+.holo-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1.6 / 1;
+  min-height: 260px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #091224 0%, #0d1a38 50%, #0a1329 100%);
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease;
+  box-shadow:
+    0 18px 45px rgba(5, 11, 24, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  cursor: grab;
+}
+
+.holo-card:active {
+  cursor: grabbing;
+}
+
+/* Spectrum Iridescent Border Accent */
+.holo-spectrum-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  pointer-events: none;
+  padding: 1.5px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 183, 195, 0.6) 0%,
+    rgba(0, 120, 212, 0.4) 25%,
+    rgba(242, 80, 34, 0.5) 50%,
+    rgba(127, 186, 0, 0.5) 75%,
+    rgba(255, 185, 0, 0.6) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 4;
+  opacity: 0.75;
+}
+
+/* Dynamic Interactive Shimmer Glare */
+.holo-shimmer {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    circle at var(--shimmer-x, 50%) var(--shimmer-y, 50%),
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(0, 183, 195, 0.25) 25%,
+    rgba(242, 80, 34, 0.2) 45%,
+    rgba(127, 186, 0, 0.15) 65%,
+    transparent 75%
+  );
+  mix-blend-mode: color-dodge;
+}
+
+.holo-card:hover .holo-shimmer {
+  opacity: 0.85;
+}
+
+/* Card Content Inner Container */
+.holo-inner {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+/* Hologram Header */
+.holo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.holo-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.holo-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.holo-club-name {
+  display: block;
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.holo-affil {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+}
+
+.holo-college-tag {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Hologram Body: Chip & Member Details */
+.holo-body {
+  margin: 10px 0;
+}
+
+.holo-chip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+/* Metallic Smart NFC Chip */
+.smart-chip {
+  position: relative;
+  width: 42px;
+  height: 32px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ffd700 0%, #f59e0b 45%, #b45309 85%, #ffd700 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(180, 83, 9, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 4px;
+  overflow: hidden;
+}
+
+.chip-line {
+  width: 100%;
+  height: 1px;
+  background: rgba(115, 41, 0, 0.45);
+}
+
+.holo-serial {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #7dd3fc;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.holo-name {
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+
+.holo-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.holo-dept {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.holo-domain-badge {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(0, 120, 212, 0.85), rgba(0, 183, 195, 0.85));
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.35);
+  transition: all 0.3s ease;
+}
+
+/* Hologram Footer: Institution & QR Code */
+.holo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 10px;
+}
+
+.holo-inst span {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.02em;
+}
+
+.holo-inst small {
+  display: block;
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+
+.holo-qr-box {
+  background: #ffffff;
+  padding: 3px;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.holo-qr {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+/* Pass Action Buttons */
+.pass-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.pass-hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 10px 0 0;
+  line-height: 1.4;
+}
+
+/* Pulsing highlight effect when domain is applied from quiz */
+@keyframes passDomainFlash {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.18); filter: brightness(1.6); box-shadow: 0 0 18px var(--cyan); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.holo-domain-badge.badge-updated {
+  animation: passDomainFlash 0.7s ease-in-out;
+}
+
+/* ==========================================================================
+   Official Member Verification Modal (QR Code Verification)
+   ========================================================================== */
+
+.verify-modal-card {
+  max-width: 480px;
+  padding: 34px 28px;
+  text-align: center;
+  border-radius: 24px;
+}
+
+.verify-badge-icon {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+}
+
+.verify-pulse-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(16, 185, 129, 0.4);
+  animation: pulseRing 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.92); opacity: 0.9; }
+  60% { transform: scale(1.22); opacity: 0; }
+  100% { transform: scale(1.22); opacity: 0; }
+}
+
+.verify-shield-emoji {
+  font-size: 2.2rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.4));
+}
+
+.verify-inst-tag {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+
+.verify-title {
+  font-size: 1.38rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 10px;
+  letter-spacing: -0.015em;
+}
+
+.verify-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  margin-bottom: 22px;
+}
+
+[data-theme="dark"] .verify-status-badge {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.16);
+}
+
+.verify-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.verify-record-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.verify-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.verify-label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.verify-val {
+  color: var(--navy);
+  font-weight: 700;
+  text-align: right;
+}
+
+.verify-mono {
+  font-family: 'Consolas', 'Courier New', monospace;
+  letter-spacing: 0.06em;
+}
+
+.verify-domain-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #ffffff;
+}
+
+.verify-serial-tag {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--blue);
+  background: rgba(0, 120, 212, 0.1);
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 120, 212, 0.25);
+}
+
+.verify-seal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(0, 120, 212, 0.04);
+  border: 1px dashed var(--border);
+  text-align: left;
+}
+
+.verify-seal-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+.verify-seal-text strong {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--navy);
+}
+
+.verify-seal-text small {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+

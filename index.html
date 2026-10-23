@@ -72,6 +72,7 @@
       <a href="#achievements">Achievements</a>
       <a href="#gallery">Gallery</a>
       <a href="#team">Team</a>
+      <a href="#interactive-hub">Member Hub</a>
       <a href="#contact">Contact</a>
       <a class="btn sm join-link" href="https://mkceclub.vercel.app/">Join Club</a>
     </nav>
@@ -641,6 +642,296 @@
       </div>
     </section>
 
+    <!-- Student Innovation Hub: Domain Quiz & Virtual Member Pass Generator -->
+    <section id="interactive-hub" class="alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Student Innovation Hub</h2>
+          <p class="lead">Discover your tech track, unlock your potential, and claim your personalized 3D holographic digital member badge.</p>
+        </div>
+
+        <div class="hub-interactive-grid">
+          <!-- Column 1: Domain Discovery Quiz -->
+          <div class="card hub-quiz-card reveal">
+            <div class="hub-card-header">
+              <span class="hub-badge">🧭 30-Second Quiz</span>
+              <h3>Find Your Tech Domain</h3>
+              <p class="hub-sub">Not sure which team fits you? Answer 3 quick questions to discover your natural calling.</p>
+            </div>
+
+            <!-- Quiz Step Container -->
+            <div class="quiz-container" id="quizContainer">
+              <!-- Question 1 -->
+              <div class="quiz-step active" data-step="1">
+                <span class="quiz-step-indicator">Question 1 of 3</span>
+                <h4 class="quiz-question">What gets you most excited when sitting in front of a computer?</h4>
+                <div class="quiz-options">
+                  <button type="button" class="quiz-opt" data-domain="ai">
+                    <span class="opt-emoji">🤖</span>
+                    <div class="opt-info">
+                      <strong>AI &amp; Machine Learning</strong>
+                      <small>Building smart bots, vision systems &amp; automation</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="cloud">
+                    <span class="opt-emoji">☁️</span>
+                    <div class="opt-info">
+                      <strong>Cloud &amp; DevOps</strong>
+                      <small>Architecting Azure servers, networks &amp; scalability</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="dev">
+                    <span class="opt-emoji">💻</span>
+                    <div class="opt-info">
+                      <strong>Full-Stack Coding</strong>
+                      <small>Crafting high-velocity web apps &amp; APIs</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="design">
+                    <span class="opt-emoji">🎨</span>
+                    <div class="opt-info">
+                      <strong>UI/UX &amp; Product Design</strong>
+                      <small>Creating sleek interfaces, animations &amp; Figma mockups</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="lead">
+                    <span class="opt-emoji">🎪</span>
+                    <div class="opt-info">
+                      <strong>Events, Media &amp; Leadership</strong>
+                      <small>Organizing hackathons, public speaking &amp; community PR</small>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Question 2 -->
+              <div class="quiz-step" data-step="2">
+                <span class="quiz-step-indicator">Question 2 of 3</span>
+                <h4 class="quiz-question">Pick your favorite superpower tool in the modern ecosystem:</h4>
+                <div class="quiz-options">
+                  <button type="button" class="quiz-opt" data-domain="ai">
+                    <span class="opt-emoji">🧠</span>
+                    <div class="opt-info">
+                      <strong>OpenAI &amp; Azure Copilot</strong>
+                      <small>Harnessing intelligence to solve complex problems</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="cloud">
+                    <span class="opt-emoji">🛡️</span>
+                    <div class="opt-info">
+                      <strong>Azure Cloud Portal &amp; Docker</strong>
+                      <small>Shipping resilient software to global infrastructure</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="dev">
+                    <span class="opt-emoji">⚡</span>
+                    <div class="opt-info">
+                      <strong>VS Code, React &amp; GitHub</strong>
+                      <small>Writing clean code and open-source contributions</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="design">
+                    <span class="opt-emoji">📐</span>
+                    <div class="opt-info">
+                      <strong>Figma, Typography &amp; Canvas</strong>
+                      <small>Shaping modern user experiences and visual hierarchy</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="lead">
+                    <span class="opt-emoji">📢</span>
+                    <div class="opt-info">
+                      <strong>Keynote Stage &amp; Social Media</strong>
+                      <small>Connecting students, sponsors &amp; mentoring teams</small>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Question 3 -->
+              <div class="quiz-step" data-step="3">
+                <span class="quiz-step-indicator">Question 3 of 3</span>
+                <h4 class="quiz-question">In a 24-hour hackathon, what role would you naturally take?</h4>
+                <div class="quiz-options">
+                  <button type="button" class="quiz-opt" data-domain="ai">
+                    <span class="opt-emoji">🔬</span>
+                    <div class="opt-info">
+                      <strong>The Model Trainer</strong>
+                      <small>Fine-tuning the AI algorithms &amp; data intelligence</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="cloud">
+                    <span class="opt-emoji">🚀</span>
+                    <div class="opt-info">
+                      <strong>The Cloud Deployer</strong>
+                      <small>Configuring databases, security &amp; live endpoints</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="dev">
+                    <span class="opt-emoji">🛠️</span>
+                    <div class="opt-info">
+                      <strong>The Core Developer</strong>
+                      <small>Building the functional application features</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="design">
+                    <span class="opt-emoji">✨</span>
+                    <div class="opt-info">
+                      <strong>The Experience Architect</strong>
+                      <small>Ensuring the product looks stunning and intuitive</small>
+                    </div>
+                  </button>
+                  <button type="button" class="quiz-opt" data-domain="lead">
+                    <span class="opt-emoji">🏆</span>
+                    <div class="opt-info">
+                      <strong>The Pitch Master</strong>
+                      <small>Formulating the winning pitch and presenting to juries</small>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Quiz Result View -->
+              <div class="quiz-result" id="quizResult" hidden>
+                <div class="result-celebration">🎉 Match Found!</div>
+                <div class="result-domain-icon" id="resultIcon">🤖</div>
+                <h4 class="result-domain-title" id="resultTitle">AI &amp; Copilot Systems Engineer</h4>
+                <p class="result-domain-desc" id="resultDesc">You thrive at the cutting edge of artificial intelligence, model training, and generative algorithms. In ITF, you will build with Azure AI and GitHub Copilot tools.</p>
+                <div class="result-tech-stack" id="resultTech">
+                  <span>Azure OpenAI</span>
+                  <span>Python</span>
+                  <span>Copilot Studio</span>
+                  <span>HuggingFace</span>
+                </div>
+                <div class="result-actions">
+                  <button type="button" class="btn sm" id="applyToPassBtn">Claim This Domain on My Pass 🪪</button>
+                  <button type="button" class="btn sm ghost" id="retakeQuizBtn">Retake Quiz ↺</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Holographic Digital Pass Generator -->
+          <div class="card hub-pass-card reveal" id="memberPassCard">
+            <div class="hub-card-header">
+              <span class="hub-badge gold">🪪 Live Generator</span>
+              <h3>Virtual Member Pass</h3>
+              <p class="hub-sub">Enter your details to generate your official, 3D holographic club credential.</p>
+            </div>
+
+            <!-- Pass Customizer Form -->
+            <form class="pass-form" id="passForm" onsubmit="return false;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="passNameInput">Student Full Name</label>
+                  <input type="text" id="passNameInput" placeholder="e.g. Alex Carter" maxlength="28" value="Innovator Student">
+                </div>
+                <div class="form-group">
+                  <label for="passRegInput">College Register / Roll No</label>
+                  <input type="text" id="passRegInput" placeholder="e.g. 927622BCS045" maxlength="20" value="927622BCS045">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="passDeptInput">Department</label>
+                  <select id="passDeptInput">
+                    <option value="CSBS" selected>CSBS</option>
+                    <option value="CSE">CSE</option>
+                    <option value="IT">IT</option>
+                    <option value="AI &amp; DS">AI &amp; DS</option>
+                    <option value="AI &amp; ML">AI &amp; ML</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="Mech">Mechanical</option>
+                    <option value="Civil">Civil</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="passYearInput">Academic Year</label>
+                  <select id="passYearInput">
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year" selected>2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="Final Year">Final Year</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                  <label for="passDomainInput">Club Domain Track</label>
+                  <select id="passDomainInput">
+                    <option value="AI Systems" selected>AI &amp; Intelligent Systems</option>
+                    <option value="Cloud Architect">Cloud &amp; DevOps Architect</option>
+                    <option value="Full-Stack Dev">Full-Stack Web &amp; App</option>
+                    <option value="UI/UX Designer">UI/UX &amp; Experience Design</option>
+                    <option value="Community Lead">Events &amp; Community Leadership</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+
+            <!-- Holographic Pass Preview (Interactive 3D Tilt Card) -->
+            <div class="hologram-stage" id="hologramStage">
+              <div class="holo-card" id="holoCard">
+                <div class="holo-shimmer" id="holoShimmer" aria-hidden="true"></div>
+                <div class="holo-spectrum-border" aria-hidden="true"></div>
+
+                <div class="holo-inner">
+                  <!-- Card Top Branding -->
+                  <div class="holo-header">
+                    <div class="holo-brand">
+                      <img src="assets/logo.png" alt="ITF" class="holo-logo">
+                      <div>
+                        <span class="holo-club-name">INNOVATORS TECH FORUM</span>
+                        <span class="holo-affil">A Microsoft Club · Under AAROH</span>
+                      </div>
+                    </div>
+                    <div class="holo-college-tag">MKCE</div>
+                  </div>
+
+                  <!-- Card Chip & Membership Details -->
+                  <div class="holo-body">
+                    <div class="holo-chip-row">
+                      <div class="smart-chip" title="Virtual NFC">
+                        <div class="chip-line"></div>
+                        <div class="chip-line"></div>
+                      </div>
+                      <span class="holo-serial" id="holoSerial">ITF - 2026 - 927622BCS045</span>
+                    </div>
+
+                    <div class="holo-member-info">
+                      <div class="holo-name" id="holoName">Innovator Student</div>
+                      <div class="holo-meta">
+                        <span class="holo-dept" id="holoDept">CSBS · 2nd Year</span>
+                        <span class="holo-domain-badge" id="holoDomain">AI Systems</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Card Footer: QR & College Badge -->
+                  <div class="holo-footer">
+                    <div class="holo-inst">
+                      <span>M. KUMARASAMY COLLEGE OF ENGINEERING</span>
+                      <small>Autonomous · Affiliated to Anna University</small>
+                    </div>
+                    <div class="holo-qr-box" id="holoQrBox" title="Scan with camera to verify">
+                      <img id="holoQrImg" class="holo-qr" alt="Scannable Verification QR Code" width="36" height="36">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pass Action Buttons -->
+            <div class="pass-actions">
+              <button type="button" class="btn sm" id="downloadPassBtn">⬇ Download My Digital Pass</button>
+              <a class="btn sm ghost join-link" href="https://mkceclub.vercel.app/" target="_blank" rel="noopener">Official Registration →</a>
+            </div>
+            <p class="pass-hint">💡 Move your mouse or tilt your phone over the pass to see the 3D holographic reflections!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Join Call-to-action Section -->
     <section id="join" class="feature">
       <div class="wrap">
@@ -808,6 +1099,57 @@
       <div class="row">
         <a class="btn" id="modal-register" href="#" target="_blank" rel="noopener">Register Online</a>
       </div>
+    </div>
+  </div>
+
+  <!-- Official Member Verification Modal (Triggered by QR Code Scan) -->
+  <div class="modal" id="verify-modal" aria-hidden="true" role="dialog">
+    <div class="modal-card verify-modal-card">
+      <button class="modal-close" id="verify-modal-close" aria-label="Close verification modal">×</button>
+      
+      <div class="verify-badge-icon" aria-hidden="true">
+        <div class="verify-pulse-ring"></div>
+        <span class="verify-shield-emoji">🛡️</span>
+      </div>
+
+      <span class="verify-inst-tag">M. KUMARASAMY COLLEGE OF ENGINEERING</span>
+      <h3 class="verify-title">Official Member Credential Verified</h3>
+      <div class="verify-status-badge">
+        <span class="verify-status-dot"></span> Active Registered Member · 2026–2027
+      </div>
+
+      <div class="verify-record-card">
+        <div class="verify-row">
+          <span class="verify-label">Student Name</span>
+          <strong class="verify-val" id="verify-name">Vasudevan M</strong>
+        </div>
+        <div class="verify-row">
+          <span class="verify-label">College Reg / Roll No</span>
+          <strong class="verify-val verify-mono" id="verify-reg">927622BCS045</strong>
+        </div>
+        <div class="verify-row">
+          <span class="verify-label">Department &amp; Year</span>
+          <strong class="verify-val" id="verify-dept">CSBS · 3rd Year</strong>
+        </div>
+        <div class="verify-row">
+          <span class="verify-label">Club Track Domain</span>
+          <span class="verify-domain-badge" id="verify-domain">Full-Stack Dev</span>
+        </div>
+        <div class="verify-row">
+          <span class="verify-label">Official Member ID</span>
+          <span class="verify-serial-tag" id="verify-id">ITF - 2026 - 927622BCS045</span>
+        </div>
+      </div>
+
+      <div class="verify-seal">
+        <img src="assets/logo.png" alt="ITF" class="verify-seal-logo">
+        <div class="verify-seal-text">
+          <strong>Innovators Tech Forum</strong>
+          <small>A Microsoft Student Club · Under AAROH Student Chapter</small>
+        </div>
+      </div>
+
+      <button type="button" class="btn sm" id="verify-done-btn" style="width: 100%; margin-top: 18px;">Confirm &amp; Explore ITF</button>
     </div>
   </div>
 

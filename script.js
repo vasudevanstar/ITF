@@ -521,3 +521,616 @@ window.addEventListener('appinstalled', () => {
   if (pwaBanner) pwaBanner.hidden = true;
   if (pwaInstallBtn) pwaInstallBtn.hidden = true;
 });
+
+// ==========================================================================
+// Student Innovation Hub: 30-Second Domain Quiz & 3D Member Pass Generator
+// ==========================================================================
+
+(function initStudentHub() {
+  // Domain Quiz State & Data
+  const domainProfiles = {
+    ai: {
+      title: "AI & Copilot Systems Engineer",
+      icon: "🤖",
+      desc: "You thrive at the cutting edge of artificial intelligence, model training, and generative algorithms. In ITF, you will build with Azure OpenAI and GitHub Copilot tools.",
+      tech: ["Azure OpenAI", "Python", "Copilot Studio", "HuggingFace"],
+      passDomain: "AI Systems",
+      selectVal: "AI Systems"
+    },
+    cloud: {
+      title: "Cloud & DevOps Architect",
+      icon: "☁️",
+      desc: "You love scalable infrastructure, continuous integration, and secure distributed cloud architectures powering modern global platforms.",
+      tech: ["Microsoft Azure", "Docker", "GitHub Actions", "Kubernetes"],
+      passDomain: "Cloud Architect",
+      selectVal: "Cloud Architect"
+    },
+    dev: {
+      title: "Full-Stack Software Engineer",
+      icon: "💻",
+      desc: "You are driven by crafting responsive web applications, robust APIs, and interactive digital solutions that users love.",
+      tech: ["React / Next.js", "Node.js & TypeScript", "REST APIs", "Modern CSS"],
+      passDomain: "Full-Stack Dev",
+      selectVal: "Full-Stack Dev"
+    },
+    design: {
+      title: "UI/UX & Experience Designer",
+      icon: "🎨",
+      desc: "You blend human psychology with high-fidelity visual aesthetics, crafting unforgettable interactions, design systems, and product prototypes.",
+      tech: ["Figma Design", "Fluent Design", "Micro-animations", "Prototyping"],
+      passDomain: "UI/UX Designer",
+      selectVal: "UI/UX Designer"
+    },
+    lead: {
+      title: "Community Lead & Tech Evangelist",
+      icon: "🎪",
+      desc: "You excel at energizing tech communities, presenting ideas, organizing high-impact hackathons, and inspiring teammates to victory.",
+      tech: ["Public Speaking", "Event Management", "Pitch Decks", "DevRel & PR"],
+      passDomain: "Community Lead",
+      selectVal: "Community Lead"
+    }
+  };
+
+  const quizContainer = $("#quizContainer");
+  const quizSteps = $$(".quiz-step", quizContainer);
+  const quizResult = $("#quizResult");
+  const resultIcon = $("#resultIcon");
+  const resultTitle = $("#resultTitle");
+  const resultDesc = $("#resultDesc");
+  const resultTech = $("#resultTech");
+  const applyToPassBtn = $("#applyToPassBtn");
+  const retakeQuizBtn = $("#retakeQuizBtn");
+
+  let currentStep = 1;
+  const quizAnswers = [];
+  let detectedDomainKey = "ai";
+
+  // Handle option click
+  if (quizContainer) {
+    quizContainer.addEventListener("click", e => {
+      const optBtn = e.target.closest(".quiz-opt");
+      if (!optBtn) return;
+
+      const domain = optBtn.getAttribute("data-domain");
+      if (!domain) return;
+
+      quizAnswers.push(domain);
+
+      if (currentStep < quizSteps.length) {
+        // Go to next question
+        quizSteps.forEach(s => s.classList.remove("active"));
+        currentStep++;
+        const nextStepEl = $(`[data-step="${currentStep}"]`, quizContainer);
+        if (nextStepEl) nextStepEl.classList.add("active");
+      } else {
+        // Compute winning domain
+        finishQuiz();
+      }
+    });
+  }
+
+  function finishQuiz() {
+    // Hide all question steps
+    quizSteps.forEach(s => s.classList.remove("active"));
+
+    // Tally votes
+    const counts = {};
+    quizAnswers.forEach(d => { counts[d] = (counts[d] || 0) + 1; });
+    let maxDomain = "ai";
+    let maxCount = -1;
+    for (const d in counts) {
+      if (counts[d] > maxCount) {
+        maxCount = counts[d];
+        maxDomain = d;
+      }
+    }
+    detectedDomainKey = maxDomain;
+    const profile = domainProfiles[maxDomain] || domainProfiles.ai;
+
+    if (resultIcon) resultIcon.textContent = profile.icon;
+    if (resultTitle) resultTitle.textContent = profile.title;
+    if (resultDesc) resultDesc.textContent = profile.desc;
+    if (resultTech) {
+      resultTech.innerHTML = profile.tech.map(t => `<span>${t}</span>`).join("");
+    }
+
+    if (quizResult) {
+      quizResult.hidden = false;
+    }
+  }
+
+  // Retake quiz
+  if (retakeQuizBtn) {
+    retakeQuizBtn.addEventListener("click", () => {
+      quizAnswers.length = 0;
+      currentStep = 1;
+      if (quizResult) quizResult.hidden = true;
+      quizSteps.forEach(s => s.classList.remove("active"));
+      const firstStep = $(`[data-step="1"]`, quizContainer);
+      if (firstStep) firstStep.classList.add("active");
+    });
+  }
+
+  // Claim domain on Virtual Member Pass
+  const passDomainInput = $("#passDomainInput");
+  const holoDomain = $("#holoDomain");
+
+  if (applyToPassBtn) {
+    applyToPassBtn.addEventListener("click", () => {
+      const profile = domainProfiles[detectedDomainKey] || domainProfiles.ai;
+      if (passDomainInput) {
+        passDomainInput.value = profile.selectVal;
+        passDomainInput.dispatchEvent(new Event("change"));
+      }
+      if (holoDomain) {
+        holoDomain.classList.remove("badge-updated");
+        void holoDomain.offsetWidth; // Trigger reflow
+        holoDomain.classList.add("badge-updated");
+      }
+
+      // Smooth scroll to member pass card
+      const memberPassCard = $("#memberPassCard");
+      if (memberPassCard) {
+        memberPassCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  }
+
+  // ========================================================================
+  // Live Member Pass Synchronization (Tied to Official College Identity)
+  // ========================================================================
+  const passNameInput = $("#passNameInput");
+  const passRegInput = $("#passRegInput");
+  const passDeptInput = $("#passDeptInput");
+  const passYearInput = $("#passYearInput");
+  const holoName = $("#holoName");
+  const holoDept = $("#holoDept");
+  const holoSerial = $("#holoSerial");
+  const holoQrImg = $("#holoQrImg");
+
+  // Get active site base URL (handles GitHub Pages, Vercel, or custom domains)
+  const getBaseUrl = () => {
+    if (window.location.protocol.startsWith("http")) {
+      return window.location.origin + window.location.pathname;
+    }
+    return "https://mkceclub.vercel.app/";
+  };
+
+  // Generate dynamic Scannable Verification QR Payload URL
+  const getVerificationPayloadUrl = () => {
+    const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+    const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
+    const dept = (passDeptInput && passDeptInput.value) || "CSBS";
+    const year = (passYearInput && passYearInput.value) || "2nd Year";
+    const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
+    const serial = `ITF - 2026 - ${reg}`;
+
+    const params = new URLSearchParams({
+      verify: "1",
+      id: serial,
+      name: name,
+      reg: reg,
+      dept: dept,
+      year: year,
+      domain: domain
+    });
+    return `${getBaseUrl()}?${params.toString()}`;
+  };
+
+  const updatePassDetails = () => {
+    const nameVal = passNameInput ? passNameInput.value.trim() : "";
+    if (holoName) {
+      holoName.textContent = nameVal || "Innovator Student";
+    }
+    if (holoDept && passDeptInput && passYearInput) {
+      holoDept.textContent = `${passDeptInput.value} · ${passYearInput.value}`;
+    }
+    if (holoDomain && passDomainInput) {
+      holoDomain.textContent = passDomainInput.value;
+    }
+    const regVal = passRegInput ? passRegInput.value.trim() : "";
+    if (holoSerial) {
+      holoSerial.textContent = `ITF - 2026 - ${regVal || "927622BCS045"}`;
+    }
+
+    // Generate real scannable QR Code image reflecting student's record
+    if (holoQrImg) {
+      const verifyUrl = getVerificationPayloadUrl();
+      holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
+    }
+  };
+
+  if (passNameInput) passNameInput.addEventListener("input", updatePassDetails);
+  if (passRegInput) passRegInput.addEventListener("input", updatePassDetails);
+  if (passDeptInput) passDeptInput.addEventListener("change", updatePassDetails);
+  if (passYearInput) passYearInput.addEventListener("change", updatePassDetails);
+  if (passDomainInput) passDomainInput.addEventListener("change", updatePassDetails);
+
+  // Initial update
+  updatePassDetails();
+
+  // ========================================================================
+  // 3D Holographic Card Interactive Tilt & Shimmer Glare Effect
+  // ========================================================================
+  const hologramStage = $("#hologramStage");
+  const holoCard = $("#holoCard");
+
+  if (hologramStage && holoCard) {
+    const handleMove = (clientX, clientY) => {
+      const rect = holoCard.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Card tilt rotation (-14deg to +14deg)
+      const rotateX = ((centerY - y) / centerY) * 14;
+      const rotateY = ((x - centerX) / centerX) * 16;
+
+      // Shimmer reflection position (0% to 100%)
+      const shimmerX = Math.round((x / rect.width) * 100);
+      const shimmerY = Math.round((y / rect.height) * 100);
+
+      holoCard.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+      holoCard.style.setProperty("--shimmer-x", `${shimmerX}%`);
+      holoCard.style.setProperty("--shimmer-y", `${shimmerY}%`);
+    };
+
+    hologramStage.addEventListener("pointermove", e => {
+      handleMove(e.clientX, e.clientY);
+    });
+
+    hologramStage.addEventListener("pointerleave", () => {
+      holoCard.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+    });
+
+    // Touch support for mobile devices
+    hologramStage.addEventListener("touchmove", e => {
+      if (e.touches && e.touches[0]) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    hologramStage.addEventListener("touchend", () => {
+      holoCard.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+    });
+  }
+
+  // Helper function to ensure logo is loaded
+  function loadLogoImage() {
+    return new Promise(resolve => {
+      const domLogo = document.querySelector(".holo-logo");
+      if (domLogo && domLogo.complete && domLogo.naturalWidth > 0) {
+        return resolve(domLogo);
+      }
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(domLogo || null);
+      img.src = (domLogo && domLogo.getAttribute("src")) || "assets/logo.png";
+    });
+  }
+
+  function loadQrImage() {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(holoQrImg || null);
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(getVerificationPayloadUrl())}&margin=1&format=png`;
+    });
+  }
+
+  // ========================================================================
+  // 1-Click High-Resolution Pass PNG Export Engine (Pixel-Perfect Replica)
+  // ========================================================================
+  const downloadPassBtn = $("#downloadPassBtn");
+
+  if (downloadPassBtn) {
+    downloadPassBtn.addEventListener("click", async () => {
+      const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+      const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
+      const dept = (passDeptInput && passDeptInput.value) || "CSBS";
+      const year = (passYearInput && passYearInput.value) || "2nd Year";
+      const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
+      const serial = `ITF - 2026 - ${reg}`;
+
+      // Load logo image & dynamic scannable QR image in parallel
+      const [logoImg, qrImg] = await Promise.all([loadLogoImage(), loadQrImage()]);
+
+      // Create an offscreen 2x Retina canvas matching the card ratio
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 880;
+      canvas.height = 556;
+
+      const padL = 54;
+      const padR = 826;
+
+      // Helper function to draw rounded rectangles
+      function roundRect(c, x, y, w, h, r) {
+        c.beginPath();
+        c.moveTo(x + r, y);
+        c.arcTo(x + w, y, x + w, y + h, r);
+        c.arcTo(x + w, y + h, x, y + h, r);
+        c.arcTo(x, y + h, x, y, r);
+        c.arcTo(x, y, x + w, y, r);
+        c.closePath();
+      }
+
+      // 1. Base Card Background (Deep Navy Acrylic)
+      const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bgGrad.addColorStop(0, "#091224");
+      bgGrad.addColorStop(0.5, "#0d1a38");
+      bgGrad.addColorStop(1, "#0a1329");
+
+      ctx.save();
+      roundRect(ctx, 4, 4, canvas.width - 8, canvas.height - 8, 28);
+      ctx.fillStyle = bgGrad;
+      ctx.fill();
+
+      // Outer Prismatic Holographic Rim
+      const borderGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      borderGrad.addColorStop(0, "rgba(0, 183, 195, 0.75)");
+      borderGrad.addColorStop(0.25, "rgba(0, 120, 212, 0.55)");
+      borderGrad.addColorStop(0.5, "rgba(242, 80, 34, 0.65)");
+      borderGrad.addColorStop(0.75, "rgba(127, 186, 0, 0.65)");
+      borderGrad.addColorStop(1, "rgba(255, 185, 0, 0.75)");
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = borderGrad;
+      ctx.stroke();
+      ctx.restore();
+
+      // 2. Row 1: Header (Logo + Title + MKCE Pill)
+      // White container for Logo
+      roundRect(ctx, padL, 46, 52, 52, 12);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+
+      if (logoImg) {
+        ctx.save();
+        roundRect(ctx, padL + 3, 49, 46, 46, 10);
+        ctx.clip();
+        ctx.drawImage(logoImg, padL + 3, 49, 46, 46);
+        ctx.restore();
+      }
+
+      // Title & Subtitle beside Logo
+      ctx.textAlign = "left";
+      ctx.font = "800 24px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText("INNOVATORS TECH FORUM", padL + 66, 70);
+
+      ctx.font = "600 15px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#94a3b8";
+      ctx.fillText("A Microsoft Club · Under AAROH", padL + 66, 93);
+
+      // MKCE Tag Pill on Top Right
+      const mkceW = 82;
+      const mkceH = 38;
+      const mkceX = padR - mkceW;
+      roundRect(ctx, mkceX, 50, mkceW, mkceH, 10);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.fillText("MKCE", mkceX + mkceW / 2, 75);
+
+      // 3. Row 2: Metallic Smart NFC Chip (Left) & Serial Number (Right)
+      const chipX = padL;
+      const chipY = 144;
+      const chipW = 76;
+      const chipH = 56;
+
+      const chipGrad = ctx.createLinearGradient(chipX, chipY, chipX + chipW, chipY + chipH);
+      chipGrad.addColorStop(0, "#ffd700");
+      chipGrad.addColorStop(0.35, "#f59e0b");
+      chipGrad.addColorStop(0.7, "#b45309");
+      chipGrad.addColorStop(1, "#f59e0b");
+
+      ctx.save();
+      ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
+      ctx.shadowBlur = 8;
+      roundRect(ctx, chipX, chipY, chipW, chipH, 12);
+      ctx.fillStyle = chipGrad;
+      ctx.fill();
+      ctx.restore();
+
+      ctx.strokeStyle = "rgba(180, 83, 9, 0.75)";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Chip internal circuit lines
+      ctx.strokeStyle = "rgba(115, 41, 0, 0.5)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(chipX + 6, chipY + 20); ctx.lineTo(chipX + chipW - 6, chipY + 20);
+      ctx.moveTo(chipX + 6, chipY + 36); ctx.lineTo(chipX + chipW - 6, chipY + 36);
+      ctx.stroke();
+
+      // Serial Number (Far Right on same line)
+      ctx.textAlign = "right";
+      ctx.font = "800 22px 'Consolas', 'Courier New', monospace";
+      ctx.fillStyle = "#38bdf8";
+      ctx.shadowColor = "rgba(56, 189, 248, 0.65)";
+      ctx.shadowBlur = 10;
+      ctx.fillText(serial, padR, chipY + 37);
+      ctx.shadowBlur = 0;
+
+      // 4. Row 3: Member Full Name
+      ctx.textAlign = "left";
+      ctx.font = "800 42px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+      ctx.shadowBlur = 8;
+      ctx.fillText(name.toUpperCase(), padL, 270);
+      ctx.shadowBlur = 0;
+
+      // 5. Row 4: Department & Year + Domain Pill on the SAME LINE
+      const deptText = `${dept} · ${year}`;
+      ctx.font = "700 22px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#cbd5e1";
+      ctx.textAlign = "left";
+      ctx.fillText(deptText, padL, 340);
+
+      const deptWidth = ctx.measureText(deptText).width;
+      const domainText = domain;
+      ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
+      const domainWidth = ctx.measureText(domainText).width;
+
+      const pillH = 40;
+      const pillW = domainWidth + 36;
+      const pillX = padL + deptWidth + 18;
+      const pillY = 312;
+
+      const pillGrad = ctx.createLinearGradient(pillX, pillY, pillX + pillW, pillY + pillH);
+      pillGrad.addColorStop(0, "#0078D4");
+      pillGrad.addColorStop(1, "#00B7C3");
+
+      ctx.save();
+      ctx.shadowColor = "rgba(0, 183, 195, 0.55)";
+      ctx.shadowBlur = 14;
+      roundRect(ctx, pillX, pillY, pillW, pillH, pillH / 2);
+      ctx.fillStyle = pillGrad;
+      ctx.fill();
+      ctx.restore();
+
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.fillText(domainText, pillX + pillW / 2, pillY + 26);
+
+      // 6. Row 5: Horizontal Thin Divider Line
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(padL, 396);
+      ctx.lineTo(padR, 396);
+      ctx.stroke();
+
+      // 7. Row 6: Footer Institution (Left) + QR Matrix (Right)
+      ctx.textAlign = "left";
+      ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#e2e8f0";
+      ctx.fillText("M. KUMARASAMY COLLEGE OF ENGINEERING", padL, 448);
+
+      ctx.font = "500 13px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#94a3b8";
+      ctx.fillText("Autonomous · Affiliated to Anna University", padL, 474);
+
+      // Scannable QR Code Box on Bottom Right
+      const qrSize = 66;
+      const qrX = padR - qrSize;
+      const qrY = 425;
+
+      roundRect(ctx, qrX, qrY, qrSize, qrSize, 12);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+
+      if (qrImg) {
+        ctx.save();
+        roundRect(ctx, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8, 8);
+        ctx.clip();
+        ctx.drawImage(qrImg, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8);
+        ctx.restore();
+      } else {
+        // Fallback stylized vector QR pattern
+        ctx.save();
+        ctx.translate(qrX, qrY);
+        ctx.scale(qrSize / 40, qrSize / 40);
+        ctx.fillStyle = "#091224";
+        ctx.fillRect(5, 5, 12, 12);
+        ctx.fillRect(23, 5, 12, 12);
+        ctx.fillRect(5, 23, 12, 12);
+        ctx.fillRect(23, 23, 5, 5);
+        ctx.fillRect(30, 23, 5, 5);
+        ctx.fillRect(26.5, 28, 5, 5);
+        ctx.fillRect(23, 33, 5, 5);
+        ctx.fillRect(30, 33, 5, 5);
+        ctx.restore();
+      }
+
+      // Trigger instant PNG Download
+      try {
+        const imageURL = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        const safeName = (name + "_" + reg).replace(/[^a-zA-Z0-9]/g, "_");
+        link.download = `ITF-Member-Pass-${safeName}.png`;
+        link.href = imageURL;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Visual feedback on button
+        const originalText = downloadPassBtn.textContent;
+        downloadPassBtn.textContent = "Pass Downloaded! ✅";
+        downloadPassBtn.style.background = "#107c41";
+        setTimeout(() => {
+          downloadPassBtn.textContent = originalText;
+          downloadPassBtn.style.background = "";
+        }, 2200);
+      } catch (err) {
+        console.error("Pass export error:", err);
+      }
+    });
+  }
+
+  // ========================================================================
+  // Instant QR Code Verification Reader (Triggered by Smartphone Camera Scan)
+  // ========================================================================
+  const checkVerificationOnLoad = () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("verify") === "1" || params.has("id")) {
+      const vModal = $("#verify-modal");
+      if (!vModal) return;
+
+      const vName = $("#verify-name");
+      const vReg = $("#verify-reg");
+      const vDept = $("#verify-dept");
+      const vDomain = $("#verify-domain");
+      const vId = $("#verify-id");
+
+      if (vName && params.has("name")) vName.textContent = params.get("name");
+      if (vReg && params.has("reg")) vReg.textContent = params.get("reg");
+      const dept = params.get("dept") || "CSBS";
+      const year = params.get("year") || "3rd Year";
+      if (vDept) vDept.textContent = `${dept} · ${year}`;
+      if (vDomain && params.has("domain")) vDomain.textContent = params.get("domain");
+      if (vId && params.has("id")) vId.textContent = params.get("id");
+
+      vModal.classList.add("open");
+      vModal.setAttribute("aria-hidden", "false");
+    }
+  };
+
+  // Run on page initialization
+  checkVerificationOnLoad();
+
+  // Verification modal close triggers
+  const verifyModal = $("#verify-modal");
+  const verifyClose = $("#verify-modal-close");
+  const verifyDone = $("#verify-done-btn");
+  const closeVerify = () => {
+    if (verifyModal) {
+      verifyModal.classList.remove("open");
+      verifyModal.setAttribute("aria-hidden", "true");
+    }
+  };
+
+  if (verifyClose) verifyClose.onclick = closeVerify;
+  if (verifyDone) verifyDone.onclick = closeVerify;
+  if (verifyModal) {
+    verifyModal.onclick = e => {
+      if (e.target === verifyModal) closeVerify();
+    };
+  }
+})();
+
