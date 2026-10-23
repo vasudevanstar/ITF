@@ -1300,26 +1300,43 @@ window.addEventListener('appinstalled', () => {
       });
     }
 
-    // Temporarily reset 3D tilt transform and transition so html2canvas captures card straight
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+
+    // Elements that html2canvas cannot render properly (mix-blend-mode and mask-composite)
+    const shimmer = card.querySelector(".holo-shimmer");
+    const specBorder = card.querySelector(".holo-spectrum-border");
+    const origShimmerDisp = shimmer ? shimmer.style.display : "";
+    const origSpecDisp = specBorder ? specBorder.style.display : "";
+    const origBorder = card.style.border;
     const origTransform = card.style.transform;
     const origTransition = card.style.transition;
+
+    // Temporarily reset styles for pristine, unclipped capture
+    if (shimmer) shimmer.style.display = "none";
+    if (specBorder) specBorder.style.display = "none";
+    card.style.border = "2px solid #00B7C3";
     card.style.transform = "none";
     card.style.transition = "none";
 
     // Brief delay for DOM reflow
-    await new Promise(r => setTimeout(r, 50));
+    await new Promise(r => setTimeout(r, 60));
 
     try {
       const canvas = await html2canvas(card, {
         scale: 3, // 3x density for razor-sharp 300+ DPI clarity
         useCORS: true,
         allowTaint: true,
-        backgroundColor: null,
+        backgroundColor: "#091224", // Clean Deep Acrylic Navy
         logging: false,
         imageTimeout: 6000
       });
       return canvas;
     } finally {
+      if (shimmer) shimmer.style.display = origShimmerDisp;
+      if (specBorder) specBorder.style.display = origSpecDisp;
+      card.style.border = origBorder;
       card.style.transform = origTransform;
       card.style.transition = origTransition;
     }
@@ -1359,17 +1376,35 @@ window.addEventListener('appinstalled', () => {
         const jspdfModule = window.jspdf;
         if (jspdfModule && jspdfModule.jsPDF) {
           const { jsPDF } = jspdfModule;
-          // Standard ISO CR80 physical card: 85.6 mm x 54.0 mm
+          
+          // Calculate dynamic aspect ratio to prevent squishing or distortion
+          const canvasW = canvas.width;
+          const canvasH = canvas.height;
+          const ratio = canvasH / canvasW;
+
+          let pdfW, pdfH, orientation;
+          if (ratio > 1) {
+            // Portrait pass
+            pdfW = 60.0;
+            pdfH = Number((60.0 * ratio).toFixed(2));
+            orientation = "portrait";
+          } else {
+            // Landscape pass
+            pdfW = 85.6;
+            pdfH = Number((85.6 * ratio).toFixed(2));
+            orientation = "landscape";
+          }
+
           const doc = new jsPDF({
-            orientation: "landscape",
+            orientation: orientation,
             unit: "mm",
-            format: [85.6, 54.0],
+            format: [pdfW, pdfH],
             compress: true
           });
 
           // High quality image embedding in PDF
           const imgData = canvas.toDataURL("image/jpeg", 0.98);
-          doc.addImage(imgData, "JPEG", 0, 0, 85.6, 54.0, undefined, "FAST");
+          doc.addImage(imgData, "JPEG", 0, 0, pdfW, pdfH, undefined, "FAST");
 
           const pdfBlob = doc.output("blob");
           directDownloadBlob(pdfBlob, `ITF-Member-Pass-${cleanReg}.pdf`);
@@ -1388,9 +1423,8 @@ window.addEventListener('appinstalled', () => {
               <head>
                 <title>ITF Member Pass - ${name}</title>
                 <style>
-                  @page { size: 85.6mm 54mm landscape; margin: 0; }
                   body { margin: 0; padding: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; }
-                  img { width: 85.6mm; height: 54mm; object-fit: contain; }
+                  img { max-width: 90vw; max-height: 90vh; object-fit: contain; }
                 </style>
               </head>
               <body>

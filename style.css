@@ -3424,17 +3424,17 @@ footer {
   opacity: 0.85;
 }
 
-/* Card Content Inner Container (Clean 24px Internal Padding & Grid Flow) */
+/* Card Content Inner Container (Clean 20-24px Internal Padding & Flow) */
 .holo-inner {
   position: relative;
   z-index: 3;
   width: 100%;
   box-sizing: border-box;
-  padding: 22px 24px;
+  padding: 20px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   color: #ffffff;
   pointer-events: none;
 }
@@ -3444,7 +3444,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   min-width: 0;
 }
@@ -3452,7 +3452,7 @@ footer {
 .card-brand-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
   flex: 1;
 }
@@ -3461,6 +3461,8 @@ footer {
   background: #ffffff;
   border-radius: 8px;
   padding: 2px;
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -3468,8 +3470,8 @@ footer {
 }
 
 .card-logo-box .holo-logo {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   object-fit: contain;
   display: block;
@@ -3478,26 +3480,28 @@ footer {
 .card-title-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-width: 0;
   text-align: left;
 }
 
 .card-club-title {
-  font-size: 0.82rem;
+  font-size: clamp(0.7rem, 2.3vw, 0.82rem);
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   color: #ffffff;
   line-height: 1.2;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .card-club-sub {
-  font-size: 0.65rem;
+  font-size: clamp(0.56rem, 1.8vw, 0.64rem);
   font-weight: 500;
   color: #94a3b8;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  white-space: normal;
 }
 
 .card-badge-box {
@@ -3505,15 +3509,16 @@ footer {
 }
 
 .card-college-badge {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
-  padding: 4px 10px;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #ffffff;
   display: inline-block;
+  white-space: nowrap;
 }
 
 /* 2. MEMBER ID (Dedicated Full-Width Row) */
@@ -3530,12 +3535,13 @@ footer {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 3px 12px;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 4px 14px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.4);
   border-radius: 999px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   max-width: 100%;
+  box-sizing: border-box;
 }
 
 .card-id-label {
@@ -3549,32 +3555,36 @@ footer {
 
 .holo-serial {
   font-family: 'Consolas', 'Courier New', monospace;
-  font-size: clamp(0.7rem, 1.8vw, 0.84rem);
+  font-size: clamp(0.66rem, 2vw, 0.8rem);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: #ffffff;
-  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
   white-space: nowrap;
 }
 
-/* 3. STUDENT NAME (Centered Horizontally) */
+/* 3. STUDENT NAME (Centered Horizontally, NO truncation, NO slicing) */
 .card-student-name-row {
   width: 100%;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 2px 0;
 }
 
 .holo-name {
-  font-size: clamp(20px, 4vw, 28px);
+  font-size: clamp(17px, 4.2vw, 24px);
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: -0.01em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  white-space: normal;
+  overflow: visible;
+  word-break: break-word;
+  line-height: 1.25;
   text-transform: uppercase;
+  padding: 2px 0;
 }
 
 /* 4. DETAILS (Department • Academic Year • Domain Badge in One Clean Row) */
@@ -3582,11 +3592,11 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   margin: 2px 0 6px;
   flex-wrap: wrap;
   width: 100%;
-  font-size: 0.82rem;
+  font-size: clamp(0.72rem, 1.9vw, 0.8rem);
   color: #cbd5e1;
   font-weight: 600;
 }
@@ -3601,27 +3611,27 @@ footer {
 }
 
 .holo-domain-badge {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 3px 11px;
+  padding: 2px 10px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(0, 120, 212, 0.9), rgba(0, 183, 195, 0.9));
+  background: linear-gradient(135deg, rgba(0, 120, 212, 0.95), rgba(0, 183, 195, 0.95));
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 120, 212, 0.4);
   white-space: nowrap;
 }
 
 /* 5. BOTTOM SECTION (College Information on Left, Large QR on Right) */
 .card-bottom-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
   margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .card-college-box {
@@ -3630,41 +3640,41 @@ footer {
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .card-college-box .college-title {
-  font-size: 0.66rem;
+  font-size: clamp(0.6rem, 1.8vw, 0.68rem);
   font-weight: 800;
   color: #f1f5f9;
   letter-spacing: 0.02em;
-  line-height: 1.3;
+  line-height: 1.25;
   display: block;
 }
 
 .card-college-box .college-sub {
-  font-size: 0.58rem;
+  font-size: clamp(0.52rem, 1.5vw, 0.58rem);
   color: #94a3b8;
   font-weight: 500;
   display: block;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
-/* Large Scannable QR Code (120x120 Desktop, 100x100 Mobile with 8-12px White Padding) */
+/* Large Scannable QR Code (120x120 Desktop, 95-100px Mobile with Clean White Padding) */
 .card-qr-box {
   background: #ffffff;
-  padding: 10px;
-  border-radius: 12px;
+  padding: 7px;
+  border-radius: 10px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
   border: 2px solid rgba(255, 255, 255, 0.95);
 }
 
 .card-qr-box .holo-qr {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   display: block;
   object-fit: contain;
   image-rendering: -webkit-optimize-contrast;
@@ -3673,14 +3683,15 @@ footer {
 
 @media (max-width: 480px) {
   .holo-inner {
-    padding: 16px 16px;
+    padding: 16px 14px;
+    gap: 8px;
   }
   .card-qr-box {
-    padding: 8px;
+    padding: 6px;
   }
   .card-qr-box .holo-qr {
-    width: 100px;
-    height: 100px;
+    width: 95px;
+    height: 95px;
   }
 }
 
