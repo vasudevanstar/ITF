@@ -4,7 +4,7 @@ const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
 // Setup Join URLs
-$$(".join-link").forEach(a => { 
+$$(".join-link").forEach(a => {
   a.href = JOIN_URL;
   a.target = "_blank";
   a.rel = "noopener noreferrer";
@@ -35,7 +35,7 @@ const initCanvas = () => {
   const render = () => {
     ctx.clearRect(0, 0, width, height);
     const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-    
+
     // Draw interconnecting subtle lines
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
@@ -43,7 +43,7 @@ const initCanvas = () => {
         const dy = particles[i].y - particles[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 110) {
-          ctx.strokeStyle = isDark 
+          ctx.strokeStyle = isDark
             ? `rgba(0, 229, 255, ${(1 - dist / 110) * 0.15})`
             : `rgba(0, 120, 212, ${(1 - dist / 110) * 0.12})`;
           ctx.lineWidth = 0.8;
@@ -78,7 +78,7 @@ initCanvas();
 
 // Theme Switcher (Dark / Light)
 const themeBtn = $("#theme-toggle");
-const currentTheme = localStorage.getItem("theme") || 
+const currentTheme = localStorage.getItem("theme") ||
   (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 document.documentElement.setAttribute("data-theme", currentTheme);
 if (themeBtn) {
@@ -152,7 +152,7 @@ const count = el => {
   const steps = duration / stepTime;
   const increment = Math.max(1, Math.ceil(end / steps));
   let current = 0;
-  
+
   const timer = setInterval(() => {
     current = Math.min(end, current + increment);
     el.textContent = current;
@@ -319,7 +319,7 @@ if (lb && lbImg) {
 }
 
 // Open Full Event Brochure / Poster in Lightbox Modal
-window.openBrochure = function(imageSrc, altText = "Event Brochure") {
+window.openBrochure = function (imageSrc, altText = "Event Brochure") {
   if (lb && lbImg) {
     lbImg.src = imageSrc;
     lbImg.alt = altText;
@@ -334,32 +334,32 @@ const countdownEl = $("#event-countdown");
 if (countdownEl) {
   // Target: November 15, 2026 09:00:00
   const targetDate = new Date("2026-11-15T09:00:00").getTime();
-  
+
   const updateCountdown = () => {
     const now = new Date().getTime();
     const dist = targetDate - now;
-    
+
     if (dist < 0) {
       countdownEl.innerHTML = "<span>Event in Progress or Concluded</span>";
       return;
     }
-    
+
     const days = Math.floor(dist / (1000 * 60 * 60 * 24));
     const hours = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const mins = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((dist % (1000 * 60)) / 1000);
-    
+
     const dEl = $("#cd-days");
     const hEl = $("#cd-hours");
     const mEl = $("#cd-mins");
     const sEl = $("#cd-secs");
-    
+
     if (dEl) dEl.textContent = String(days).padStart(2, "0");
     if (hEl) hEl.textContent = String(hours).padStart(2, "0");
     if (mEl) mEl.textContent = String(mins).padStart(2, "0");
     if (sEl) sEl.textContent = String(secs).padStart(2, "0");
   };
-  
+
   updateCountdown();
   setInterval(updateCountdown, 1000);
 }
@@ -393,7 +393,7 @@ const eventData = {
   }
 };
 
-window.openEventDetails = function(key) {
+window.openEventDetails = function (key) {
   const item = eventData[key];
   if (!item || !eventModal) return;
   modalTitle.textContent = item.title;
@@ -744,7 +744,7 @@ window.addEventListener('appinstalled', () => {
     const dept = (passDeptInput && passDeptInput.value) || "CSBS";
     const year = (passYearInput && passYearInput.value) || "2nd Year";
     const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
-    const serial = `ITF - 2026 - ${reg}`;
+    const serial = `ITF-2026-${reg}`;
 
     const params = new URLSearchParams({
       verify: "1",
@@ -774,7 +774,7 @@ window.addEventListener('appinstalled', () => {
     }
     const regVal = passRegInput ? passRegInput.value.trim() : "";
     if (holoSerial) {
-      holoSerial.textContent = `ITF - 2026 - ${regVal || "927622BCS045"}`;
+      holoSerial.textContent = `ITF-2026-${regVal || "927622BCS045"}`;
     }
 
     // Generate real, high-resolution scannable QR Code image (Client-side offline or API)
@@ -1046,7 +1046,7 @@ window.addEventListener('appinstalled', () => {
     const dept = (passDeptInput && passDeptInput.value) || "CSBS";
     const year = (passYearInput && passYearInput.value) || "2nd Year";
     const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
-    const serial = `ITF - 2026 - ${reg}`;
+    const serial = `ITF-2026-${reg}`;
 
     // Parallel preload of club logo & high-res QR code
     const [logoImg, qrImg] = await Promise.all([loadLogoImage(), loadQrImage()]);
@@ -1376,7 +1376,7 @@ window.addEventListener('appinstalled', () => {
         const jspdfModule = window.jspdf;
         if (jspdfModule && jspdfModule.jsPDF) {
           const { jsPDF } = jspdfModule;
-          
+
           // Calculate dynamic aspect ratio to prevent squishing or distortion
           const canvasW = canvas.width;
           const canvasH = canvas.height;
