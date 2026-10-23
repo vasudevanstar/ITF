@@ -651,6 +651,27 @@ window.addEventListener('appinstalled', () => {
     });
   }
 
+  // Mobile Hub Tabs Switcher (Synchronizes view on mobile screens)
+  const hubMobileNav = $("#hubMobileNav");
+  const hubNavTabs = $$(".hub-nav-tab", hubMobileNav);
+  const hubQuizCard = $("#hubQuizCard");
+  const memberPassCard = $("#memberPassCard");
+
+  if (hubMobileNav && hubNavTabs.length) {
+    hubNavTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        hubNavTabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const target = tab.getAttribute("data-tab");
+        if (target === "quiz" && hubQuizCard) {
+          hubQuizCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else if (target === "pass" && memberPassCard) {
+          memberPassCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+  }
+
   // Claim domain on Virtual Member Pass
   const passDomainInput = $("#passDomainInput");
   const holoDomain = $("#holoDomain");
@@ -668,10 +689,14 @@ window.addEventListener('appinstalled', () => {
         holoDomain.classList.add("badge-updated");
       }
 
+      // Activate Pass tab on mobile
+      if (hubNavTabs && hubNavTabs.length) {
+        hubNavTabs.forEach(t => t.classList.toggle("active", t.getAttribute("data-tab") === "pass"));
+      }
+
       // Smooth scroll to member pass card
-      const memberPassCard = $("#memberPassCard");
       if (memberPassCard) {
-        memberPassCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        memberPassCard.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     });
   }
@@ -733,10 +758,37 @@ window.addEventListener('appinstalled', () => {
       holoSerial.textContent = `ITF - 2026 - ${regVal || "927622BCS045"}`;
     }
 
-    // Generate real scannable QR Code image reflecting student's record
+    // Generate real, high-resolution scannable QR Code image (Client-side offline or API)
     if (holoQrImg) {
       const verifyUrl = getVerificationPayloadUrl();
-      holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
+      if (typeof QRCode !== "undefined") {
+        try {
+          const tempDiv = document.createElement("div");
+          new QRCode(tempDiv, {
+            text: verifyUrl,
+            width: 240,
+            height: 240,
+            colorDark: "#091224",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+          });
+          setTimeout(() => {
+            const c = tempDiv.querySelector("canvas");
+            if (c) {
+              holoQrImg.src = c.toDataURL("image/png");
+              return;
+            }
+            const im = tempDiv.querySelector("img");
+            if (im && im.src) {
+              holoQrImg.src = im.src;
+            }
+          }, 30);
+        } catch (_) {
+          holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
+        }
+      } else {
+        holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
+      }
     }
   };
 
@@ -764,9 +816,9 @@ window.addEventListener('appinstalled', () => {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      // Card tilt rotation (-14deg to +14deg)
-      const rotateX = ((centerY - y) / centerY) * 14;
-      const rotateY = ((x - centerX) / centerX) * 16;
+      // Card tilt rotation (-12deg to +12deg)
+      const rotateX = ((centerY - y) / centerY) * 12;
+      const rotateY = ((x - centerX) / centerX) * 14;
 
       // Shimmer reflection position (0% to 100%)
       const shimmerX = Math.round((x / rect.width) * 100);
@@ -797,27 +849,101 @@ window.addEventListener('appinstalled', () => {
     });
   }
 
-  // Helper function to ensure logo is loaded
+  // Helper function to safely load logo without tainting canvas
   function loadLogoImage() {
     return new Promise(resolve => {
-      const domLogo = document.querySelector(".holo-logo");
-      if (domLogo && domLogo.complete && domLogo.naturalWidth > 0) {
-        return resolve(domLogo);
-      }
+      let resolved = false;
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          const domLogo = document.querySelector(".holo-logo");
+          resolve(domLogo || null);
+        }
+      }, 2000);
+
       const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = () => resolve(domLogo || null);
-      img.src = (domLogo && domLogo.getAttribute("src")) || "assets/logo.png";
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(img);
+        }
+      };
+      img.onerror = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          const domLogo = document.querySelector(".holo-logo");
+          resolve(domLogo || null);
+        }
+      };
+      img.src = "assets/logo.png";
     });
   }
 
+  // Helper function to load high-resolution QR image (Instant client-side offline or API fallback)
   function loadQrImage() {
     return new Promise(resolve => {
+      const payloadUrl = getVerificationPayloadUrl();
+
+      // 1. Try local client-side QRCode library (Instant, 100% offline in PWA)
+      if (typeof QRCode !== "undefined") {
+        try {
+          const tempDiv = document.createElement("div");
+          new QRCode(tempDiv, {
+            text: payloadUrl,
+            width: 480,
+            height: 480,
+            colorDark: "#091224",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+          });
+
+          setTimeout(() => {
+            const qrCanvas = tempDiv.querySelector("canvas");
+            if (qrCanvas) return resolve(qrCanvas);
+            const qrImg = tempDiv.querySelector("img");
+            if (qrImg && qrImg.src) return resolve(qrImg);
+            fetchQrFromApi(payloadUrl).then(resolve);
+          }, 35);
+          return;
+        } catch (e) {
+          console.warn("Client QRCode fallback to API:", e);
+        }
+      }
+
+      fetchQrFromApi(payloadUrl).then(resolve);
+    });
+  }
+
+  function fetchQrFromApi(payloadUrl) {
+    return new Promise(resolve => {
+      let resolved = false;
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          resolve(null);
+        }
+      }, 2500);
+
       const img = new Image();
       img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = () => resolve(holoQrImg || null);
-      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(getVerificationPayloadUrl())}&margin=1&format=png`;
+      img.onload = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(img);
+        }
+      };
+      img.onerror = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(null);
+        }
+      };
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(payloadUrl)}&margin=1&format=png`;
     });
   }
 
@@ -838,6 +964,60 @@ window.addEventListener('appinstalled', () => {
     c.closePath();
   }
 
+  // Convert canvas to Blob safely across all browsers
+  function canvasToBlob(canvas, mimeType = "image/png", quality = 0.98) {
+    return new Promise(resolve => {
+      if (canvas.toBlob) {
+        canvas.toBlob(b => resolve(b), mimeType, quality);
+      } else {
+        const dataUrl = canvas.toDataURL(mimeType, quality);
+        const arr = dataUrl.split(",");
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        resolve(new Blob([u8arr], { type: mime }));
+      }
+    });
+  }
+
+  // Universal File Exporter (Supports Web Share API on mobile app / PWA, plus Blob URL download)
+  async function triggerFileDownload(blob, filename, mimeType, title) {
+    // 1. Try native Web Share API with file (works smoothly in PWA & mobile browsers)
+    try {
+      const file = new File([blob], filename, { type: mimeType });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: title,
+          text: `Official Member Pass - Innovators Tech Forum, MKCE`
+        });
+        return true;
+      }
+    } catch (shareErr) {
+      if (shareErr.name === 'AbortError') {
+        return true; // User dismissed share sheet
+      }
+      console.warn("Share sheet bypassed, using direct blob download", shareErr);
+    }
+
+    // 2. Direct Blob download link (works universally in desktop & mobile browsers)
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+    return true;
+  }
+
   // ========================================================================
   // Ultra-HD 300+ DPI Pass Canvas Engine (2640 x 1668 px Razor Sharp Replica)
   // ========================================================================
@@ -849,7 +1029,7 @@ window.addEventListener('appinstalled', () => {
     const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
     const serial = `ITF - 2026 - ${reg}`;
 
-    // Parallel preload of club logo & 600x600 high-res QR code
+    // Parallel preload of club logo & high-res QR code
     const [logoImg, qrImg] = await Promise.all([loadLogoImage(), loadQrImage()]);
 
     const baseW = 880;
@@ -1026,45 +1206,46 @@ window.addEventListener('appinstalled', () => {
     ctx.lineTo(padR, 396);
     ctx.stroke();
 
-    // 7. Row 6: Footer Institution (Left) + Scannable QR Matrix (Right)
+    // 7. Row 6: Footer Institution (Left) + Substantially Enlarged Scannable QR Matrix (Right)
     ctx.textAlign = "left";
     ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#e2e8f0";
-    ctx.fillText("M. KUMARASAMY COLLEGE OF ENGINEERING", padL, 448);
+    ctx.fillText("M. KUMARASAMY COLLEGE OF ENGINEERING", padL, 452);
 
     ctx.font = "500 13px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#94a3b8";
-    ctx.fillText("Autonomous · Affiliated to Anna University", padL, 474);
+    ctx.fillText("Autonomous · Affiliated to Anna University", padL, 478);
 
-    // Scannable QR Code Box on Bottom Right
-    const qrSize = 66;
+    // Substantially Enlarged Scannable QR Code Box (115x115 px for instant phone camera scanning)
+    const qrSize = 115;
     const qrX = padR - qrSize;
-    const qrY = 425;
+    const qrY = 405;
 
-    roundRect(ctx, qrX, qrY, qrSize, qrSize, 12);
+    roundRect(ctx, qrX, qrY, qrSize, qrSize, 14);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
 
     if (qrImg) {
       ctx.save();
-      roundRect(ctx, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8, 8);
+      roundRect(ctx, qrX + 6, qrY + 6, qrSize - 12, qrSize - 12, 8);
       ctx.clip();
-      ctx.drawImage(qrImg, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8);
+      ctx.drawImage(qrImg, qrX + 6, qrY + 6, qrSize - 12, qrSize - 12);
       ctx.restore();
     } else {
-      // Fallback vector QR pattern
+      // Fallback clean vector QR pattern
       ctx.save();
-      ctx.translate(qrX, qrY);
-      ctx.scale(qrSize / 40, qrSize / 40);
+      ctx.translate(qrX + 6, qrY + 6);
+      const innerSize = qrSize - 12;
+      ctx.scale(innerSize / 40, innerSize / 40);
       ctx.fillStyle = "#091224";
-      ctx.fillRect(5, 5, 12, 12);
-      ctx.fillRect(23, 5, 12, 12);
-      ctx.fillRect(5, 23, 12, 12);
-      ctx.fillRect(23, 23, 5, 5);
-      ctx.fillRect(30, 23, 5, 5);
-      ctx.fillRect(26.5, 28, 5, 5);
-      ctx.fillRect(23, 33, 5, 5);
-      ctx.fillRect(30, 33, 5, 5);
+      ctx.fillRect(4, 4, 12, 12);
+      ctx.fillRect(24, 4, 12, 12);
+      ctx.fillRect(4, 24, 12, 12);
+      ctx.fillRect(24, 24, 6, 6);
+      ctx.fillRect(32, 24, 4, 4);
+      ctx.fillRect(28, 30, 6, 6);
+      ctx.fillRect(24, 34, 4, 4);
+      ctx.fillRect(32, 34, 4, 4);
       ctx.restore();
     }
 
@@ -1100,7 +1281,9 @@ window.addEventListener('appinstalled', () => {
           // High quality image embedding in PDF
           const imgData = canvas.toDataURL("image/jpeg", 0.98);
           doc.addImage(imgData, "JPEG", 0, 0, 85.6, 54.0, undefined, "FAST");
-          doc.save(`ITF-Member-Pass-${safeName}.pdf`);
+
+          const pdfBlob = doc.output("blob");
+          await triggerFileDownload(pdfBlob, `ITF-Member-Pass-${safeName}.pdf`, "application/pdf", `ITF Member Pass - ${name}`);
 
           downloadPdfBtn.textContent = "PDF Downloaded! ✅";
           downloadPdfBtn.style.background = "#107c41";
@@ -1156,14 +1339,9 @@ window.addEventListener('appinstalled', () => {
       try {
         const { canvas, name, reg } = await generatePassCanvas();
         const safeName = (name + "_" + reg).replace(/[^a-zA-Z0-9]/g, "_");
-        const imageURL = canvas.toDataURL("image/png");
 
-        const link = document.createElement("a");
-        link.download = `ITF-Member-Pass-${safeName}.png`;
-        link.href = imageURL;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const pngBlob = await canvasToBlob(canvas, "image/png");
+        await triggerFileDownload(pngBlob, `ITF-Member-Pass-${safeName}.png`, "image/png", `ITF Member Pass - ${name}`);
 
         downloadPassBtn.textContent = "Pass Downloaded! ✅";
         downloadPassBtn.style.background = "#107c41";

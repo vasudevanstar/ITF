@@ -1,5 +1,5 @@
 // ITF MKCE Progressive Web App Service Worker
-const CACHE_NAME = 'itf-cache-v1';
+const CACHE_NAME = 'itf-cache-v2';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -10,7 +10,9 @@ const STATIC_ASSETS = [
   './assets/itf-logo.jpg',
   './assets/aaroh-logo.jpg',
   './assets/mkce logo.png',
-  './assets/25.jpg'
+  './assets/25.jpg',
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
 // Install Event: Pre-cache core assets
@@ -64,8 +66,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Same-origin static assets & Google fonts -> Stale-while-revalidate
-  if (url.origin === location.origin || url.hostname.includes('googleapis.com') || url.hostname.includes('gstatic.com')) {
+  // Same-origin static assets, Google fonts & CDN scripts -> Stale-while-revalidate
+  if (url.origin === location.origin || url.hostname.includes('googleapis.com') || url.hostname.includes('gstatic.com') || url.hostname.includes('cdnjs.cloudflare.com')) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
         const fetchPromise = fetch(request).then((networkResponse) => {

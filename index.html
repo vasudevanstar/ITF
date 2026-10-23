@@ -648,11 +648,19 @@
         <div class="section-head">
           <h2>Student Innovation Hub</h2>
           <p class="lead">Discover your tech track, unlock your potential, and claim your personalized 3D holographic digital member badge.</p>
+        <!-- Mobile View Navigation Switcher -->
+        <div class="hub-mobile-nav" id="hubMobileNav" aria-label="Innovation Hub Section Navigation">
+          <button type="button" class="hub-nav-tab active" data-tab="quiz">
+            <span class="tab-icon">🧭</span> Domain Quiz
+          </button>
+          <button type="button" class="hub-nav-tab" data-tab="pass">
+            <span class="tab-icon">🪪</span> Member Pass
+          </button>
         </div>
 
         <div class="hub-interactive-grid">
           <!-- Column 1: Domain Discovery Quiz -->
-          <div class="card hub-quiz-card reveal">
+          <div class="card hub-quiz-card reveal" id="hubQuizCard">
             <div class="hub-card-header">
               <span class="hub-badge">🧭 30-Second Quiz</span>
               <h3>Find Your Tech Domain</h3>
@@ -914,7 +922,7 @@
                       <small>Autonomous · Affiliated to Anna University</small>
                     </div>
                     <div class="holo-qr-box" id="holoQrBox" title="Scan with camera to verify">
-                      <img id="holoQrImg" class="holo-qr" alt="Scannable Verification QR Code" width="36" height="36">
+                      <img id="holoQrImg" class="holo-qr" alt="Scannable Verification QR Code" width="56" height="56">
                     </div>
                   </div>
                 </div>
@@ -1222,6 +1230,7 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
