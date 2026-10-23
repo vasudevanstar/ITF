@@ -328,10 +328,77 @@ section {
   align-items: center;
 }
 
+/* Institutional College Top Header */
+.top-college-header {
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px 0;
+  position: relative;
+  z-index: 105;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .top-college-header {
+  background: #ffffff;
+  border-bottom: 2px solid var(--ms-blue);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.top-college-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+.college-brand-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.college-brand-link:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.mkce-top-logo {
+  height: 60px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.college-anniversary-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.college-anniversary-badge:hover {
+  transform: scale(1.05);
+}
+
+.anniversary-top-logo {
+  height: 56px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 /* Navigation Header */
 .nav {
-  position: fixed;
-  inset: 0 0 auto;
+  position: sticky;
+  top: 0;
   z-index: 100;
   display: flex;
   justify-content: space-between;
@@ -516,7 +583,7 @@ section {
 
 /* Hero Section */
 .hero {
-  padding: 160px 0 90px;
+  padding: 75px 0 90px;
   background: radial-gradient(circle at 85% 25%, rgba(0, 120, 212, 0.08), transparent 50%),
               radial-gradient(circle at 10% 80%, rgba(122, 60, 255, 0.08), transparent 45%);
 }
@@ -1058,28 +1125,254 @@ section {
   color: transparent;
 }
 
-/* Gallery Masonry */
-.masonry {
-  columns: 3 240px;
-  column-gap: 20px;
+/* Sub-section Headings inside Moments & Memories */
+.gallery-sub-block {
+  margin-top: 3.5rem;
 }
 
-.gallery-item {
+.gallery-sub-block:first-of-type {
+  margin-top: 1.5rem;
+}
+
+.sub-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.sub-head-icon {
+  font-size: 1.85rem;
+  line-height: 1;
+}
+
+.sub-section-head h3 {
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+/* Event Winners Cards */
+.event-winners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.winner-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.winner-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(0, 120, 212, 0.35);
+}
+
+.winner-card-media {
   position: relative;
-  margin-bottom: 20px;
-  border-radius: var(--radius);
+  width: 100%;
+  aspect-ratio: 16/11;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.winner-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: zoom-in;
+  transition: transform 0.45s ease;
+}
+
+.winner-card:hover .winner-card-img {
+  transform: scale(1.05);
+}
+
+/* Rank Badge (Top Left Pill) */
+.winner-rank-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.rank-1st {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+}
+
+.rank-2nd {
+  background: linear-gradient(135deg, #94A3B8, #64748B);
+}
+
+.rank-3rd {
+  background: linear-gradient(135deg, #D97706, #B45309);
+}
+
+/* Trophy Badge (Top Right Circle) */
+.winner-trophy-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.15rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.trophy-1st {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: #ffffff;
+}
+
+.trophy-2nd {
+  background: linear-gradient(135deg, #94A3B8, #64748B);
+  color: #ffffff;
+}
+
+.trophy-3rd {
+  background: linear-gradient(135deg, #D97706, #B45309);
+  color: #ffffff;
+}
+
+/* Accent Line below image */
+.winner-accent-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  z-index: 3;
+}
+
+.accent-1st {
+  background: #F59E0B;
+}
+
+.accent-2nd {
+  background: #94A3B8;
+}
+
+.accent-3rd {
+  background: #D97706;
+}
+
+/* Winner Card Content */
+.winner-card-content {
+  padding: 24px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  flex: 1;
+}
+
+.winner-tag {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blue);
+}
+
+.winner-team-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+  margin: 2px 0 4px;
+}
+
+.winner-team-members {
+  font-size: 0.95rem;
+  color: var(--text-main);
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.winner-dept-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(0, 120, 212, 0.08);
+  color: var(--blue);
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid rgba(0, 120, 212, 0.2);
+}
+
+[data-theme="dark"] .winner-dept-badge {
+  background: rgba(40, 153, 245, 0.15);
+  border-color: rgba(40, 153, 245, 0.3);
+  color: var(--ms-blue);
+}
+
+/* Event Gallery Grid (3 columns, responsive, smooth rounded corners) */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 1.5rem;
+}
+
+.gallery-grid .gallery-item {
+  position: relative;
+  border-radius: 18px;
   overflow: hidden;
   cursor: zoom-in;
-  break-inside: avoid;
   box-shadow: var(--shadow-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  aspect-ratio: 16/11;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.gallery-item img {
+.gallery-grid .gallery-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(0, 120, 212, 0.35);
+}
+
+.gallery-grid .gallery-item img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  min-height: 170px;
-  background: linear-gradient(135deg, #cfe6ff, #e8dcff);
-  transition: transform 0.4s ease;
+  transition: transform 0.45s ease;
+}
+
+.gallery-grid .gallery-item:hover img {
+  transform: scale(1.05);
 }
 
 .gallery-caption {
@@ -1551,9 +1844,15 @@ footer {
   .burger {
     display: block;
   }
+  .nav {
+    padding: 12px 20px;
+  }
+  .nav.solid {
+    padding: 10px 20px;
+  }
   .links {
-    position: fixed;
-    top: 70px;
+    position: absolute;
+    top: 100%;
     right: 0;
     left: 0;
     flex-direction: column;
@@ -1561,19 +1860,60 @@ footer {
     gap: 16px;
     background: var(--nav-bg);
     backdrop-filter: blur(20px);
-    padding: 24px 30px;
+    -webkit-backdrop-filter: blur(20px);
+    padding: 24px 28px;
     box-shadow: var(--shadow-md);
-    transform: translateY(-130%);
-    transition: transform 0.35s ease;
+    border-bottom: 1px solid var(--border);
+    transform: translateY(-140%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.25s ease;
   }
   .links.open {
     transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
   }
   .foot {
     grid-template-columns: 1fr;
   }
   section {
-    padding: 70px 0;
+    padding: 60px 0;
+  }
+  .hero {
+    padding: 50px 0 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-college-header {
+    padding: 8px 0;
+  }
+  .top-college-wrap {
+    padding: 0 18px;
+    gap: 14px;
+  }
+  .mkce-top-logo {
+    height: 48px;
+  }
+  .anniversary-top-logo {
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-college-header {
+    padding: 6px 0;
+  }
+  .top-college-wrap {
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .mkce-top-logo {
+    height: 36px;
+  }
+  .anniversary-top-logo {
+    height: 34px;
   }
 }
 
@@ -1594,4 +1934,215 @@ footer {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ==========================================================================
+   PWA (Progressive Web App) UI & Install Prompt Components
+   ========================================================================== */
+.pwa-install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, var(--ms-blue), #106EBE);
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 10px var(--blue-glow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.pwa-install-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px var(--blue-glow);
+}
+
+.pwa-install-btn[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .pwa-install-btn .pwa-btn-text {
+    display: none;
+  }
+  .pwa-install-btn {
+    padding: 8px;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+    border-radius: 50%;
+  }
+}
+
+/* Floating PWA Install Banner */
+.pwa-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  right: 20px;
+  max-width: 520px;
+  margin: 0 auto;
+  z-index: 1000;
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pwa-banner[hidden] {
+  display: none !important;
+}
+
+.pwa-banner-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px 46px 18px 20px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+}
+
+.pwa-banner-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pwa-banner-text {
+  flex: 1;
+}
+
+.pwa-banner-text strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--navy);
+  margin-bottom: 3px;
+}
+
+.pwa-banner-text p {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.pwa-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pwa-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 1.35rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.pwa-close-btn:hover {
+  color: var(--navy);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* iOS PWA Install Guide Modal */
+.pwa-ios-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: fadeIn 0.25s ease;
+}
+
+.pwa-ios-modal[hidden] {
+  display: none !important;
+}
+
+.pwa-ios-card {
+  position: relative;
+  background: var(--bg-card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 28px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.pwa-ios-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  margin: 0 auto 14px;
+  display: block;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.pwa-ios-card h4 {
+  font-size: 1.35rem;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.pwa-ios-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.pwa-ios-steps {
+  text-align: left;
+  list-style: decimal;
+  padding-left: 22px;
+  margin-bottom: 24px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.pwa-ios-steps li {
+  margin-bottom: 10px;
+}
+
+.ios-icon {
+  display: inline-block;
+  background: rgba(0, 120, 212, 0.12);
+  color: var(--blue);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
 }

@@ -177,12 +177,12 @@ function setupFilter(container, items, attr) {
   });
 }
 setupFilter($("#events .filters"), $$("#eventGrid .event"), "type");
-setupFilter($("#gFilters"), $$(".masonry .gallery-item"), "cat");
+setupFilter($("#gFilters"), $$(".gallery-grid .gallery-item, .masonry .gallery-item"), "cat");
 
 // Gallery Lightbox Modal
 const lb = $("#lb"), lbImg = $("img", lb);
 if (lb && lbImg) {
-  $$(".masonry .gallery-item img").forEach(img => {
+  $$(".gallery-grid .gallery-item img, .masonry .gallery-item img, .winner-card-img").forEach(img => {
     img.onclick = () => {
       lbImg.src = img.src;
       lbImg.alt = img.alt || "Gallery image";
@@ -304,3 +304,99 @@ if (glow) {
     glow.style.top = e.clientY + "px";
   }, { passive: true });
 }
+
+// ==========================================================================
+// PWA (Progressive Web App): Service Worker & Native Install Prompt Manager
+// ==========================================================================
+let deferredPrompt = null;
+const pwaInstallBtn = $("#pwa-install-btn");
+const pwaBanner = $("#pwa-banner");
+const pwaInstallAction = $("#pwa-install-action");
+const pwaDismissAction = $("#pwa-dismiss-action");
+const pwaCloseBtn = $("#pwa-close-btn");
+const pwaIosModal = $("#pwa-ios-modal");
+const pwaIosClose = $("#pwa-ios-close");
+const pwaIosDone = $("#pwa-ios-done");
+
+// Check if running on iOS or in Standalone
+const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+const isInStandaloneMode = () => ('standalone' in window.navigator && window.navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches;
+
+// 1. Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then((reg) => {
+        console.log('ITF PWA: Service Worker registered successfully', reg.scope);
+      })
+      .catch((err) => {
+        console.warn('ITF PWA: Service Worker registration failed', err);
+      });
+  });
+}
+
+// 2. Handle beforeinstallprompt (Android / Chromium Desktop / Edge)
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  if (pwaInstallBtn) pwaInstallBtn.hidden = false;
+
+  // Show bottom banner after a short delay if not dismissed this session
+  if (pwaBanner && !sessionStorage.getItem('pwa_banner_dismissed')) {
+    setTimeout(() => {
+      pwaBanner.hidden = false;
+      pwaBanner.setAttribute('aria-hidden', 'false');
+    }, 2500);
+  }
+});
+
+// Trigger install prompt flow
+const triggerInstall = async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`ITF PWA: User response to install: ${outcome}`);
+    deferredPrompt = null;
+    if (pwaBanner) pwaBanner.hidden = true;
+    if (pwaInstallBtn) pwaInstallBtn.hidden = true;
+  } else if (isIos() && !isInStandaloneMode() && pwaIosModal) {
+    pwaIosModal.hidden = false;
+    if (pwaBanner) pwaBanner.hidden = true;
+  }
+};
+
+if (pwaInstallBtn) {
+  // Always show on iOS if not already installed as standalone
+  if (isIos() && !isInStandaloneMode()) {
+    pwaInstallBtn.hidden = false;
+  }
+  pwaInstallBtn.onclick = triggerInstall;
+}
+
+if (pwaInstallAction) {
+  pwaInstallAction.onclick = triggerInstall;
+}
+
+const dismissBanner = () => {
+  if (pwaBanner) {
+    pwaBanner.hidden = true;
+    pwaBanner.setAttribute('aria-hidden', 'true');
+    sessionStorage.setItem('pwa_banner_dismissed', 'true');
+  }
+};
+
+if (pwaDismissAction) pwaDismissAction.onclick = dismissBanner;
+if (pwaCloseBtn) pwaCloseBtn.onclick = dismissBanner;
+
+// iOS Guide Modal Closures
+if (pwaIosClose) pwaIosClose.onclick = () => { if (pwaIosModal) pwaIosModal.hidden = true; };
+if (pwaIosDone) pwaIosDone.onclick = () => { if (pwaIosModal) pwaIosModal.hidden = true; };
+
+// 3. Track App Installed
+window.addEventListener('appinstalled', () => {
+  console.log('ITF PWA: App successfully installed on device!');
+  deferredPrompt = null;
+  if (pwaBanner) pwaBanner.hidden = true;
+  if (pwaInstallBtn) pwaInstallBtn.hidden = true;
+});

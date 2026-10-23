@@ -15,7 +15,13 @@
   <meta property="og:type" content="website">
   <link rel="icon" type="image/jpeg" href="assets/itf-logo.jpg">
   <link rel="shortcut icon" type="image/jpeg" href="assets/itf-logo.jpg">
-  <link rel="apple-touch-icon" href="assets/itf-logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0078D4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ITF MKCE">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -27,6 +33,18 @@
 <body>
   <!-- Ambient Interactive Canvas -->
   <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+  <!-- Institutional College Top Header -->
+  <div class="top-college-header" id="top-college-header">
+    <div class="wrap top-college-wrap">
+      <a href="https://mkce.ac.in/" target="_blank" rel="noopener noreferrer" class="college-brand-link" title="M. Kumarasamy College of Engineering (Autonomous)">
+        <img src="assets/mkce logo.png" alt="M. Kumarasamy College of Engineering" class="mkce-top-logo">
+      </a>
+      <div class="college-anniversary-badge" title="Celebrating 25 Years of Academic Excellence - KR">
+        <img src="assets/25.jpg" alt="Celebrating 25 Years - KR" class="anniversary-top-logo">
+      </div>
+    </div>
+  </div>
 
   <!-- Navigation Bar -->
   <header class="nav" id="nav">
@@ -59,6 +77,10 @@
     </nav>
 
     <div class="nav-actions">
+      <button class="pwa-install-btn" id="pwa-install-btn" aria-label="Install App" title="Install App on Device" hidden>
+        <span class="pwa-btn-icon">📲</span>
+        <span class="pwa-btn-text">Install App</span>
+      </button>
       <button class="theme-btn" id="theme-toggle" aria-label="Toggle dark/light mode" title="Switch Theme">🌙</button>
       <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -402,60 +424,104 @@
       </div>
     </section>
 
-    <!-- Gallery Section with Filterable Masonry & Lightbox -->
+    <!-- Moments & Memories Section -->
     <section id="gallery" class="alt">
       <div class="wrap">
         <div class="section-head">
           <h2>Moments &amp; Memories</h2>
-          <p class="lead">A glance at our sessions, workshops, competitive battles, and team spirit.</p>
+          <p class="lead">A glance at our sessions, workshops, competitive battles, and winning teams.</p>
         </div>
-        <div class="filters" id="gFilters" role="group" aria-label="Filter gallery">
-          <button class="on" data-f="all">All Photos</button>
-          <button data-f="events">Events</button>
-          <button data-f="workshops">Workshops</button>
-          <button data-f="competitions">Competitions</button>
-          <button data-f="team">Team</button>
+
+        <!-- Event Winners Subsection -->
+        <div class="gallery-sub-block">
+          <div class="sub-section-head">
+            <span class="sub-head-icon" aria-hidden="true">🏆</span>
+            <h3>Event Winners</h3>
+          </div>
+
+          <div class="event-winners-grid">
+            <!-- 1st Place Winner Card -->
+            <article class="winner-card reveal">
+              <div class="winner-card-media">
+                <img loading="lazy" src="assets/gallery/1792300081913.jpg" alt="1st Prize - Team Zephyra" class="winner-card-img">
+                <div class="winner-rank-badge rank-1st">1st Prize</div>
+                <div class="winner-trophy-badge trophy-1st" aria-label="1st Place Trophy">🏆</div>
+                <div class="winner-accent-line accent-1st"></div>
+              </div>
+              <div class="winner-card-content">
+                <span class="winner-tag">INNOVATE-X · 1st Prize</span>
+                <h4 class="winner-team-title">Team Zephyra</h4>
+                <p class="winner-team-members">Niranjana Srii S · Vishnu V · Jeevamani S</p>
+                <div class="winner-dept-badge">Dept of CSBS</div>
+              </div>
+            </article>
+
+            <!-- 2nd Place Runner-Up Card -->
+            <article class="winner-card reveal">
+              <div class="winner-card-media">
+                <img loading="lazy" src="assets/gallery/1792300081482.jpg" alt="2nd Prize - Team TechVibe" class="winner-card-img">
+                <div class="winner-rank-badge rank-2nd">2nd Prize</div>
+                <div class="winner-trophy-badge trophy-2nd" aria-label="2nd Place Medal">🥈</div>
+                <div class="winner-accent-line accent-2nd"></div>
+              </div>
+              <div class="winner-card-content">
+                <span class="winner-tag">INNOVATE-X · 2nd Prize</span>
+                <h4 class="winner-team-title">Team TechVibe</h4>
+                <p class="winner-team-members">Tamilselvan N · Vaitheeswaran P</p>
+                <div class="winner-dept-badge">Dept of CSBS</div>
+              </div>
+            </article>
+          </div>
         </div>
-        <div class="masonry">
-          <div class="gallery-item" data-cat="events">
-            <img loading="lazy" src="assets/gallery/innovate-x-poster.jpeg"
-              alt="INNOVATE-X Idea to Prototype Challenge Poster">
-            <div class="gallery-caption">INNOVATE-X · Idea to Prototype Challenge</div>
+
+        <!-- Event Gallery Subsection -->
+        <div class="gallery-sub-block">
+          <div class="sub-section-head">
+            <span class="sub-head-icon" aria-hidden="true">🖼️</span>
+            <h3>Event Gallery</h3>
           </div>
-          <div class="gallery-item" data-cat="competitions">
-            <img loading="lazy" src="assets/gallery/hackathon-team-coding.jpeg" alt="Students coding during hackathon">
-            <div class="gallery-caption">INNOVATE-X · Live Team Sprint</div>
+
+          <div class="filters" id="gFilters" role="group" aria-label="Filter gallery">
+            <button class="on" data-f="all">All Photos</button>
+            <button data-f="events">Events</button>
+            <button data-f="workshops">Workshops</button>
+            <button data-f="competitions">Competitions</button>
+            <button data-f="team">Team</button>
           </div>
-          <div class="gallery-item" data-cat="workshops">
-            <img loading="lazy" src="assets/gallery/hackathon-session-1.jpeg"
-              alt="Hands-on development at CSE APJ Block Lab">
-            <div class="gallery-caption">APJ Block CSE Lab · Hands-on Coding</div>
-          </div>
-          <div class="gallery-item" data-cat="competitions">
-            <img loading="lazy" src="assets/gallery/hackathon-session-2.jpeg"
-              alt="Problem solving and algorithm development">
-            <div class="gallery-caption">Problem Formulation &amp; Logic Sprint</div>
-          </div>
-          <div class="gallery-item" data-cat="team">
-            <img loading="lazy" src="assets/gallery/hackathon-lab-review.jpeg" alt="Student teams in lab review">
-            <div class="gallery-caption">Team Synergy &amp; Mentorship</div>
-          </div>
-          <div class="gallery-item" data-cat="workshops">
-            <img loading="lazy" src="assets/gallery/hackathon-evaluation.jpeg"
-              alt="Technical review and project validation">
-            <div class="gallery-caption">Prototype Evaluation &amp; Testing</div>
-          </div>
-          <div class="gallery-item" data-cat="team">
-            <img loading="lazy" src="assets/gallery/hackathon-teams.jpeg" alt="Innovators Tech Forum participants">
-            <div class="gallery-caption">Innovators Tech Forum Challenge Teams</div>
-          </div>
-          <div class="gallery-item" data-cat="team">
-            <img loading="lazy" src="assets/gallery/1792300081913.jpg" alt="INNOVATE-X WINNER">
-            <div class="gallery-caption">INNOVATE-X WINNING Team</div>
-          </div>
-          <div class="gallery-item" data-cat="team">
-            <img loading="lazy" src="assets/gallery/1792300081482.jpg" alt="INNOVATE-X RUNNER">
-            <div class="gallery-caption">INNOVATE-X RUNNER-UP</div>
+
+          <div class="gallery-grid">
+            <div class="gallery-item" data-cat="events">
+              <img loading="lazy" src="assets/gallery/innovate-x-poster.jpeg"
+                alt="INNOVATE-X Idea to Prototype Challenge Poster">
+              <div class="gallery-caption">INNOVATE-X · Idea to Prototype Challenge</div>
+            </div>
+            <div class="gallery-item" data-cat="competitions">
+              <img loading="lazy" src="assets/gallery/hackathon-team-coding.jpeg" alt="Students coding during hackathon">
+              <div class="gallery-caption">Live Team Coding Sprint</div>
+            </div>
+            <div class="gallery-item" data-cat="workshops">
+              <img loading="lazy" src="assets/gallery/hackathon-session-1.jpeg"
+                alt="Hands-on development at CSE APJ Block Lab">
+              <div class="gallery-caption">APJ Block CSE Lab · Hands-on Coding</div>
+            </div>
+            <div class="gallery-item" data-cat="competitions">
+              <img loading="lazy" src="assets/gallery/hackathon-session-2.jpeg"
+                alt="Problem solving and algorithm development">
+              <div class="gallery-caption">Problem Formulation &amp; Logic Sprint</div>
+            </div>
+            <div class="gallery-item" data-cat="team">
+              <img loading="lazy" src="assets/gallery/hackathon-lab-review.jpeg" alt="Student teams in lab review">
+              <div class="gallery-caption">Team Synergy &amp; Mentorship</div>
+            </div>
+            <div class="gallery-item" data-cat="workshops">
+              <img loading="lazy" src="assets/gallery/hackathon-evaluation.jpeg"
+                alt="Technical review and project validation">
+              <div class="gallery-caption">Prototype Evaluation &amp; Testing</div>
+            </div>
+            <div class="gallery-item" data-cat="team">
+              <img loading="lazy" src="assets/gallery/hackathon-teams.jpeg" alt="Innovators Tech Forum participants">
+              <div class="gallery-caption">Innovators Tech Forum Challenge Teams</div>
+            </div>
           </div>
         </div>
       </div>
@@ -759,7 +825,37 @@
 
   <!-- Floating Controls -->
   <button class="top" id="top" aria-label="Back to top" title="Scroll to top">↑</button>
-  <div class="glow" id="glow" aria-hidden="true"></div>
+  <!-- PWA Install Prompt Banner -->
+  <aside class="pwa-banner" id="pwa-banner" role="dialog" aria-labelledby="pwa-banner-title" aria-hidden="true" hidden>
+    <div class="pwa-banner-card">
+      <img src="assets/logo.png" alt="ITF Club Logo" class="pwa-banner-icon">
+      <div class="pwa-banner-text">
+        <strong id="pwa-banner-title">Install ITF Club App</strong>
+        <p>Get one-tap access to events, hackathons, and announcements right from your home screen.</p>
+      </div>
+      <div class="pwa-banner-actions">
+        <button class="btn sm" id="pwa-install-action">Install</button>
+        <button class="btn sm ghost" id="pwa-dismiss-action">Later</button>
+      </div>
+      <button class="pwa-close-btn" id="pwa-close-btn" aria-label="Dismiss install banner">×</button>
+    </div>
+  </aside>
+
+  <!-- iOS PWA Install Guide Modal -->
+  <div class="pwa-ios-modal" id="pwa-ios-modal" hidden>
+    <div class="pwa-ios-card">
+      <button class="pwa-close-btn" id="pwa-ios-close" aria-label="Close">×</button>
+      <img src="assets/logo.png" alt="ITF Club Logo" class="pwa-ios-icon">
+      <h4>Install on iPhone / iPad</h4>
+      <p class="pwa-ios-sub">Add this web app to your home screen in 3 quick steps:</p>
+      <ol class="pwa-ios-steps">
+        <li>Tap the <strong>Share</strong> icon <span class="ios-icon">⎋</span> at the bottom of Safari.</li>
+        <li>Scroll down and tap <strong>"Add to Home Screen"</strong> <span class="ios-icon">⊞</span>.</li>
+        <li>Tap <strong>Add</strong> in the top-right corner to finish.</li>
+      </ol>
+      <button class="btn sm" id="pwa-ios-done">Got it!</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

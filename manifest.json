@@ -1,0 +1,64 @@
+{
+  "name": "Innovators Tech Forum | Microsoft Club",
+  "short_name": "ITF MKCE",
+  "description": "Student-driven Microsoft Club at M. Kumarasamy College of Engineering. Think. Create. Innovate.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "itf-mkce-club-pwa",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "background_color": "#0B1329",
+  "theme_color": "#0078D4",
+  "orientation": "any",
+  "categories": ["education", "technology", "community"],
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Upcoming Events",
+      "short_name": "Events",
+      "description": "Check our hackathons and workshops",
+      "url": "./index.html#events",
+      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Moments & Memories",
+      "short_name": "Gallery",
+      "description": "View event winners and photo gallery",
+      "url": "./index.html#gallery",
+      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "TECH-X Roadmap",
+      "short_name": "TECH-X",
+      "description": "Explore the 3-day technical symposium",
+      "url": "./index.html#techx",
+      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Join Club",
+      "short_name": "Join",
+      "description": "Register to become an ITF member",
+      "url": "https://mkceclub.vercel.app/",
+      "icons": [{ "src": "assets/logo.png", "sizes": "192x192" }]
+    }
+  ]
+}
