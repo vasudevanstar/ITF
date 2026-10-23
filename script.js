@@ -106,14 +106,41 @@ if (topBtn) {
 // Mobile Menu
 const burger = $("#burger"), links = $("#links");
 if (burger && links) {
-  burger.onclick = () => {
+  const closeMenu = () => {
+    links.classList.remove("open");
+    burger.classList.remove("open");
+    burger.setAttribute("aria-expanded", "false");
+  };
+
+  burger.onclick = (e) => {
+    e.stopPropagation();
     const isOpen = links.classList.toggle("open");
+    burger.classList.toggle("open", isOpen);
     burger.setAttribute("aria-expanded", isOpen);
   };
-  $$("#links a").forEach(a => a.addEventListener("click", () => {
-    links.classList.remove("open");
-    burger.setAttribute("aria-expanded", false);
-  }));
+
+  $$("#links a").forEach(a => a.addEventListener("click", closeMenu));
+
+  // Close when clicking outside
+  document.addEventListener("click", (e) => {
+    if (links.classList.contains("open") && !links.contains(e.target) && !burger.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  // Close on Escape key
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && links.classList.contains("open")) {
+      closeMenu();
+    }
+  });
+
+  // Auto close menu when resizing to desktop
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 1080 && links.classList.contains("open")) {
+      closeMenu();
+    }
+  });
 }
 
 // Animated Counters with IntersectionObserver
