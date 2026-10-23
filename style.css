@@ -3352,51 +3352,41 @@ footer {
   box-sizing: border-box;
 }
 
-/* The Holographic Card itself */
-.holo-card {
+/* ==========================================================================
+   Cyberpunk Holographic Member Pass Card (HUD / Sci-Fi Credential Badge)
+   ========================================================================== */
+.cyber-pass-card {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  min-height: 275px;
+  max-width: 450px;
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: 26px;
   overflow: hidden;
-  background: linear-gradient(135deg, #091224 0%, #0d1a38 50%, #0a1329 100%);
+  background: radial-gradient(circle at 50% 0%, #0d1e44 0%, #070f26 50%, #040816 100%);
   transform-style: preserve-3d;
   transition: transform 0.15s ease-out, box-shadow 0.25s ease;
   box-shadow:
-    0 18px 45px rgba(5, 11, 24, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(0, 210, 255, 0.35),
+    0 0 25px rgba(0, 180, 255, 0.25),
+    inset 0 0 20px rgba(0, 140, 255, 0.15);
   cursor: grab;
+  user-select: none;
 }
 
-.holo-card:active {
+.cyber-pass-card:active {
   cursor: grabbing;
 }
 
-/* Spectrum Iridescent Border Accent */
-.holo-spectrum-border {
+/* Neon Sci-Fi Border with Chamfer Corner Accents */
+.cyber-border {
   position: absolute;
   inset: 0;
-  border-radius: 20px;
+  border-radius: 26px;
   pointer-events: none;
-  padding: 1.5px;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 183, 195, 0.6) 0%,
-    rgba(0, 120, 212, 0.4) 25%,
-    rgba(242, 80, 34, 0.5) 50%,
-    rgba(127, 186, 0, 0.5) 75%,
-    rgba(255, 185, 0, 0.6) 100%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  border: 1.5px solid rgba(0, 210, 255, 0.45);
+  box-shadow: inset 0 0 15px rgba(0, 210, 255, 0.2), 0 0 15px rgba(168, 85, 247, 0.25);
   z-index: 4;
-  opacity: 0.75;
 }
 
 /* Dynamic Interactive Shimmer Glare */
@@ -3411,294 +3401,574 @@ footer {
   transition: opacity 0.3s ease;
   background: radial-gradient(
     circle at var(--shimmer-x, 50%) var(--shimmer-y, 50%),
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(0, 183, 195, 0.25) 25%,
-    rgba(242, 80, 34, 0.2) 45%,
-    rgba(127, 186, 0, 0.15) 65%,
-    transparent 75%
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(0, 183, 195, 0.2) 25%,
+    rgba(242, 80, 34, 0.15) 45%,
+    transparent 70%
   );
   mix-blend-mode: color-dodge;
 }
 
-.holo-card:hover .holo-shimmer {
+.cyber-pass-card:hover .holo-shimmer {
   opacity: 0.85;
 }
 
-/* Card Content Inner Container (Clean 20-24px Internal Padding & Flow) */
-.holo-inner {
+/* Internal Card Layout Container */
+.cyber-pass-inner {
   position: relative;
-  z-index: 3;
+  z-index: 5;
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 20px;
+  padding: 22px 20px 18px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 14px;
   color: #ffffff;
-  pointer-events: none;
 }
 
 /* 1. TOP HEADER */
-.card-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-}
-
-.card-brand-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  flex: 1;
-}
-
-.card-logo-box {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 2px;
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-}
-
-.card-logo-box .holo-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  object-fit: contain;
-  display: block;
-}
-
-.card-title-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-  text-align: left;
-}
-
-.card-club-title {
-  font-size: clamp(0.7rem, 2.3vw, 0.82rem);
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: #ffffff;
-  line-height: 1.2;
-  white-space: normal;
-  word-break: break-word;
-}
-
-.card-club-sub {
-  font-size: clamp(0.56rem, 1.8vw, 0.64rem);
-  font-weight: 500;
-  color: #94a3b8;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-  white-space: normal;
-}
-
-.card-badge-box {
-  flex-shrink: 0;
-}
-
-.card-aaroh-box {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 2px;
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-}
-
-.card-aaroh-box .holo-aaroh-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  object-fit: contain;
-  display: block;
-}
-
-/* 2. MEMBER ID (Dedicated Full-Width Row) */
-.card-member-id-row {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 2px 0;
-}
-
-.card-id-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 4px 14px;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  border-radius: 999px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.card-id-label {
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #38bdf8;
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-.holo-serial {
-  font-family: 'Consolas', 'Courier New', monospace;
-  font-size: clamp(0.66rem, 2vw, 0.8rem);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: #ffffff;
-  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
-  white-space: nowrap;
-}
-
-/* 3. STUDENT NAME (Centered Horizontally, NO truncation, NO slicing) */
-.card-student-name-row {
-  width: 100%;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 2px 0;
-}
-
-.holo-name {
-  font-size: clamp(17px, 4.2vw, 24px);
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 0.01em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-  white-space: normal;
-  overflow: visible;
-  word-break: break-word;
-  line-height: 1.25;
-  text-transform: uppercase;
-  padding: 2px 0;
-}
-
-/* 4. DETAILS (Department • Academic Year • Domain Badge in One Clean Row) */
-.card-details-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 2px 0 6px;
-  flex-wrap: wrap;
-  width: 100%;
-  font-size: clamp(0.72rem, 1.9vw, 0.8rem);
-  color: #cbd5e1;
-  font-weight: 600;
-}
-
-.card-detail-item {
-  white-space: nowrap;
-}
-
-.card-detail-bullet {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.75rem;
-}
-
-.holo-domain-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgba(0, 120, 212, 0.95), rgba(0, 183, 195, 0.95));
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 2px 6px rgba(0, 120, 212, 0.4);
-  white-space: nowrap;
-}
-
-/* 5. BOTTOM SECTION (College Information on Left, Large QR on Right) */
-.card-bottom-row {
+.cyber-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.card-college-box {
-  flex: 1;
-  min-width: 0;
-  text-align: left;
+.cyber-brand-left {
+  flex-shrink: 0;
+}
+
+.cyber-club-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.45);
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.cyber-club-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+}
+
+.cyber-title-center {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
 }
 
-.card-college-box .college-title {
-  font-size: clamp(0.6rem, 1.8vw, 0.68rem);
-  font-weight: 800;
-  color: #f1f5f9;
-  letter-spacing: 0.02em;
-  line-height: 1.25;
-  display: block;
-}
-
-.card-college-box .college-sub {
-  font-size: clamp(0.52rem, 1.5vw, 0.58rem);
-  color: #94a3b8;
-  font-weight: 500;
-  display: block;
+.cyber-club-title {
+  font-size: clamp(0.78rem, 2.4vw, 0.96rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #ffffff;
   line-height: 1.2;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Large Scannable QR Code (120x120 Desktop, 95-100px Mobile with Clean White Padding) */
-.card-qr-box {
+.cyber-club-sub {
+  font-size: clamp(0.58rem, 1.8vw, 0.68rem);
+  font-weight: 600;
+  color: #38bdf8;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cyber-club-motto {
+  font-size: clamp(0.5rem, 1.5vw, 0.58rem);
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.cyber-brand-right {
+  flex-shrink: 0;
+}
+
+.cyber-aaroh-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   background: #ffffff;
-  padding: 7px;
-  border-radius: 10px;
   display: grid;
   place-items: center;
+  border: 2px solid #00d2ff;
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.55);
+  overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-  border: 2px solid rgba(255, 255, 255, 0.95);
 }
 
-.card-qr-box .holo-qr {
-  width: 110px;
-  height: 110px;
-  display: block;
+.cyber-aaroh-img {
+  width: 88%;
+  height: 88%;
   object-fit: contain;
+  display: block;
+}
+
+/* 2. UPPER-MIDDLE SECTION (2 COLUMNS) */
+.cyber-upper-grid {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+}
+
+/* Left Column: Student Photo Frame */
+.cyber-photo-col {
+  width: 100%;
+}
+
+.cyber-photo-frame {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid #a855f7;
+  box-shadow:
+    0 0 18px rgba(168, 85, 247, 0.5),
+    inset 0 0 12px rgba(0, 240, 255, 0.35);
+  background: #091224;
+}
+
+.cyber-photo-img {
+  width: 100%;
+  aspect-ratio: 1 / 1.15;
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
+}
+
+.cyber-member-pill {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(8, 16, 38, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid #00f0ff;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 240, 255, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cyber-star-icon {
+  color: #ff007f;
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+/* Right Column: Member Info, HUD ID, Name, 3 Stats */
+.cyber-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  text-align: left;
+}
+
+/* Member ID HUD Box */
+.cyber-id-hud {
+  background: rgba(6, 20, 50, 0.7);
+  border: 1.5px solid #00d2ff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.3), inset 0 0 8px rgba(0, 210, 255, 0.15);
+}
+
+.cyber-id-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cyber-id-icon {
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.cyber-id-serial {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: clamp(0.7rem, 1.8vw, 0.82rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Student Full Name */
+.cyber-name-box {
+  margin-top: 1px;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+.cyber-student-name {
+  font-size: clamp(1.15rem, 3.2vw, 1.55rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 14px rgba(255, 255, 255, 0.35);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cyber-name-box::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(90deg, #a855f7, #00f0ff, transparent);
+  border-radius: 999px;
+}
+
+/* 3 Stat Badges */
+.cyber-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  width: 100%;
+}
+
+.cyber-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  background: rgba(13, 26, 56, 0.55);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 8px;
+  padding: 5px 2px;
+  min-width: 0;
+}
+
+.cyber-stat-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.7));
+}
+
+.cyber-stat-label {
+  font-size: 0.48rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.cyber-stat-val {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* 3. LOWER SECTION (2 COLUMNS: Campus Frame + QR Code) */
+.cyber-lower-grid {
+  display: grid;
+  grid-template-columns: 1fr 126px;
+  gap: 12px;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Left Column: Campus Photo & Institution Info */
+.cyber-campus-box {
+  background: rgba(8, 18, 44, 0.8);
+  border: 1.5px solid rgba(0, 210, 255, 0.4);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), inset 0 0 10px rgba(0, 210, 255, 0.12);
+}
+
+.cyber-campus-frame {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  overflow: hidden;
+}
+
+.cyber-campus-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.campus-overlay-tag {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+}
+
+.cyber-inst-info {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.inst-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(0, 210, 255, 0.6));
+  flex-shrink: 0;
+}
+
+.inst-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.inst-name {
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.inst-affil {
+  font-size: 0.48rem;
+  color: #94a3b8;
+  line-height: 1.15;
+}
+
+/* Right Column: Scannable QR Matrix + Center iTF Badge + SCAN TO VERIFY */
+.cyber-qr-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.cyber-qr-wrapper {
+  position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 5px;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 14px rgba(0, 210, 255, 0.45);
+  width: 120px;
+  height: 120px;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.cyber-qr-img {
+  width: 106px;
+  height: 106px;
+  object-fit: contain;
+  display: block;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
 }
 
+
+
+.cyber-scan-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+  white-space: nowrap;
+}
+
+.scan-frame-icon {
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+/* 4. BOTTOM BANNER (Hazard Hashes + OFFICIAL MEMBER Badge) */
+.cyber-bottom-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.cyber-hazard-hashes {
+  font-family: monospace;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: rgba(0, 210, 255, 0.65);
+  letter-spacing: 3px;
+  line-height: 1;
+}
+
+.cyber-official-badge {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #00c6ff 0%, #0072ff 50%, #9b51e0 100%);
+  box-shadow: 0 0 18px rgba(0, 198, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.official-check {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0072ff;
+  font-size: 0.65rem;
+  font-weight: 900;
+}
+
+/* Mobile Responsive Tweaks for the Cyber Pass */
 @media (max-width: 480px) {
-  .holo-inner {
-    padding: 16px 14px;
+  .hub-pass-card {
+    padding: 20px 14px;
+  }
+  .cyber-pass-card {
+    border-radius: 20px;
+  }
+  .cyber-pass-inner {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+  .cyber-club-badge {
+    width: 40px;
+    height: 40px;
+  }
+  .cyber-aaroh-circle {
+    width: 40px;
+    height: 40px;
+  }
+  .cyber-upper-grid {
+    grid-template-columns: 112px 1fr;
     gap: 8px;
   }
-  .card-qr-box {
-    padding: 6px;
+  .cyber-member-pill {
+    font-size: 0.56rem;
+    padding: 2px 7px;
+    bottom: 5px;
   }
-  .card-qr-box .holo-qr {
-    width: 95px;
-    height: 95px;
+  .cyber-student-name {
+    font-size: 1.15rem;
+  }
+  .cyber-stat-icon {
+    font-size: 0.82rem;
+  }
+  .cyber-stat-label {
+    font-size: 0.44rem;
+  }
+  .cyber-stat-val {
+    font-size: 0.62rem;
+  }
+  .cyber-lower-grid {
+    grid-template-columns: 1fr 105px;
+    gap: 8px;
+  }
+  .cyber-qr-wrapper {
+    width: 102px;
+    height: 102px;
+  }
+  .cyber-qr-img {
+    width: 90px;
+    height: 90px;
+  }
+  .cyber-campus-frame {
+    height: 72px;
+  }
+  .cyber-bottom-banner {
+    gap: 6px;
+  }
+  .cyber-official-badge {
+    padding: 6px 12px;
+    font-size: 0.68rem;
+  }
+  .cyber-hazard-hashes {
+    font-size: 0.95rem;
+    letter-spacing: 2px;
   }
 }
 

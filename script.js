@@ -709,13 +709,34 @@ window.addEventListener('appinstalled', () => {
   const passRegInput = $("#passRegInput");
   const passDeptInput = $("#passDeptInput");
   const passYearInput = $("#passYearInput");
+  const passPhotoInput = $("#passPhotoInput");
   const holoName = $("#holoName");
   const holoDept = $("#holoDept");
   const holoYear = $("#holoYear");
   const holoSerial = $("#holoSerial");
+  const holoPhoto = $("#holoPhoto");
   const holoQrImg = $("#holoQrImg");
   const passStatusMsg = $("#passStatusMsg");
   const sharePassBtn = $("#sharePassBtn");
+
+  // Live profile photo file upload preview
+  if (passPhotoInput && holoPhoto) {
+    passPhotoInput.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) {
+        if (!file.type.startsWith("image/")) {
+          showPassStatus("Please select a valid image file", false);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          holoPhoto.src = evt.target.result;
+          showPassStatus("✓ Photo applied to member pass", true);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
 
   // Feedback status notifier
   function showPassStatus(message, isSuccess = true) {
@@ -739,7 +760,7 @@ window.addEventListener('appinstalled', () => {
 
   // Generate dynamic Scannable Verification QR Payload URL
   const getVerificationPayloadUrl = () => {
-    const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+    const name = (passNameInput && passNameInput.value.trim()) || "Vasudevan M";
     const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
     const dept = (passDeptInput && passDeptInput.value) || "CSBS";
     const year = (passYearInput && passYearInput.value) || "2nd Year";
@@ -761,7 +782,7 @@ window.addEventListener('appinstalled', () => {
   const updatePassDetails = () => {
     const nameVal = passNameInput ? passNameInput.value.trim() : "";
     if (holoName) {
-      holoName.textContent = (nameVal || "Innovator Student").toUpperCase();
+      holoName.textContent = nameVal || "Vasudevan M";
     }
     if (holoDept && passDeptInput) {
       holoDept.textContent = passDeptInput.value || "CSBS";
@@ -868,14 +889,14 @@ window.addEventListener('appinstalled', () => {
     });
   }
 
-  // Helper function to safely load logo without tainting canvas
+  // Helper function to safely load ITF club logo
   function loadLogoImage() {
     return new Promise(resolve => {
       let resolved = false;
       const timeout = setTimeout(() => {
         if (!resolved) {
           resolved = true;
-          const domLogo = document.querySelector(".holo-logo");
+          const domLogo = document.querySelector(".cyber-club-img") || document.querySelector(".holo-logo");
           resolve(domLogo || null);
         }
       }, 2000);
@@ -893,11 +914,11 @@ window.addEventListener('appinstalled', () => {
         if (!resolved) {
           resolved = true;
           clearTimeout(timeout);
-          const domLogo = document.querySelector(".holo-logo");
+          const domLogo = document.querySelector(".cyber-club-img") || document.querySelector(".holo-logo");
           resolve(domLogo || null);
         }
       };
-      img.src = "assets/logo.png";
+      img.src = "assets/itf-logo.jpg";
     });
   }
 
@@ -931,6 +952,68 @@ window.addEventListener('appinstalled', () => {
         }
       };
       img.src = "assets/aaroh-logo.jpg";
+    });
+  }
+
+  // Helper function to safely load Student Photo
+  function loadStudentImage() {
+    return new Promise(resolve => {
+      const domImg = document.querySelector("#holoPhoto");
+      const src = (domImg && domImg.src) ? domImg.src : "assets/default-student.jpg";
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      let resolved = false;
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          resolve(domImg || null);
+        }
+      }, 2500);
+      img.onload = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(img);
+        }
+      };
+      img.onerror = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(domImg || null);
+        }
+      };
+      img.src = src;
+    });
+  }
+
+  // Helper function to safely load MKCE Campus Photo
+  function loadCampusImage() {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      let resolved = false;
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          resolve(null);
+        }
+      }, 2500);
+      img.onload = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(img);
+        }
+      };
+      img.onerror = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(null);
+        }
+      };
+      img.src = "assets/mkce-campus.jpg";
     });
   }
 
@@ -1071,23 +1154,29 @@ window.addEventListener('appinstalled', () => {
   }
 
   // ========================================================================
-  // Ultra-HD 300+ DPI Pass Canvas Engine (1800 x 2520 px Razor-Sharp Portrait Replica)
+  // Ultra-HD 300+ DPI Pass Canvas Engine (1800 x 2490 px Razor-Sharp Portrait Replica)
   // Perfectly reproduces the holographic member pass with zero HTML2Canvas artifacts
   // ========================================================================
   async function generatePassCanvas() {
-    const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+    const name = (passNameInput && passNameInput.value.trim()) || "Vasudevan M";
     const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
     const dept = (passDeptInput && passDeptInput.value) || "CSBS";
     const year = (passYearInput && passYearInput.value) || "2nd Year";
     const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
     const serial = `ITF-2026-${reg}`;
 
-    // Parallel preload of club logo, AAROH logo & high-res QR code
-    const [logoImg, aarohImg, qrImg] = await Promise.all([loadLogoImage(), loadAarohImage(), loadQrImage()]);
+    // Parallel preload of club logo, student photo, campus photo, AAROH logo & high-res QR code
+    const [logoImg, studentImg, campusImg, aarohImg, qrImg] = await Promise.all([
+      loadLogoImage(),
+      loadStudentImage(),
+      loadCampusImage(),
+      loadAarohImage(),
+      loadQrImage()
+    ]);
 
     const baseW = 600;
-    const baseH = 840;
-    const scale = 3; // 3x Supersampling for 300+ DPI print & Retina clarity (1800 x 2520 px)
+    const baseH = 830;
+    const scale = 3; // 3x Supersampling for 300+ DPI print & Retina clarity (1800 x 2490 px)
     const cardRadius = 32;
 
     const canvas = document.createElement("canvas");
@@ -1099,55 +1188,60 @@ window.addEventListener('appinstalled', () => {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
 
-    const padX = 42;
+    const padX = 32;
     const padR = baseW - padX;
 
-    // 1. Base Card Background (Deep Luxury Acrylic Navy with Rounded Corner Clipping)
+    // 1. Base Card Shell (Deep Cyber Dark Navy with Radial Sheen & Rounded Clip)
     ctx.save();
     roundRect(ctx, 4, 4, baseW - 8, baseH - 8, cardRadius);
     ctx.clip();
 
-    const bgGrad = ctx.createLinearGradient(0, 0, baseW, baseH);
-    bgGrad.addColorStop(0, "#081022");
-    bgGrad.addColorStop(0.5, "#0d1a38");
-    bgGrad.addColorStop(1, "#0a1329");
+    const bgGrad = ctx.createRadialGradient(baseW / 2, 80, 20, baseW / 2, baseH / 2, 540);
+    bgGrad.addColorStop(0, "#0e204c");
+    bgGrad.addColorStop(0.45, "#08102a");
+    bgGrad.addColorStop(1, "#030715");
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, baseW, baseH);
 
-    // Subtle holographic light sheen across the upper section
-    const sheenGrad = ctx.createLinearGradient(0, 0, baseW, baseH * 0.7);
-    sheenGrad.addColorStop(0, "rgba(255, 255, 255, 0.04)");
-    sheenGrad.addColorStop(0.3, "rgba(0, 183, 195, 0.08)");
-    sheenGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.12)");
-    sheenGrad.addColorStop(0.7, "rgba(0, 120, 212, 0.05)");
-    sheenGrad.addColorStop(1, "transparent");
+    // Subtle holographic light sheen
+    const sheenGrad = ctx.createLinearGradient(0, 0, baseW, baseH * 0.6);
+    sheenGrad.addColorStop(0, "rgba(0, 240, 255, 0.08)");
+    sheenGrad.addColorStop(0.35, "rgba(168, 85, 247, 0.06)");
+    sheenGrad.addColorStop(0.7, "transparent");
     ctx.fillStyle = sheenGrad;
     ctx.fillRect(0, 0, baseW, baseH);
     ctx.restore();
 
-    // 2. Outer Prismatic Holographic Rim
+    // 2. Outer Dual Neon Cyber Rim
     ctx.save();
     roundRect(ctx, 4, 4, baseW - 8, baseH - 8, cardRadius);
-    const borderGrad = ctx.createLinearGradient(0, 0, baseW, baseH);
-    borderGrad.addColorStop(0, "rgba(0, 183, 195, 0.95)");
-    borderGrad.addColorStop(0.25, "rgba(0, 120, 212, 0.85)");
-    borderGrad.addColorStop(0.5, "rgba(242, 80, 34, 0.85)");
-    borderGrad.addColorStop(0.75, "rgba(127, 186, 0, 0.85)");
-    borderGrad.addColorStop(1, "rgba(255, 185, 0, 0.95)");
-    ctx.lineWidth = 3.5;
-    ctx.strokeStyle = borderGrad;
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.55)";
+    ctx.shadowColor = "rgba(0, 210, 255, 0.4)";
+    ctx.shadowBlur = 12;
+    ctx.stroke();
+
+    // Inner subtle magenta tech outline
+    roundRect(ctx, 14, 14, baseW - 28, baseH - 28, cardRadius - 6);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(168, 85, 247, 0.35)";
     ctx.stroke();
     ctx.restore();
 
-    // 3. Row 1: Top Header (ITF Logo + Title + AAROH Logo)
-    const logoBoxX = padX;
-    const logoBoxY = 44;
+    // 3. TOP HEADER (Official Club Logo + Center Title Block + AAROH Circle Badge)
+    // Left: Official Club Logo in white rounded container
     const logoBoxSize = 56;
-
-    // White rounded container for ITF Logo
+    const logoBoxX = padX;
+    const logoBoxY = 38;
     roundRect(ctx, logoBoxX, logoBoxY, logoBoxSize, logoBoxSize, 12);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.shadowColor = "rgba(0, 210, 255, 0.5)";
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
 
     if (logoImg) {
       ctx.save();
@@ -1157,167 +1251,315 @@ window.addEventListener('appinstalled', () => {
       ctx.restore();
     }
 
-    // Title & Subtitle beside Logo
+    // Center Title Block
     const titleX = logoBoxX + logoBoxSize + 16;
     ctx.textAlign = "left";
-    ctx.font = "800 24px 'Segoe UI', Arial, sans-serif";
+    ctx.font = "900 20px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#ffffff";
-    ctx.fillText("INNOVATORS TECH FORUM", titleX, logoBoxY + 25);
+    ctx.fillText("INNOVATORS TECH FORUM", titleX, 52);
 
-    ctx.font = "600 15px 'Segoe UI', Arial, sans-serif";
-    ctx.fillStyle = "#94a3b8";
-    ctx.fillText("A Microsoft Club · Under AAROH", titleX, logoBoxY + 48);
-
-    // AAROH Logo Box on Top Right (Replacing MKCE text)
-    const aarohBoxSize = 56;
-    const aarohBoxX = padR - aarohBoxSize;
-    const aarohBoxY = logoBoxY;
-    roundRect(ctx, aarohBoxX, aarohBoxY, aarohBoxSize, aarohBoxSize, 12);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-
-    if (aarohImg) {
-      ctx.save();
-      roundRect(ctx, aarohBoxX + 4, aarohBoxY + 4, aarohBoxSize - 8, aarohBoxSize - 8, 8);
-      ctx.clip();
-      ctx.drawImage(aarohImg, aarohBoxX + 4, aarohBoxY + 4, aarohBoxSize - 8, aarohBoxSize - 8);
-      ctx.restore();
-    } else {
-      ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#091224";
-      ctx.textAlign = "center";
-      ctx.fillText("AAROH", aarohBoxX + aarohBoxSize / 2, aarohBoxY + 34);
-    }
-
-    // 4. Row 2: Member ID Pill
-    const pillH = 46;
-    const pillW = 500;
-    const pillX = (baseW - pillW) / 2;
-    const pillY = 135;
-
-    roundRect(ctx, pillX, pillY, pillW, pillH, pillH / 2);
-    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.textAlign = "left";
-    ctx.font = "800 14px 'Segoe UI', Arial, sans-serif";
+    ctx.font = "600 13px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#38bdf8";
-    ctx.fillText("MEMBER ID", pillX + 24, pillY + 29);
+    ctx.fillText("A Microsoft Club · Under AAROH", titleX, 71);
 
-    ctx.textAlign = "right";
-    ctx.font = "700 21px 'Consolas', 'Courier New', monospace";
-    ctx.fillStyle = "#ffffff";
-    ctx.shadowColor = "rgba(56, 189, 248, 0.6)";
-    ctx.shadowBlur = 8;
-    ctx.fillText(serial, pillX + pillW - 24, pillY + 30);
-    ctx.shadowBlur = 0;
+    // Subtle divider line under club subtitle
+    const aarohSize = 56;
+    const aarohX = padR - aarohSize;
+    const aarohY = 38;
 
-    // 5. Row 3: Member Full Name (Centered Horizontally)
-    const nameY = 258;
-    ctx.textAlign = "center";
-    ctx.font = "900 36px 'Segoe UI', Arial, sans-serif";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(titleX, 77);
+    ctx.lineTo(aarohX - 16, 77);
+    ctx.stroke();
+
+    ctx.font = "800 10.5px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#7dd3fc";
+    ctx.fillText("L E A R N   •   C O N N E C T   •   B U I L D", titleX, 92);
+
+    // Right: Circular AAROH Badge
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(aarohX + aarohSize / 2, aarohY + aarohSize / 2, aarohSize / 2, 0, Math.PI * 2);
     ctx.fillStyle = "#ffffff";
-    ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
+    ctx.fill();
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = "#00d2ff";
+    ctx.shadowColor = "rgba(0, 210, 255, 0.6)";
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+    ctx.clip();
+    if (aarohImg) {
+      ctx.drawImage(aarohImg, aarohX + 4, aarohY + 4, aarohSize - 8, aarohSize - 8);
+    }
+    ctx.restore();
+
+    // 4. UPPER-MIDDLE SECTION (2 COLUMNS: Student Photo Frame + Info Column)
+    const upperY = 114;
+    const photoW = 180;
+    const photoH = 226;
+    const photoX = padX;
+    const photoY = upperY;
+
+    // Left Column: Student Photo Frame
+    roundRect(ctx, photoX, photoY, photoW, photoH, 18);
+    ctx.fillStyle = "#091224";
+    ctx.fill();
+
+    ctx.save();
+    roundRect(ctx, photoX, photoY, photoW, photoH, 18);
+    ctx.clip();
+    if (studentImg) {
+      ctx.drawImage(studentImg, photoX, photoY, photoW, photoH);
+    }
+    ctx.restore();
+
+    // Purple & Cyan Neon Frame Border
+    roundRect(ctx, photoX, photoY, photoW, photoH, 18);
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = "#a855f7";
+    ctx.shadowColor = "rgba(168, 85, 247, 0.65)";
     ctx.shadowBlur = 14;
-    ctx.fillText(name.toUpperCase(), baseW / 2, nameY);
+    ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // 6. Row 4: Department & Academic Year + Domain Pill (Centered Row)
-    const deptYearText = `${dept}  •  ${year}  •`;
-    ctx.font = "700 20px 'Segoe UI', Arial, sans-serif";
-    const deptW = ctx.measureText(deptYearText).width;
+    // Overlapping ★ ITF MEMBER Pill at Bottom of Photo
+    const pillW = 142;
+    const pillH = 26;
+    const pillX = photoX + (photoW - pillW) / 2;
+    const pillY = photoY + photoH - 14;
+    roundRect(ctx, pillX, pillY, pillW, pillH, pillH / 2);
+    ctx.fillStyle = "rgba(8, 16, 38, 0.94)";
+    ctx.fill();
+    ctx.strokeStyle = "#00f0ff";
+    ctx.lineWidth = 1.8;
+    ctx.shadowColor = "rgba(0, 240, 255, 0.6)";
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
 
-    ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
-    const domW = ctx.measureText(domain).width;
-    const domPillW = domW + 32;
-    const domPillH = 36;
+    ctx.textAlign = "center";
+    ctx.font = "800 12px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ff007f";
+    ctx.fillText("★", pillX + 22, pillY + 18);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("ITF MEMBER", pillX + 80, pillY + 18);
 
-    const totalDetailsW = deptW + 12 + domPillW;
-    const startDetailsX = (baseW - totalDetailsW) / 2;
-    const detailsBaselineY = 328;
+    // Right Column: Info Column
+    const infoX = photoX + photoW + 18;
+    const infoW = padR - infoX;
+
+    // HUD Member ID Box
+    const hudY = upperY;
+    const hudH = 54;
+    roundRect(ctx, infoX, hudY, infoW, hudH, 10);
+    ctx.fillStyle = "rgba(6, 20, 50, 0.75)";
+    ctx.fill();
+    ctx.strokeStyle = "#00d2ff";
+    ctx.lineWidth = 1.8;
+    ctx.shadowColor = "rgba(0, 210, 255, 0.4)";
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
 
     ctx.textAlign = "left";
-    ctx.font = "700 20px 'Segoe UI', Arial, sans-serif";
-    ctx.fillStyle = "#cbd5e1";
-    ctx.fillText(deptYearText, startDetailsX, detailsBaselineY + 6);
+    ctx.font = "800 11px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillText("🪪  MEMBER ID", infoX + 14, hudY + 20);
 
-    // Domain Pill
-    const domPillX = startDetailsX + deptW + 12;
-    const domPillY = detailsBaselineY - 18;
-    roundRect(ctx, domPillX, domPillY, domPillW, domPillH, domPillH / 2);
-    const pillGrad = ctx.createLinearGradient(domPillX, domPillY, domPillX + domPillW, domPillY + domPillH);
-    pillGrad.addColorStop(0, "#0078D4");
-    pillGrad.addColorStop(1, "#00B7C3");
-    ctx.fillStyle = pillGrad;
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
+    ctx.font = "800 19px 'Consolas', monospace";
     ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.fillText(domain, domPillX + domPillW / 2, domPillY + 23);
+    ctx.shadowColor = "rgba(56, 189, 248, 0.8)";
+    ctx.shadowBlur = 8;
+    ctx.fillText(serial, infoX + 14, hudY + 43);
+    ctx.shadowBlur = 0;
 
-    // 7. Row 5: Thin Divider Line
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
-    ctx.lineWidth = 1.5;
+    // Student Full Name
+    const nameY = hudY + 86;
+    ctx.textAlign = "left";
+    ctx.font = "900 34px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
+    ctx.shadowBlur = 12;
+    ctx.fillText(name, infoX, nameY);
+    ctx.shadowBlur = 0;
+
+    // Glowing Divider Line under Name
+    const divGrad = ctx.createLinearGradient(infoX, nameY + 10, infoX + infoW, nameY + 10);
+    divGrad.addColorStop(0, "#a855f7");
+    divGrad.addColorStop(0.5, "#00f0ff");
+    divGrad.addColorStop(1, "transparent");
+    ctx.strokeStyle = divGrad;
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(padX, 390);
-    ctx.lineTo(padR, 390);
+    ctx.moveTo(infoX, nameY + 10);
+    ctx.lineTo(infoX + infoW, nameY + 10);
     ctx.stroke();
 
-    // 8. Row 6: Bottom Section (College Info on Left, Large QR Code on Right)
-    // Substantially Enlarged Scannable QR Code Box (250x250 px, crisp white background & padding)
-    const qrSize = 250;
-    const qrX = padR - qrSize;
-    const qrY = 440;
+    // 3 Stat Metric Badges
+    const statsY = nameY + 22;
+    const statH = 68;
+    const statW = (infoW - 16) / 3;
 
-    roundRect(ctx, qrX, qrY, qrSize, qrSize, 22);
+    const statsData = [
+      { icon: "🎓", label: "Department", val: dept },
+      { icon: "📅", label: "Academic Year", val: year },
+      { icon: "💠", label: "Domain Track", val: domain }
+    ];
+
+    statsData.forEach((s, idx) => {
+      const sx = infoX + idx * (statW + 8);
+      roundRect(ctx, sx, statsY, statW, statH, 8);
+      ctx.fillStyle = "rgba(13, 26, 56, 0.6)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.3)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.textAlign = "center";
+      ctx.font = "18px 'Segoe UI', Arial, sans-serif";
+      ctx.fillText(s.icon, sx + statW / 2, statsY + 22);
+
+      ctx.font = "700 8.5px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#94a3b8";
+      ctx.fillText(s.label.toUpperCase(), sx + statW / 2, statsY + 41);
+
+      ctx.font = "800 12px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(s.val, sx + statW / 2, statsY + 59);
+    });
+
+    // 5. LOWER SECTION (2 COLUMNS: Campus Frame + QR Code)
+    const lowerY = 368;
+    const campusBoxW = 340;
+    const campusBoxH = 260;
+    const campusBoxX = padX;
+    const campusBoxY = lowerY;
+
+    // Left Column: Campus Building Photo & Institution Box
+    roundRect(ctx, campusBoxX, campusBoxY, campusBoxW, campusBoxH, 16);
+    ctx.fillStyle = "rgba(8, 18, 44, 0.85)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.4)";
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
+
+    // Top Campus Image
+    ctx.save();
+    roundRect(ctx, campusBoxX, campusBoxY, campusBoxW, 165, 16);
+    ctx.clip();
+    if (campusImg) {
+      ctx.drawImage(campusImg, campusBoxX, campusBoxY, campusBoxW, 165);
+    }
+    ctx.restore();
+
+    // MKCE Overlay Tag in Top-Right of Image
+    roundRect(ctx, campusBoxX + campusBoxW - 54, campusBoxY + 8, 46, 20, 4);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.textAlign = "center";
+    ctx.font = "800 11px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("MKCE", campusBoxX + campusBoxW - 31, campusBoxY + 22);
+
+    // Classical Icon & College Text Info
+    ctx.textAlign = "left";
+    ctx.font = "24px 'Segoe UI', Arial, sans-serif";
+    ctx.fillText("🏛️", campusBoxX + 14, campusBoxY + 215);
+
+    ctx.font = "800 13px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("M. KUMARASAMY", campusBoxX + 50, campusBoxY + 200);
+    ctx.fillText("COLLEGE OF ENGINEERING", campusBoxX + 50, campusBoxY + 218);
+
+    ctx.font = "500 10.5px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText("Autonomous · Affiliated to Anna University", campusBoxX + 50, campusBoxY + 238);
+
+    // Right Column: Scannable QR Matrix
+    const qrBoxSize = 180;
+    const qrBoxX = padR - qrBoxSize;
+    const qrBoxY = lowerY;
+
+    roundRect(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 16);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
     ctx.strokeStyle = "rgba(255, 255, 255, 0.95)";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = "rgba(0, 210, 255, 0.4)";
+    ctx.shadowBlur = 12;
     ctx.stroke();
+    ctx.shadowBlur = 0;
 
+    // Scannable QR Code Matrix (Clean, 100% unobstructed without center logo)
     if (qrImg) {
-      ctx.save();
-      roundRect(ctx, qrX + 16, qrY + 16, qrSize - 32, qrSize - 32, 12);
-      ctx.clip();
-      ctx.drawImage(qrImg, qrX + 16, qrY + 16, qrSize - 32, qrSize - 32);
-      ctx.restore();
+      ctx.drawImage(qrImg, qrBoxX + 12, qrBoxY + 12, qrBoxSize - 24, qrBoxSize - 24);
     }
 
-    // College Information (Left side)
-    const colX = padX;
-    const colY = 510;
-    ctx.textAlign = "left";
-    ctx.font = "800 21px 'Segoe UI', Arial, sans-serif";
-    ctx.fillStyle = "#f1f5f9";
-    ctx.fillText("M. KUMARASAMY", colX, colY);
-    ctx.fillText("COLLEGE OF", colX, colY + 28);
-    ctx.fillText("ENGINEERING", colX, colY + 56);
-
-    ctx.font = "500 15px 'Segoe UI', Arial, sans-serif";
-    ctx.fillStyle = "#94a3b8";
-    ctx.fillText("Autonomous · Affiliated", colX, colY + 98);
-    ctx.fillText("to Anna University", colX, colY + 120);
-
-    // Official Verified Pass Badge (Bottom Left)
-    const badgeY = colY + 155;
-    roundRect(ctx, colX, badgeY, 160, 34, 17);
-    ctx.fillStyle = "rgba(0, 183, 195, 0.15)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(0, 183, 195, 0.45)";
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
+    // Bottom Scanner Label
+    const scanLabelY = qrBoxY + qrBoxSize + 28;
+    ctx.textAlign = "center";
     ctx.font = "800 13px 'Segoe UI', Arial, sans-serif";
     ctx.fillStyle = "#38bdf8";
-    ctx.fillText("✓ OFFICIAL MEMBER", colX + 14, badgeY + 22);
+    ctx.shadowColor = "rgba(56, 189, 248, 0.8)";
+    ctx.shadowBlur = 8;
+    ctx.fillText("⛶  SCAN TO VERIFY", qrBoxX + qrBoxSize / 2, scanLabelY);
+    ctx.shadowBlur = 0;
+
+    // 6. BOTTOM BANNER (Hazard Stripes + OFFICIAL MEMBER Pill)
+    const bannerY = 665;
+
+    // Left Hazard Stripes
+    ctx.textAlign = "left";
+    ctx.font = "900 24px 'Consolas', monospace";
+    ctx.fillStyle = "rgba(0, 210, 255, 0.65)";
+    ctx.fillText("/////", padX + 8, bannerY + 31);
+
+    // Center OFFICIAL MEMBER Pill
+    const botPillX = 138;
+    const botPillW = 324;
+    const botPillH = 46;
+    roundRect(ctx, botPillX, bannerY, botPillW, botPillH, botPillH / 2);
+    const botGrad = ctx.createLinearGradient(botPillX, bannerY, botPillX + botPillW, bannerY);
+    botGrad.addColorStop(0, "#00c6ff");
+    botGrad.addColorStop(0.5, "#0072ff");
+    botGrad.addColorStop(1, "#9b51e0");
+    ctx.fillStyle = botGrad;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 1.2;
+    ctx.shadowColor = "rgba(0, 198, 255, 0.55)";
+    ctx.shadowBlur = 14;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // White Checkmark Icon Circle
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(botPillX + 38, bannerY + botPillH / 2, 11, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.textAlign = "center";
+    ctx.font = "900 12px Arial, sans-serif";
+    ctx.fillStyle = "#0072ff";
+    ctx.fillText("✓", botPillX + 38, bannerY + botPillH / 2 + 4);
+    ctx.restore();
+
+    // Text: OFFICIAL MEMBER
+    ctx.textAlign = "center";
+    ctx.font = "900 15px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("OFFICIAL MEMBER", botPillX + (botPillW / 2) + 12, bannerY + 29);
+
+    // Right Hazard Stripes
+    ctx.textAlign = "right";
+    ctx.font = "900 24px 'Consolas', monospace";
+    ctx.fillStyle = "rgba(0, 210, 255, 0.65)";
+    ctx.fillText("/////", padR - 8, bannerY + 31);
 
     return { canvas, name, reg, serial };
   }

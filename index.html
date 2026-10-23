@@ -27,7 +27,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 
 <body>
@@ -841,8 +841,8 @@
                 <div class="pass-form-grid">
                   <div class="form-group field-name">
                     <label for="passNameInput">Student Full Name</label>
-                    <input type="text" id="passNameInput" placeholder="e.g. Alex Carter" maxlength="28"
-                      value="Innovator Student" autocomplete="name">
+                    <input type="text" id="passNameInput" placeholder="e.g. Vasudevan M" maxlength="28"
+                      value="Vasudevan M" autocomplete="name">
                   </div>
                   <div class="form-group field-reg">
                     <label for="passRegInput">Register / Roll No</label>
@@ -882,65 +882,124 @@
                       <option value="Community Lead">Events &amp; Community Leadership</option>
                     </select>
                   </div>
+                  <div class="form-group field-photo" style="grid-column: 1 / -1;">
+                    <label for="passPhotoInput">Upload Profile Photo (Optional)</label>
+                    <input type="file" id="passPhotoInput" accept="image/*">
+                  </div>
                 </div>
               </form>
 
-              <!-- Holographic Pass Preview (Clean Alignment Grid System) -->
+              <!-- Futuristic Cyber Holographic Pass Preview -->
               <div class="hologram-stage" id="hologramStage">
-                <div class="holo-card" id="holoCard">
+                <div class="holo-card cyber-pass-card" id="holoCard">
                   <div class="holo-shimmer" id="holoShimmer" aria-hidden="true"></div>
-                  <div class="holo-spectrum-border" aria-hidden="true"></div>
+                  <div class="holo-spectrum-border cyber-border" aria-hidden="true"></div>
 
-                  <div class="holo-inner">
-                    <!-- TOP HEADER -->
-                    <div class="card-header-row">
-                      <div class="card-brand-group">
-                        <div class="card-logo-box">
-                          <img src="assets/logo.png" alt="ITF" class="holo-logo">
-                        </div>
-                        <div class="card-title-group">
-                          <span class="card-club-title">INNOVATORS TECH FORUM</span>
-                          <span class="card-club-sub">A Microsoft Club · Under AAROH</span>
+                  <div class="cyber-pass-inner">
+                    <!-- 1. TOP HEADER -->
+                    <div class="cyber-header-row">
+                      <div class="cyber-brand-left">
+                        <div class="cyber-club-badge" title="Innovators Tech Forum">
+                          <img src="assets/itf-logo.jpg" alt="ITF Club Logo" class="cyber-club-img">
                         </div>
                       </div>
-                      <div class="card-badge-box">
-                        <div class="card-aaroh-box" title="AAROH">
-                          <img src="assets/aaroh-logo.jpg" alt="AAROH" class="holo-aaroh-logo">
+                      <div class="cyber-title-center">
+                        <span class="cyber-club-title">INNOVATORS TECH FORUM</span>
+                        <span class="cyber-club-sub">A Microsoft Club · Under AAROH</span>
+                        <span class="cyber-club-motto">LEARN &nbsp;•&nbsp; CONNECT &nbsp;•&nbsp; BUILD</span>
+                      </div>
+                      <div class="cyber-brand-right">
+                        <div class="cyber-aaroh-circle" title="AAROH Student Club">
+                          <img src="assets/aaroh-logo.jpg" alt="AAROH" class="cyber-aaroh-img">
                         </div>
                       </div>
                     </div>
 
-                    <!-- MEMBER ID (Dedicated Full-Width Row) -->
-                    <div class="card-member-id-row">
-                      <div class="card-id-pill">
-                        <span class="card-id-label">MEMBER ID</span>
-                        <span class="holo-serial" id="holoSerial">ITF-2026-927622BCS045</span>
+                    <!-- 2. UPPER-MIDDLE SECTION (2 COLUMNS: Photo + Info) -->
+                    <div class="cyber-upper-grid">
+                      <!-- Left Column: Student Photo Frame with ★ ITF MEMBER -->
+                      <div class="cyber-photo-col">
+                        <div class="cyber-photo-frame">
+                          <img src="assets/default-student.jpg" alt="Student Photo" id="holoPhoto"
+                            class="cyber-photo-img">
+                          <div class="cyber-member-pill">
+                            <span class="cyber-star-icon">★</span> ITF MEMBER
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Right Column: Member ID HUD + Student Name + 3 Stat Badges -->
+                      <div class="cyber-info-col">
+                        <!-- Member ID HUD box -->
+                        <div class="cyber-id-hud">
+                          <div class="cyber-id-tag">
+                            <span class="cyber-id-icon">🪪</span> MEMBER ID
+                          </div>
+                          <div class="cyber-id-serial" id="holoSerial">ITF-2026-927622BCS045</div>
+                        </div>
+
+                        <!-- Student Full Name -->
+                        <div class="cyber-name-box">
+                          <span class="cyber-student-name" id="holoName">Vasudevan M</span>
+                        </div>
+
+                        <!-- Three Stat Metric Badges -->
+                        <div class="cyber-stats-row">
+                          <div class="cyber-stat-item">
+                            <div class="cyber-stat-icon">🎓</div>
+                            <div class="cyber-stat-label">Department</div>
+                            <div class="cyber-stat-val" id="holoDept">CSBS</div>
+                          </div>
+                          <div class="cyber-stat-item">
+                            <div class="cyber-stat-icon">📅</div>
+                            <div class="cyber-stat-label">Academic Year</div>
+                            <div class="cyber-stat-val" id="holoYear">2nd Year</div>
+                          </div>
+                          <div class="cyber-stat-item">
+                            <div class="cyber-stat-icon">💠</div>
+                            <div class="cyber-stat-label">Domain Track</div>
+                            <div class="cyber-stat-val" id="holoDomain">AI Systems</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <!-- STUDENT NAME (Centered Horizontally) -->
-                    <div class="card-student-name-row">
-                      <div class="holo-name" id="holoName">INNOVATOR STUDENT</div>
+                    <!-- 3. LOWER SECTION (2 COLUMNS: Campus Frame + QR Code) -->
+                    <div class="cyber-lower-grid">
+                      <!-- Left Column: Campus Building Photo & Institution Box -->
+                      <div class="cyber-campus-box">
+                        <div class="cyber-campus-frame">
+                          <img src="assets/mkce-campus.jpg" alt="MKCE Campus" class="cyber-campus-img">
+                          <div class="campus-overlay-tag">MKCE</div>
+                        </div>
+                        <div class="cyber-inst-info">
+                          <div class="inst-icon">🏛️</div>
+                          <div class="inst-text">
+                            <span class="inst-name">M. KUMARASAMY COLLEGE OF ENGINEERING</span>
+                            <span class="inst-affil">Autonomous · Affiliated to Anna University</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Right Column: Scannable QR Matrix + SCAN TO VERIFY -->
+                      <div class="cyber-qr-col">
+                        <div class="cyber-qr-wrapper">
+                          <img id="holoQrImg" class="cyber-qr-img" alt="Member Verification QR" width="125"
+                            height="125">
+                        </div>
+                        <div class="cyber-scan-label">
+                          <span class="scan-frame-icon">⛶</span> SCAN TO VERIFY
+                        </div>
+                      </div>
                     </div>
 
-                    <!-- DETAILS (Department • Academic Year • Domain Badge in One Clean Row) -->
-                    <div class="card-details-row">
-                      <span class="card-detail-item" id="holoDept">CSBS</span>
-                      <span class="card-detail-bullet">•</span>
-                      <span class="card-detail-item" id="holoYear">2nd Year</span>
-                      <span class="card-detail-bullet">•</span>
-                      <span class="holo-domain-badge" id="holoDomain">AI Systems</span>
-                    </div>
-
-                    <!-- BOTTOM SECTION (College Information on Left, Large QR on Right) -->
-                    <div class="card-bottom-row">
-                      <div class="card-college-box">
-                        <span class="college-title">M. KUMARASAMY COLLEGE OF ENGINEERING</span>
-                        <span class="college-sub">Autonomous · Affiliated to Anna University</span>
+                    <!-- 4. BOTTOM BANNER: Hazard Stripes + OFFICIAL MEMBER Pill -->
+                    <div class="cyber-bottom-banner">
+                      <div class="cyber-hazard-hashes">/////</div>
+                      <div class="cyber-official-badge">
+                        <span class="official-check">✓</span> OFFICIAL MEMBER
                       </div>
-                      <div class="card-qr-box" id="holoQrBox" title="Scan to verify official membership">
-                        <img id="holoQrImg" class="holo-qr" alt="Official Member QR Code" width="120" height="120">
-                      </div>
+                      <div class="cyber-hazard-hashes">/////</div>
                     </div>
                   </div>
                 </div>
@@ -952,7 +1011,7 @@
                 <button type="button" class="btn sm ghost" id="downloadPdfBtn">📄 Download PDF</button>
                 <button type="button" class="btn sm ghost" id="sharePassBtn">📤 Share Pass</button>
                 <a class="btn sm ghost join-link" href="https://mkceclub.vercel.app/" target="_blank"
-                  rel="noopener">Official Registration →</a>
+                  rel="noopener">Official Registration</a>
               </div>
 
               <!-- Download Status Notification Feedback -->
@@ -1257,7 +1316,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js?v=5"></script>
 </body>
 
 </html>
