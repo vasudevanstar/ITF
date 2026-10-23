@@ -817,268 +817,365 @@ window.addEventListener('appinstalled', () => {
       img.crossOrigin = "anonymous";
       img.onload = () => resolve(img);
       img.onerror = () => resolve(holoQrImg || null);
-      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(getVerificationPayloadUrl())}&margin=1&format=png`;
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(getVerificationPayloadUrl())}&margin=1&format=png`;
+    });
+  }
+
+  // Helper function to draw rounded rectangles
+  function roundRect(c, x, y, w, h, r) {
+    if (c.roundRect) {
+      c.beginPath();
+      c.roundRect(x, y, w, h, r);
+      c.closePath();
+      return;
+    }
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  // ========================================================================
+  // Ultra-HD 300+ DPI Pass Canvas Engine (2640 x 1668 px Razor Sharp Replica)
+  // ========================================================================
+  async function generatePassCanvas() {
+    const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+    const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
+    const dept = (passDeptInput && passDeptInput.value) || "CSBS";
+    const year = (passYearInput && passYearInput.value) || "2nd Year";
+    const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
+    const serial = `ITF - 2026 - ${reg}`;
+
+    // Parallel preload of club logo & 600x600 high-res QR code
+    const [logoImg, qrImg] = await Promise.all([loadLogoImage(), loadQrImage()]);
+
+    const baseW = 880;
+    const baseH = 556;
+    const scale = 3; // 3x Supersampling for 300+ DPI print & Retina clarity
+
+    const canvas = document.createElement("canvas");
+    canvas.width = baseW * scale;
+    canvas.height = baseH * scale;
+
+    const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    const padL = 54;
+    const padR = 826;
+
+    // 1. Base Card Background (Deep Luxury Acrylic Navy)
+    const bgGrad = ctx.createLinearGradient(0, 0, baseW, baseH);
+    bgGrad.addColorStop(0, "#091224");
+    bgGrad.addColorStop(0.5, "#0d1a38");
+    bgGrad.addColorStop(1, "#0a1329");
+
+    ctx.save();
+    roundRect(ctx, 4, 4, baseW - 8, baseH - 8, 28);
+    ctx.fillStyle = bgGrad;
+    ctx.fill();
+
+    // Outer Prismatic Holographic Rim
+    const borderGrad = ctx.createLinearGradient(0, 0, baseW, baseH);
+    borderGrad.addColorStop(0, "rgba(0, 183, 195, 0.85)");
+    borderGrad.addColorStop(0.25, "rgba(0, 120, 212, 0.7)");
+    borderGrad.addColorStop(0.5, "rgba(242, 80, 34, 0.75)");
+    borderGrad.addColorStop(0.75, "rgba(127, 186, 0, 0.75)");
+    borderGrad.addColorStop(1, "rgba(255, 185, 0, 0.85)");
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = borderGrad;
+    ctx.stroke();
+    ctx.restore();
+
+    // 2. Row 1: Header (Logo + Title + MKCE Pill)
+    // Pure white rounded pill container for ITF Logo
+    roundRect(ctx, padL, 46, 52, 52, 12);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+
+    if (logoImg) {
+      ctx.save();
+      roundRect(ctx, padL + 3, 49, 46, 46, 10);
+      ctx.clip();
+      ctx.drawImage(logoImg, padL + 3, 49, 46, 46);
+      ctx.restore();
+    }
+
+    // Title & Subtitle beside Logo
+    ctx.textAlign = "left";
+    ctx.font = "800 24px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("INNOVATORS TECH FORUM", padL + 66, 70);
+
+    ctx.font = "600 15px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText("A Microsoft Club · Under AAROH", padL + 66, 93);
+
+    // MKCE Tag Pill on Top Right
+    const mkceW = 82;
+    const mkceH = 38;
+    const mkceX = padR - mkceW;
+    roundRect(ctx, mkceX, 50, mkceW, mkceH, 10);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.fillText("MKCE", mkceX + mkceW / 2, 75);
+
+    // 3. Row 2: Metallic Smart NFC Chip (Left) & Serial Number (Right)
+    const chipX = padL;
+    const chipY = 144;
+    const chipW = 76;
+    const chipH = 56;
+
+    const chipGrad = ctx.createLinearGradient(chipX, chipY, chipX + chipW, chipY + chipH);
+    chipGrad.addColorStop(0, "#ffd700");
+    chipGrad.addColorStop(0.35, "#f59e0b");
+    chipGrad.addColorStop(0.7, "#b45309");
+    chipGrad.addColorStop(1, "#f59e0b");
+
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
+    ctx.shadowBlur = 8;
+    roundRect(ctx, chipX, chipY, chipW, chipH, 12);
+    ctx.fillStyle = chipGrad;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = "rgba(180, 83, 9, 0.75)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // Chip internal circuit lines
+    ctx.strokeStyle = "rgba(115, 41, 0, 0.5)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(chipX + 6, chipY + 20); ctx.lineTo(chipX + chipW - 6, chipY + 20);
+    ctx.moveTo(chipX + 6, chipY + 36); ctx.lineTo(chipX + chipW - 6, chipY + 36);
+    ctx.stroke();
+
+    // Serial Number (Far Right on same line)
+    ctx.textAlign = "right";
+    ctx.font = "800 22px 'Consolas', 'Courier New', monospace";
+    ctx.fillStyle = "#38bdf8";
+    ctx.shadowColor = "rgba(56, 189, 248, 0.65)";
+    ctx.shadowBlur = 10;
+    ctx.fillText(serial, padR, chipY + 37);
+    ctx.shadowBlur = 0;
+
+    // 4. Row 3: Member Full Name
+    ctx.textAlign = "left";
+    ctx.font = "800 42px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+    ctx.shadowBlur = 8;
+    ctx.fillText(name.toUpperCase(), padL, 270);
+    ctx.shadowBlur = 0;
+
+    // 5. Row 4: Department & Year + Domain Pill on the SAME LINE
+    const deptText = `${dept} · ${year}`;
+    ctx.font = "700 22px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.textAlign = "left";
+    ctx.fillText(deptText, padL, 340);
+
+    const deptWidth = ctx.measureText(deptText).width;
+    const domainText = domain;
+    ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
+    const domainWidth = ctx.measureText(domainText).width;
+
+    const pillH = 40;
+    const pillW = domainWidth + 36;
+    const pillX = padL + deptWidth + 18;
+    const pillY = 312;
+
+    const pillGrad = ctx.createLinearGradient(pillX, pillY, pillX + pillW, pillY + pillH);
+    pillGrad.addColorStop(0, "#0078D4");
+    pillGrad.addColorStop(1, "#00B7C3");
+
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 183, 195, 0.55)";
+    ctx.shadowBlur = 14;
+    roundRect(ctx, pillX, pillY, pillW, pillH, pillH / 2);
+    ctx.fillStyle = pillGrad;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.fillText(domainText, pillX + pillW / 2, pillY + 26);
+
+    // 6. Row 5: Horizontal Thin Divider Line
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(padL, 396);
+    ctx.lineTo(padR, 396);
+    ctx.stroke();
+
+    // 7. Row 6: Footer Institution (Left) + Scannable QR Matrix (Right)
+    ctx.textAlign = "left";
+    ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#e2e8f0";
+    ctx.fillText("M. KUMARASAMY COLLEGE OF ENGINEERING", padL, 448);
+
+    ctx.font = "500 13px 'Segoe UI', Arial, sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText("Autonomous · Affiliated to Anna University", padL, 474);
+
+    // Scannable QR Code Box on Bottom Right
+    const qrSize = 66;
+    const qrX = padR - qrSize;
+    const qrY = 425;
+
+    roundRect(ctx, qrX, qrY, qrSize, qrSize, 12);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+
+    if (qrImg) {
+      ctx.save();
+      roundRect(ctx, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8, 8);
+      ctx.clip();
+      ctx.drawImage(qrImg, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8);
+      ctx.restore();
+    } else {
+      // Fallback vector QR pattern
+      ctx.save();
+      ctx.translate(qrX, qrY);
+      ctx.scale(qrSize / 40, qrSize / 40);
+      ctx.fillStyle = "#091224";
+      ctx.fillRect(5, 5, 12, 12);
+      ctx.fillRect(23, 5, 12, 12);
+      ctx.fillRect(5, 23, 12, 12);
+      ctx.fillRect(23, 23, 5, 5);
+      ctx.fillRect(30, 23, 5, 5);
+      ctx.fillRect(26.5, 28, 5, 5);
+      ctx.fillRect(23, 33, 5, 5);
+      ctx.fillRect(30, 33, 5, 5);
+      ctx.restore();
+    }
+
+    return { canvas, name, reg, serial };
+  }
+
+  // ========================================================================
+  // Direct Download: High-Quality Standard ISO CR80 Pass in PDF
+  // ========================================================================
+  const downloadPdfBtn = $("#downloadPdfBtn");
+
+  if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener("click", async () => {
+      const origText = downloadPdfBtn.textContent;
+      downloadPdfBtn.textContent = "Generating PDF... ⏳";
+      downloadPdfBtn.disabled = true;
+
+      try {
+        const { canvas, name, reg } = await generatePassCanvas();
+        const safeName = (name + "_" + reg).replace(/[^a-zA-Z0-9]/g, "_");
+
+        const jspdfModule = window.jspdf;
+        if (jspdfModule && jspdfModule.jsPDF) {
+          const { jsPDF } = jspdfModule;
+          // Standard ISO CR80 physical card: 85.6 mm x 54.0 mm
+          const doc = new jsPDF({
+            orientation: "landscape",
+            unit: "mm",
+            format: [85.6, 54.0],
+            compress: true
+          });
+
+          // High quality image embedding in PDF
+          const imgData = canvas.toDataURL("image/jpeg", 0.98);
+          doc.addImage(imgData, "JPEG", 0, 0, 85.6, 54.0, undefined, "FAST");
+          doc.save(`ITF-Member-Pass-${safeName}.pdf`);
+
+          downloadPdfBtn.textContent = "PDF Downloaded! ✅";
+          downloadPdfBtn.style.background = "#107c41";
+        } else {
+          // Robust Fallback: print popup formatted to standard card dimensions
+          const imgData = canvas.toDataURL("image/png");
+          const printWin = window.open("", "_blank");
+          if (printWin) {
+            printWin.document.write(`
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <title>ITF Member Pass - ${name}</title>
+                <style>
+                  @page { size: 85.6mm 54mm landscape; margin: 0; }
+                  body { margin: 0; padding: 0; background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; }
+                  img { width: 85.6mm; height: 54mm; object-fit: contain; }
+                </style>
+              </head>
+              <body>
+                <img src="${imgData}" onload="window.print();" />
+              </body>
+              </html>
+            `);
+            printWin.document.close();
+          }
+          downloadPdfBtn.textContent = "Print / PDF Ready! ✅";
+        }
+      } catch (err) {
+        console.error("Pass PDF export error:", err);
+        downloadPdfBtn.textContent = "Error generating PDF";
+      } finally {
+        setTimeout(() => {
+          downloadPdfBtn.textContent = origText;
+          downloadPdfBtn.style.background = "";
+          downloadPdfBtn.disabled = false;
+        }, 2500);
+      }
     });
   }
 
   // ========================================================================
-  // 1-Click High-Resolution Pass PNG Export Engine (Pixel-Perfect Replica)
+  // Direct Download: Ultra-HD 300+ DPI (2640 x 1668 px) PNG Image
   // ========================================================================
   const downloadPassBtn = $("#downloadPassBtn");
 
   if (downloadPassBtn) {
     downloadPassBtn.addEventListener("click", async () => {
-      const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
-      const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
-      const dept = (passDeptInput && passDeptInput.value) || "CSBS";
-      const year = (passYearInput && passYearInput.value) || "2nd Year";
-      const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
-      const serial = `ITF - 2026 - ${reg}`;
+      const origText = downloadPassBtn.textContent;
+      downloadPassBtn.textContent = "Generating HD PNG... ⏳";
+      downloadPassBtn.disabled = true;
 
-      // Load logo image & dynamic scannable QR image in parallel
-      const [logoImg, qrImg] = await Promise.all([loadLogoImage(), loadQrImage()]);
-
-      // Create an offscreen 2x Retina canvas matching the card ratio
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = 880;
-      canvas.height = 556;
-
-      const padL = 54;
-      const padR = 826;
-
-      // Helper function to draw rounded rectangles
-      function roundRect(c, x, y, w, h, r) {
-        c.beginPath();
-        c.moveTo(x + r, y);
-        c.arcTo(x + w, y, x + w, y + h, r);
-        c.arcTo(x + w, y + h, x, y + h, r);
-        c.arcTo(x, y + h, x, y, r);
-        c.arcTo(x, y, x + w, y, r);
-        c.closePath();
-      }
-
-      // 1. Base Card Background (Deep Navy Acrylic)
-      const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      bgGrad.addColorStop(0, "#091224");
-      bgGrad.addColorStop(0.5, "#0d1a38");
-      bgGrad.addColorStop(1, "#0a1329");
-
-      ctx.save();
-      roundRect(ctx, 4, 4, canvas.width - 8, canvas.height - 8, 28);
-      ctx.fillStyle = bgGrad;
-      ctx.fill();
-
-      // Outer Prismatic Holographic Rim
-      const borderGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      borderGrad.addColorStop(0, "rgba(0, 183, 195, 0.75)");
-      borderGrad.addColorStop(0.25, "rgba(0, 120, 212, 0.55)");
-      borderGrad.addColorStop(0.5, "rgba(242, 80, 34, 0.65)");
-      borderGrad.addColorStop(0.75, "rgba(127, 186, 0, 0.65)");
-      borderGrad.addColorStop(1, "rgba(255, 185, 0, 0.75)");
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = borderGrad;
-      ctx.stroke();
-      ctx.restore();
-
-      // 2. Row 1: Header (Logo + Title + MKCE Pill)
-      // White container for Logo
-      roundRect(ctx, padL, 46, 52, 52, 12);
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
-
-      if (logoImg) {
-        ctx.save();
-        roundRect(ctx, padL + 3, 49, 46, 46, 10);
-        ctx.clip();
-        ctx.drawImage(logoImg, padL + 3, 49, 46, 46);
-        ctx.restore();
-      }
-
-      // Title & Subtitle beside Logo
-      ctx.textAlign = "left";
-      ctx.font = "800 24px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#ffffff";
-      ctx.fillText("INNOVATORS TECH FORUM", padL + 66, 70);
-
-      ctx.font = "600 15px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#94a3b8";
-      ctx.fillText("A Microsoft Club · Under AAROH", padL + 66, 93);
-
-      // MKCE Tag Pill on Top Right
-      const mkceW = 82;
-      const mkceH = 38;
-      const mkceX = padR - mkceW;
-      roundRect(ctx, mkceX, 50, mkceW, mkceH, 10);
-      ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-
-      ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.fillText("MKCE", mkceX + mkceW / 2, 75);
-
-      // 3. Row 2: Metallic Smart NFC Chip (Left) & Serial Number (Right)
-      const chipX = padL;
-      const chipY = 144;
-      const chipW = 76;
-      const chipH = 56;
-
-      const chipGrad = ctx.createLinearGradient(chipX, chipY, chipX + chipW, chipY + chipH);
-      chipGrad.addColorStop(0, "#ffd700");
-      chipGrad.addColorStop(0.35, "#f59e0b");
-      chipGrad.addColorStop(0.7, "#b45309");
-      chipGrad.addColorStop(1, "#f59e0b");
-
-      ctx.save();
-      ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
-      ctx.shadowBlur = 8;
-      roundRect(ctx, chipX, chipY, chipW, chipH, 12);
-      ctx.fillStyle = chipGrad;
-      ctx.fill();
-      ctx.restore();
-
-      ctx.strokeStyle = "rgba(180, 83, 9, 0.75)";
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-
-      // Chip internal circuit lines
-      ctx.strokeStyle = "rgba(115, 41, 0, 0.5)";
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(chipX + 6, chipY + 20); ctx.lineTo(chipX + chipW - 6, chipY + 20);
-      ctx.moveTo(chipX + 6, chipY + 36); ctx.lineTo(chipX + chipW - 6, chipY + 36);
-      ctx.stroke();
-
-      // Serial Number (Far Right on same line)
-      ctx.textAlign = "right";
-      ctx.font = "800 22px 'Consolas', 'Courier New', monospace";
-      ctx.fillStyle = "#38bdf8";
-      ctx.shadowColor = "rgba(56, 189, 248, 0.65)";
-      ctx.shadowBlur = 10;
-      ctx.fillText(serial, padR, chipY + 37);
-      ctx.shadowBlur = 0;
-
-      // 4. Row 3: Member Full Name
-      ctx.textAlign = "left";
-      ctx.font = "800 42px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#ffffff";
-      ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
-      ctx.shadowBlur = 8;
-      ctx.fillText(name.toUpperCase(), padL, 270);
-      ctx.shadowBlur = 0;
-
-      // 5. Row 4: Department & Year + Domain Pill on the SAME LINE
-      const deptText = `${dept} · ${year}`;
-      ctx.font = "700 22px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#cbd5e1";
-      ctx.textAlign = "left";
-      ctx.fillText(deptText, padL, 340);
-
-      const deptWidth = ctx.measureText(deptText).width;
-      const domainText = domain;
-      ctx.font = "800 17px 'Segoe UI', Arial, sans-serif";
-      const domainWidth = ctx.measureText(domainText).width;
-
-      const pillH = 40;
-      const pillW = domainWidth + 36;
-      const pillX = padL + deptWidth + 18;
-      const pillY = 312;
-
-      const pillGrad = ctx.createLinearGradient(pillX, pillY, pillX + pillW, pillY + pillH);
-      pillGrad.addColorStop(0, "#0078D4");
-      pillGrad.addColorStop(1, "#00B7C3");
-
-      ctx.save();
-      ctx.shadowColor = "rgba(0, 183, 195, 0.55)";
-      ctx.shadowBlur = 14;
-      roundRect(ctx, pillX, pillY, pillW, pillH, pillH / 2);
-      ctx.fillStyle = pillGrad;
-      ctx.fill();
-      ctx.restore();
-
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.fillText(domainText, pillX + pillW / 2, pillY + 26);
-
-      // 6. Row 5: Horizontal Thin Divider Line
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.moveTo(padL, 396);
-      ctx.lineTo(padR, 396);
-      ctx.stroke();
-
-      // 7. Row 6: Footer Institution (Left) + QR Matrix (Right)
-      ctx.textAlign = "left";
-      ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#e2e8f0";
-      ctx.fillText("M. KUMARASAMY COLLEGE OF ENGINEERING", padL, 448);
-
-      ctx.font = "500 13px 'Segoe UI', Arial, sans-serif";
-      ctx.fillStyle = "#94a3b8";
-      ctx.fillText("Autonomous · Affiliated to Anna University", padL, 474);
-
-      // Scannable QR Code Box on Bottom Right
-      const qrSize = 66;
-      const qrX = padR - qrSize;
-      const qrY = 425;
-
-      roundRect(ctx, qrX, qrY, qrSize, qrSize, 12);
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
-
-      if (qrImg) {
-        ctx.save();
-        roundRect(ctx, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8, 8);
-        ctx.clip();
-        ctx.drawImage(qrImg, qrX + 4, qrY + 4, qrSize - 8, qrSize - 8);
-        ctx.restore();
-      } else {
-        // Fallback stylized vector QR pattern
-        ctx.save();
-        ctx.translate(qrX, qrY);
-        ctx.scale(qrSize / 40, qrSize / 40);
-        ctx.fillStyle = "#091224";
-        ctx.fillRect(5, 5, 12, 12);
-        ctx.fillRect(23, 5, 12, 12);
-        ctx.fillRect(5, 23, 12, 12);
-        ctx.fillRect(23, 23, 5, 5);
-        ctx.fillRect(30, 23, 5, 5);
-        ctx.fillRect(26.5, 28, 5, 5);
-        ctx.fillRect(23, 33, 5, 5);
-        ctx.fillRect(30, 33, 5, 5);
-        ctx.restore();
-      }
-
-      // Trigger instant PNG Download
       try {
-        const imageURL = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
+        const { canvas, name, reg } = await generatePassCanvas();
         const safeName = (name + "_" + reg).replace(/[^a-zA-Z0-9]/g, "_");
+        const imageURL = canvas.toDataURL("image/png");
+
+        const link = document.createElement("a");
         link.download = `ITF-Member-Pass-${safeName}.png`;
         link.href = imageURL;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
-        // Visual feedback on button
-        const originalText = downloadPassBtn.textContent;
         downloadPassBtn.textContent = "Pass Downloaded! ✅";
         downloadPassBtn.style.background = "#107c41";
-        setTimeout(() => {
-          downloadPassBtn.textContent = originalText;
-          downloadPassBtn.style.background = "";
-        }, 2200);
       } catch (err) {
-        console.error("Pass export error:", err);
+        console.error("Pass PNG export error:", err);
+        downloadPassBtn.textContent = "Error downloading PNG";
+      } finally {
+        setTimeout(() => {
+          downloadPassBtn.textContent = origText;
+          downloadPassBtn.style.background = "";
+          downloadPassBtn.disabled = false;
+        }, 2200);
       }
     });
   }
