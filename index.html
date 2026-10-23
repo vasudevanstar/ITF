@@ -827,19 +827,18 @@
             </div>
 
             <!-- Pass Customizer Form -->
+            <!-- Pass Customizer Form (Responsive Grid) -->
             <form class="pass-form" id="passForm" onsubmit="return false;">
-              <div class="form-row">
-                <div class="form-group">
+              <div class="pass-form-grid">
+                <div class="form-group field-name">
                   <label for="passNameInput">Student Full Name</label>
-                  <input type="text" id="passNameInput" placeholder="e.g. Alex Carter" maxlength="28" value="Innovator Student">
+                  <input type="text" id="passNameInput" placeholder="e.g. Alex Carter" maxlength="28" value="Innovator Student" autocomplete="name">
                 </div>
-                <div class="form-group">
+                <div class="form-group field-reg">
                   <label for="passRegInput">Register / Roll No</label>
-                  <input type="text" id="passRegInput" placeholder="e.g. 927622BCS045" maxlength="20" value="927622BCS045">
+                  <input type="text" id="passRegInput" placeholder="e.g. 927622BCS045" maxlength="20" value="927622BCS045" autocomplete="off">
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
+                <div class="form-group field-dept">
                   <label for="passDeptInput">Department</label>
                   <select id="passDeptInput">
                     <option value="CSBS" selected>CSBS</option>
@@ -853,7 +852,7 @@
                     <option value="Civil">Civil</option>
                   </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group field-year">
                   <label for="passYearInput">Academic Year</label>
                   <select id="passYearInput">
                     <option value="1st Year">1st Year</option>
@@ -862,9 +861,7 @@
                     <option value="Final Year">Final Year</option>
                   </select>
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group" style="grid-column: 1 / -1;">
+                <div class="form-group field-domain">
                   <label for="passDomainInput">Club Domain Track</label>
                   <select id="passDomainInput">
                     <option value="AI Systems" selected>AI &amp; Intelligent Systems</option>
@@ -877,52 +874,59 @@
               </div>
             </form>
 
-            <!-- Holographic Pass Preview (Interactive 3D Tilt Card) -->
+            <!-- Holographic Pass Preview (Clean Alignment Grid System) -->
             <div class="hologram-stage" id="hologramStage">
               <div class="holo-card" id="holoCard">
                 <div class="holo-shimmer" id="holoShimmer" aria-hidden="true"></div>
                 <div class="holo-spectrum-border" aria-hidden="true"></div>
 
                 <div class="holo-inner">
-                  <!-- Card Top Branding -->
-                  <div class="holo-header">
-                    <div class="holo-brand">
-                      <img src="assets/logo.png" alt="ITF" class="holo-logo">
-                      <div>
-                        <span class="holo-club-name">INNOVATORS TECH FORUM</span>
-                        <span class="holo-affil">A Microsoft Club · Under AAROH</span>
+                  <!-- TOP HEADER -->
+                  <div class="card-header-row">
+                    <div class="card-brand-group">
+                      <div class="card-logo-box">
+                        <img src="assets/logo.png" alt="ITF" class="holo-logo">
+                      </div>
+                      <div class="card-title-group">
+                        <span class="card-club-title">INNOVATORS TECH FORUM</span>
+                        <span class="card-club-sub">A Microsoft Club · Under AAROH</span>
                       </div>
                     </div>
-                    <div class="holo-college-tag">MKCE</div>
+                    <div class="card-badge-box">
+                      <span class="card-college-badge">MKCE</span>
+                    </div>
                   </div>
 
-                  <!-- Card Chip & Membership Details -->
-                  <div class="holo-body">
-                    <div class="holo-chip-row">
-                      <div class="smart-chip" title="Virtual NFC">
-                        <div class="chip-line"></div>
-                        <div class="chip-line"></div>
-                      </div>
+                  <!-- MEMBER ID (Dedicated Full-Width Row) -->
+                  <div class="card-member-id-row">
+                    <div class="card-id-pill">
+                      <span class="card-id-label">MEMBER ID</span>
                       <span class="holo-serial" id="holoSerial">ITF - 2026 - 927622BCS045</span>
                     </div>
-
-                    <div class="holo-member-info">
-                      <div class="holo-name" id="holoName">Innovator Student</div>
-                      <div class="holo-meta">
-                        <span class="holo-dept" id="holoDept">CSBS · 2nd Year</span>
-                        <span class="holo-domain-badge" id="holoDomain">AI Systems</span>
-                      </div>
-                    </div>
                   </div>
 
-                  <!-- Card Footer: QR & College Badge -->
-                  <div class="holo-footer">
-                    <div class="holo-inst">
-                      <span>M. KUMARASAMY COLLEGE OF ENGINEERING</span>
-                      <small>Autonomous · Affiliated to Anna University</small>
+                  <!-- STUDENT NAME (Centered Horizontally) -->
+                  <div class="card-student-name-row">
+                    <div class="holo-name" id="holoName">INNOVATOR STUDENT</div>
+                  </div>
+
+                  <!-- DETAILS (Department • Academic Year • Domain Badge in One Clean Row) -->
+                  <div class="card-details-row">
+                    <span class="card-detail-item" id="holoDept">CSBS</span>
+                    <span class="card-detail-bullet">•</span>
+                    <span class="card-detail-item" id="holoYear">2nd Year</span>
+                    <span class="card-detail-bullet">•</span>
+                    <span class="holo-domain-badge" id="holoDomain">AI Systems</span>
+                  </div>
+
+                  <!-- BOTTOM SECTION (College Information on Left, Large QR on Right) -->
+                  <div class="card-bottom-row">
+                    <div class="card-college-box">
+                      <span class="college-title">M. KUMARASAMY COLLEGE OF ENGINEERING</span>
+                      <span class="college-sub">Autonomous · Affiliated to Anna University</span>
                     </div>
-                    <div class="holo-qr-box" id="holoQrBox" title="Scan with camera to verify">
-                      <img id="holoQrImg" class="holo-qr" alt="Scannable Verification QR Code" width="56" height="56">
+                    <div class="card-qr-box" id="holoQrBox" title="Scan to verify official membership">
+                      <img id="holoQrImg" class="holo-qr" alt="Official Member QR Code" width="120" height="120">
                     </div>
                   </div>
                 </div>
@@ -931,10 +935,14 @@
 
             <!-- Pass Action Buttons -->
             <div class="pass-actions">
-              <button type="button" class="btn sm" id="downloadPdfBtn">📄 Download Pass (High Quality PDF)</button>
-              <button type="button" class="btn sm ghost" id="downloadPassBtn">🖼️ Download HD PNG</button>
+              <button type="button" class="btn sm" id="downloadPassBtn">🖼️ Download PNG</button>
+              <button type="button" class="btn sm ghost" id="downloadPdfBtn">📄 Download PDF</button>
+              <button type="button" class="btn sm ghost" id="sharePassBtn">📤 Share Pass</button>
               <a class="btn sm ghost join-link" href="https://mkceclub.vercel.app/" target="_blank" rel="noopener">Official Registration →</a>
             </div>
+
+            <!-- Download Status Notification Feedback -->
+            <div class="pass-status-msg" id="passStatusMsg" role="alert" aria-live="polite"></div>
             <p class="pass-hint">💡 Move your mouse or tilt your phone over the pass to see the 3D holographic reflections!</p>
           </div>
         </div>
@@ -1231,6 +1239,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>

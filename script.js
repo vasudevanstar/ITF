@@ -702,6 +702,7 @@ window.addEventListener('appinstalled', () => {
   }
 
   // ========================================================================
+  // ========================================================================
   // Live Member Pass Synchronization (Tied to Official College Identity)
   // ========================================================================
   const passNameInput = $("#passNameInput");
@@ -710,8 +711,23 @@ window.addEventListener('appinstalled', () => {
   const passYearInput = $("#passYearInput");
   const holoName = $("#holoName");
   const holoDept = $("#holoDept");
+  const holoYear = $("#holoYear");
   const holoSerial = $("#holoSerial");
   const holoQrImg = $("#holoQrImg");
+  const passStatusMsg = $("#passStatusMsg");
+  const sharePassBtn = $("#sharePassBtn");
+
+  // Feedback status notifier
+  function showPassStatus(message, isSuccess = true) {
+    if (!passStatusMsg) return;
+    passStatusMsg.textContent = message;
+    passStatusMsg.className = `pass-status-msg ${isSuccess ? "success" : "error"}`;
+    clearTimeout(passStatusMsg._statusTimer);
+    passStatusMsg._statusTimer = setTimeout(() => {
+      passStatusMsg.textContent = "";
+      passStatusMsg.className = "pass-status-msg";
+    }, 4500);
+  }
 
   // Get active site base URL (handles GitHub Pages, Vercel, or custom domains)
   const getBaseUrl = () => {
@@ -745,13 +761,16 @@ window.addEventListener('appinstalled', () => {
   const updatePassDetails = () => {
     const nameVal = passNameInput ? passNameInput.value.trim() : "";
     if (holoName) {
-      holoName.textContent = nameVal || "Innovator Student";
+      holoName.textContent = (nameVal || "Innovator Student").toUpperCase();
     }
-    if (holoDept && passDeptInput && passYearInput) {
-      holoDept.textContent = `${passDeptInput.value} · ${passYearInput.value}`;
+    if (holoDept && passDeptInput) {
+      holoDept.textContent = passDeptInput.value || "CSBS";
+    }
+    if (holoYear && passYearInput) {
+      holoYear.textContent = passYearInput.value || "2nd Year";
     }
     if (holoDomain && passDomainInput) {
-      holoDomain.textContent = passDomainInput.value;
+      holoDomain.textContent = passDomainInput.value || "AI Systems";
     }
     const regVal = passRegInput ? passRegInput.value.trim() : "";
     if (holoSerial) {
@@ -766,8 +785,8 @@ window.addEventListener('appinstalled', () => {
           const tempDiv = document.createElement("div");
           new QRCode(tempDiv, {
             text: verifyUrl,
-            width: 240,
-            height: 240,
+            width: 320,
+            height: 320,
             colorDark: "#091224",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.M
@@ -784,10 +803,10 @@ window.addEventListener('appinstalled', () => {
             }
           }, 30);
         } catch (_) {
-          holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
+          holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
         }
       } else {
-        holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
+        holoQrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(verifyUrl)}&margin=1&format=png`;
       }
     }
   };
@@ -1252,6 +1271,73 @@ window.addEventListener('appinstalled', () => {
     return { canvas, name, reg, serial };
   }
 
+  // Direct Blob download trigger (always triggers direct download on all devices)
+  function directDownloadBlob(blob, filename) {
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+  }
+
+  // ========================================================================
+  // html2canvas Card Capture Engine (High-Resolution 3x Pixel Density)
+  // ========================================================================
+  async function renderPassWithHtml2Canvas() {
+    const card = document.getElementById("holoCard");
+    if (!card) throw new Error("Card element not found");
+
+    // Make sure QR code image is fully loaded
+    if (holoQrImg && holoQrImg.src && !holoQrImg.complete) {
+      await new Promise(res => {
+        holoQrImg.onload = res;
+        holoQrImg.onerror = res;
+        setTimeout(res, 800);
+      });
+    }
+
+    // Temporarily reset 3D tilt transform and transition so html2canvas captures card straight
+    const origTransform = card.style.transform;
+    const origTransition = card.style.transition;
+    card.style.transform = "none";
+    card.style.transition = "none";
+
+    // Brief delay for DOM reflow
+    await new Promise(r => setTimeout(r, 50));
+
+    try {
+      const canvas = await html2canvas(card, {
+        scale: 3, // 3x density for razor-sharp 300+ DPI clarity
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        logging: false,
+        imageTimeout: 6000
+      });
+      return canvas;
+    } finally {
+      card.style.transform = origTransform;
+      card.style.transition = origTransition;
+    }
+  }
+
+  // Helper to get pass canvas either via html2canvas or high-res direct canvas engine
+  async function getRenderedPassCanvas() {
+    if (typeof html2canvas !== "undefined") {
+      try {
+        return await renderPassWithHtml2Canvas();
+      } catch (err) {
+        console.warn("html2canvas capture error, falling back to direct canvas engine:", err);
+      }
+    }
+    const { canvas } = await generatePassCanvas();
+    return canvas;
+  }
+
   // ========================================================================
   // Direct Download: High-Quality Standard ISO CR80 Pass in PDF
   // ========================================================================
@@ -1264,8 +1350,11 @@ window.addEventListener('appinstalled', () => {
       downloadPdfBtn.disabled = true;
 
       try {
-        const { canvas, name, reg } = await generatePassCanvas();
-        const safeName = (name + "_" + reg).replace(/[^a-zA-Z0-9]/g, "_");
+        const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+        const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
+        const cleanReg = reg.replace(/[/\\?%*:|"<>]/g, "-");
+
+        const canvas = await getRenderedPassCanvas();
 
         const jspdfModule = window.jspdf;
         if (jspdfModule && jspdfModule.jsPDF) {
@@ -1283,8 +1372,9 @@ window.addEventListener('appinstalled', () => {
           doc.addImage(imgData, "JPEG", 0, 0, 85.6, 54.0, undefined, "FAST");
 
           const pdfBlob = doc.output("blob");
-          await triggerFileDownload(pdfBlob, `ITF-Member-Pass-${safeName}.pdf`, "application/pdf", `ITF Member Pass - ${name}`);
+          directDownloadBlob(pdfBlob, `ITF-Member-Pass-${cleanReg}.pdf`);
 
+          showPassStatus("✓ Member Pass downloaded successfully", true);
           downloadPdfBtn.textContent = "PDF Downloaded! ✅";
           downloadPdfBtn.style.background = "#107c41";
         } else {
@@ -1310,10 +1400,12 @@ window.addEventListener('appinstalled', () => {
             `);
             printWin.document.close();
           }
+          showPassStatus("✓ Member Pass downloaded successfully", true);
           downloadPdfBtn.textContent = "Print / PDF Ready! ✅";
         }
       } catch (err) {
         console.error("Pass PDF export error:", err);
+        showPassStatus("Unable to download the pass. Please try again.", false);
         downloadPdfBtn.textContent = "Error generating PDF";
       } finally {
         setTimeout(() => {
@@ -1326,34 +1418,112 @@ window.addEventListener('appinstalled', () => {
   }
 
   // ========================================================================
-  // Direct Download: Ultra-HD 300+ DPI (2640 x 1668 px) PNG Image
+  // Direct Download: High-Resolution (2x–3x) PNG Image
+  // Automatically saves as: ITF-Member-Pass-[REGISTER_NUMBER].png
   // ========================================================================
-  const downloadPassBtn = $("#downloadPassBtn");
+  const handleDownloadPassPng = async () => {
+    const downloadBtns = document.querySelectorAll("#downloadPassBtn, .download-pass-img, #downloadImageBtn");
+    const origTexts = Array.from(downloadBtns).map(b => b.textContent);
+    downloadBtns.forEach(b => {
+      b.textContent = "Generating PNG... ⏳";
+      b.disabled = true;
+    });
 
-  if (downloadPassBtn) {
-    downloadPassBtn.addEventListener("click", async () => {
-      const origText = downloadPassBtn.textContent;
-      downloadPassBtn.textContent = "Generating HD PNG... ⏳";
-      downloadPassBtn.disabled = true;
+    try {
+      const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
+      const cleanReg = reg.replace(/[/\\?%*:|"<>]/g, "-");
+      const filename = `ITF-Member-Pass-${cleanReg}.png`;
 
-      try {
-        const { canvas, name, reg } = await generatePassCanvas();
-        const safeName = (name + "_" + reg).replace(/[^a-zA-Z0-9]/g, "_");
+      const canvas = await getRenderedPassCanvas();
+      const pngBlob = await canvasToBlob(canvas, "image/png");
 
-        const pngBlob = await canvasToBlob(canvas, "image/png");
-        await triggerFileDownload(pngBlob, `ITF-Member-Pass-${safeName}.png`, "image/png", `ITF Member Pass - ${name}`);
+      directDownloadBlob(pngBlob, filename);
 
-        downloadPassBtn.textContent = "Pass Downloaded! ✅";
-        downloadPassBtn.style.background = "#107c41";
-      } catch (err) {
-        console.error("Pass PNG export error:", err);
-        downloadPassBtn.textContent = "Error downloading PNG";
-      } finally {
-        setTimeout(() => {
-          downloadPassBtn.textContent = origText;
-          downloadPassBtn.style.background = "";
-          downloadPassBtn.disabled = false;
-        }, 2200);
+      showPassStatus("✓ Member Pass downloaded successfully", true);
+      downloadBtns.forEach(b => {
+        b.textContent = "Downloaded! ✅";
+        b.style.background = "#107c41";
+      });
+    } catch (err) {
+      console.error("Pass PNG export error:", err);
+      showPassStatus("Unable to download the pass. Please try again.", false);
+      downloadBtns.forEach(b => {
+        b.textContent = "Download Failed ❌";
+      });
+    } finally {
+      setTimeout(() => {
+        downloadBtns.forEach((b, i) => {
+          b.textContent = origTexts[i] || "🖼️ Download PNG";
+          b.style.background = "";
+          b.disabled = false;
+        });
+      }, 2500);
+    }
+  };
+
+  const downloadPassBtns = document.querySelectorAll("#downloadPassBtn, .download-pass-img, #downloadImageBtn");
+  downloadPassBtns.forEach(btn => {
+    btn.addEventListener("click", handleDownloadPassPng);
+  });
+
+  // ========================================================================
+  // Share Pass Button Functionality (Web Share API with Clipboard Fallback)
+  // ========================================================================
+  function copyShareText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showPassStatus("✓ Member pass details copied to clipboard!", true);
+      }).catch(() => {
+        fallbackCopyText(text);
+      });
+    } else {
+      fallbackCopyText(text);
+    }
+  }
+
+  function fallbackCopyText(text) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showPassStatus("✓ Member pass details copied to clipboard!", true);
+    } catch (_) {
+      showPassStatus("Unable to share pass. Please copy link manually.", false);
+    }
+  }
+
+  if (sharePassBtn) {
+    sharePassBtn.addEventListener("click", async () => {
+      const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+      const reg = (passRegInput && passRegInput.value.trim()) || "927622BCS045";
+      const dept = (passDeptInput && passDeptInput.value) || "CSBS";
+      const year = (passYearInput && passYearInput.value) || "2nd Year";
+      const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
+      const verifyUrl = getVerificationPayloadUrl();
+      const shareTitle = `ITF Official Member Pass - ${name}`;
+      const shareText = `Check out my official Innovators Tech Forum (A Microsoft Club @ MKCE) Member Pass! 🚀\nMember: ${name} (${reg})\nDepartment: ${dept} · ${year}\nDomain: ${domain}\nVerify credential: ${verifyUrl}`;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: verifyUrl
+          });
+          showPassStatus("✓ Member Pass shared successfully", true);
+        } catch (shareErr) {
+          if (shareErr.name !== "AbortError") {
+            copyShareText(shareText);
+          }
+        }
+      } else {
+        copyShareText(shareText);
       }
     });
   }

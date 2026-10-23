@@ -3263,42 +3263,54 @@ footer {
    ========================================================================== */
 
 .pass-form {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.pass-form .form-row {
+.pass-form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 18px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-@media (max-width: 540px) {
-  .pass-form .form-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-}
-
-.pass-form .form-group {
+.pass-form-grid .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   text-align: left;
 }
 
+.pass-form-grid .field-domain {
+  grid-column: 1 / -1;
+}
+
 .pass-form label {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--navy);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .pass-form input,
 .pass-form select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
   font-family: inherit;
-  font-size: 0.88rem;
-  padding: 9px 12px;
+  font-size: 0.92rem;
+  padding: 0 14px;
   border-radius: 10px;
   border: 1.5px solid var(--border);
   background: var(--bg-secondary);
@@ -3314,22 +3326,39 @@ footer {
   background: var(--bg-card);
 }
 
+@media (max-width: 600px) {
+  .pass-form-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .pass-form-grid .field-domain {
+    grid-column: 1;
+  }
+  .pass-form input,
+  .pass-form select {
+    font-size: 16px; /* Prevents auto-zoom on iOS Safari */
+  }
+}
+
 /* Hologram 3D Stage */
 .hologram-stage {
   perspective: 1200px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 0 20px;
+  padding: 10px 0 16px;
   user-select: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* The Holographic Card itself */
 .holo-card {
   position: relative;
   width: 100%;
-  max-width: 480px;
-  min-height: 295px;
+  max-width: 420px;
+  min-height: 275px;
+  box-sizing: border-box;
   border-radius: 20px;
   overflow: hidden;
   background: linear-gradient(135deg, #091224 0%, #0d1a38 50%, #0a1329 100%);
@@ -3395,50 +3424,67 @@ footer {
   opacity: 0.85;
 }
 
-/* Card Content Inner Container */
+/* Card Content Inner Container (Clean 24px Internal Padding & Grid Flow) */
 .holo-inner {
   position: relative;
   z-index: 3;
-  height: 100%;
-  min-height: 295px;
+  width: 100%;
   box-sizing: border-box;
-  padding: 16px 20px;
+  padding: 22px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
   color: #ffffff;
   pointer-events: none;
 }
 
-/* Hologram Header */
-.holo-header {
+/* 1. TOP HEADER */
+.card-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
 }
 
-.holo-brand {
+.card-brand-group {
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
+  flex: 1;
 }
 
-.holo-logo {
+.card-logo-box {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 2px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.card-logo-box .holo-logo {
   width: 34px;
   height: 34px;
-  border-radius: 8px;
+  border-radius: 6px;
   object-fit: contain;
-  background: #ffffff;
-  padding: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  flex-shrink: 0;
+  display: block;
 }
 
-.holo-club-name {
-  display: block;
-  font-size: 0.84rem;
+.card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  text-align: left;
+}
+
+.card-club-title {
+  font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.03em;
   color: #ffffff;
@@ -3446,8 +3492,7 @@ footer {
   white-space: nowrap;
 }
 
-.holo-affil {
-  display: block;
+.card-club-sub {
   font-size: 0.65rem;
   font-weight: 500;
   color: #94a3b8;
@@ -3455,162 +3500,188 @@ footer {
   white-space: nowrap;
 }
 
-.holo-college-tag {
-  font-size: 0.74rem;
+.card-badge-box {
+  flex-shrink: 0;
+}
+
+.card-college-badge {
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.06em;
-  padding: 3px 10px;
+  padding: 4px 10px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  flex-shrink: 0;
+  display: inline-block;
 }
 
-/* Hologram Body: Chip & Member Details */
-.holo-body {
-  margin: 4px 0;
-}
-
-.holo-chip-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  gap: 10px;
-}
-
-/* Metallic Smart NFC Chip */
-.smart-chip {
-  position: relative;
-  width: 40px;
-  height: 30px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #ffd700 0%, #f59e0b 45%, #b45309 85%, #ffd700 100%);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.7),
-    0 2px 6px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(180, 83, 9, 0.6);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding: 3px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.chip-line {
+/* 2. MEMBER ID (Dedicated Full-Width Row) */
+.card-member-id-row {
   width: 100%;
-  height: 1px;
-  background: rgba(115, 41, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px 0;
+}
+
+.card-id-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 3px 12px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  max-width: 100%;
+}
+
+.card-id-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .holo-serial {
   font-family: 'Consolas', 'Courier New', monospace;
-  font-size: clamp(0.72rem, 1.8vw, 0.84rem);
+  font-size: clamp(0.7rem, 1.8vw, 0.84rem);
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #7dd3fc;
-  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
   white-space: nowrap;
-  flex-shrink: 0;
+}
+
+/* 3. STUDENT NAME (Centered Horizontally) */
+.card-student-name-row {
+  width: 100%;
+  text-align: center;
+  margin: 2px 0;
 }
 
 .holo-name {
-  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  font-size: clamp(20px, 4vw, 28px);
   font-weight: 800;
   color: #ffffff;
   letter-spacing: -0.01em;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
-  margin: 3px 0;
   line-height: 1.2;
+  text-transform: uppercase;
 }
 
-.holo-meta {
+/* 4. DETAILS (Department • Academic Year • Domain Badge in One Clean Row) */
+.card-details-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  margin-top: 3px;
-  flex-wrap: nowrap;
+  margin: 2px 0 6px;
+  flex-wrap: wrap;
+  width: 100%;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  font-weight: 600;
 }
 
-.holo-dept {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #cbd5e1;
+.card-detail-item {
   white-space: nowrap;
+}
+
+.card-detail-bullet {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
 }
 
 .holo-domain-badge {
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 3px 10px;
+  padding: 3px 11px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(0, 120, 212, 0.85), rgba(0, 183, 195, 0.85));
+  background: linear-gradient(135deg, rgba(0, 120, 212, 0.9), rgba(0, 183, 195, 0.9));
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  letter-spacing: 0.02em;
-  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.4);
   white-space: nowrap;
 }
 
-/* Hologram Footer: Institution & QR Code */
-.holo-footer {
+/* 5. BOTTOM SECTION (College Information on Left, Large QR on Right) */
+.card-bottom-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding-top: 9px;
-  gap: 12px;
-  margin-top: 6px;
+  gap: 14px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.holo-inst {
+.card-college-box {
   flex: 1;
   min-width: 0;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.holo-inst span {
-  display: block;
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #e2e8f0;
+.card-college-box .college-title {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: #f1f5f9;
   letter-spacing: 0.02em;
+  line-height: 1.3;
+  display: block;
+}
+
+.card-college-box .college-sub {
+  font-size: 0.58rem;
+  color: #94a3b8;
+  font-weight: 500;
+  display: block;
   line-height: 1.25;
 }
 
-.holo-inst small {
-  display: block;
-  font-size: 0.58rem;
-  color: #94a3b8;
-  margin-top: 2px;
-  line-height: 1.2;
-}
-
-/* Clear, High-Contrast Scannable QR Code Box */
-.holo-qr-box {
+/* Large Scannable QR Code (120x120 Desktop, 100x100 Mobile with 8-12px White Padding) */
+.card-qr-box {
   background: #ffffff;
-  padding: 3px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 12px;
   display: grid;
   place-items: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
   flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.95);
 }
 
-.holo-qr {
+.card-qr-box .holo-qr {
+  width: 120px;
+  height: 120px;
   display: block;
-  width: 48px;
-  height: 48px;
   object-fit: contain;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+}
+
+@media (max-width: 480px) {
+  .holo-inner {
+    padding: 16px 16px;
+  }
+  .card-qr-box {
+    padding: 8px;
+  }
+  .card-qr-box .holo-qr {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 /* Pass Action Buttons */
@@ -3620,14 +3691,32 @@ footer {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  margin-top: 12px;
+  margin-top: 14px;
+}
+
+/* Download Status Notification Feedback */
+.pass-status-msg {
+  min-height: 22px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+}
+
+.pass-status-msg.success {
+  color: #10b981;
+}
+
+.pass-status-msg.error {
+  color: #ef4444;
 }
 
 .pass-hint {
   font-size: 0.82rem;
   color: var(--text-muted);
   text-align: center;
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   line-height: 1.4;
 }
 
