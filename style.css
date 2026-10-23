@@ -3508,17 +3508,24 @@ footer {
   flex-shrink: 0;
 }
 
-.card-college-badge {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 3px 8px;
+.card-aaroh-box {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 2px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.card-aaroh-box .holo-aaroh-logo {
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-  display: inline-block;
-  white-space: nowrap;
+  object-fit: contain;
+  display: block;
 }
 
 /* 2. MEMBER ID (Dedicated Full-Width Row) */

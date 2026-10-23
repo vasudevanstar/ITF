@@ -901,6 +901,39 @@ window.addEventListener('appinstalled', () => {
     });
   }
 
+  // Helper function to safely load AAROH logo without tainting canvas
+  function loadAarohImage() {
+    return new Promise(resolve => {
+      let resolved = false;
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          const domLogo = document.querySelector(".holo-aaroh-logo");
+          resolve(domLogo || null);
+        }
+      }, 2000);
+
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(img);
+        }
+      };
+      img.onerror = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          const domLogo = document.querySelector(".holo-aaroh-logo");
+          resolve(domLogo || null);
+        }
+      };
+      img.src = "assets/aaroh-logo.jpg";
+    });
+  }
+
   // Helper function to load high-resolution QR image (Instant client-side offline or API fallback)
   function loadQrImage() {
     return new Promise(resolve => {
@@ -1049,8 +1082,8 @@ window.addEventListener('appinstalled', () => {
     const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
     const serial = `ITF-2026-${reg}`;
 
-    // Parallel preload of club logo & high-res QR code
-    const [logoImg, qrImg] = await Promise.all([loadLogoImage(), loadQrImage()]);
+    // Parallel preload of club logo, AAROH logo & high-res QR code
+    const [logoImg, aarohImg, qrImg] = await Promise.all([loadLogoImage(), loadAarohImage(), loadQrImage()]);
 
     const baseW = 600;
     const baseH = 840;
@@ -1106,7 +1139,7 @@ window.addEventListener('appinstalled', () => {
     ctx.stroke();
     ctx.restore();
 
-    // 3. Row 1: Top Header (ITF Logo + Title + MKCE Badge)
+    // 3. Row 1: Top Header (ITF Logo + Title + AAROH Logo)
     const logoBoxX = padX;
     const logoBoxY = 44;
     const logoBoxSize = 56;
@@ -1135,22 +1168,26 @@ window.addEventListener('appinstalled', () => {
     ctx.fillStyle = "#94a3b8";
     ctx.fillText("A Microsoft Club · Under AAROH", titleX, logoBoxY + 48);
 
-    // MKCE Tag Pill on Top Right
-    const mkceW = 82;
-    const mkceH = 38;
-    const mkceX = padR - mkceW;
-    const mkceY = logoBoxY + 9;
-    roundRect(ctx, mkceX, mkceY, mkceW, mkceH, 8);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    ctx.font = "800 18px 'Segoe UI', Arial, sans-serif";
+    // AAROH Logo Box on Top Right (Replacing MKCE text)
+    const aarohBoxSize = 56;
+    const aarohBoxX = padR - aarohBoxSize;
+    const aarohBoxY = logoBoxY;
+    roundRect(ctx, aarohBoxX, aarohBoxY, aarohBoxSize, aarohBoxSize, 12);
     ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.fillText("MKCE", mkceX + mkceW / 2, mkceY + 25);
+    ctx.fill();
+
+    if (aarohImg) {
+      ctx.save();
+      roundRect(ctx, aarohBoxX + 4, aarohBoxY + 4, aarohBoxSize - 8, aarohBoxSize - 8, 8);
+      ctx.clip();
+      ctx.drawImage(aarohImg, aarohBoxX + 4, aarohBoxY + 4, aarohBoxSize - 8, aarohBoxSize - 8);
+      ctx.restore();
+    } else {
+      ctx.font = "800 16px 'Segoe UI', Arial, sans-serif";
+      ctx.fillStyle = "#091224";
+      ctx.textAlign = "center";
+      ctx.fillText("AAROH", aarohBoxX + aarohBoxSize / 2, aarohBoxY + 34);
+    }
 
     // 4. Row 2: Member ID Pill
     const pillH = 46;
