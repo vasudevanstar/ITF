@@ -141,6 +141,41 @@ if (burger && links) {
       closeMenu();
     }
   });
+
+  // Setup dropdown accordion in mobile / touch click in desktop
+  const navDropdowns = $(".nav-dropdown", links);
+  navDropdowns.forEach(dd => {
+    const trigger = $(".nav-dropdown-trigger", dd);
+    if (!trigger) return;
+
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isAlreadyOpen = dd.classList.contains("open");
+      
+      // Close sibling dropdowns
+      navDropdowns.forEach(other => {
+        if (other !== dd) {
+          other.classList.remove("open");
+          const otherTrig = $(".nav-dropdown-trigger", other);
+          if (otherTrig) otherTrig.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      dd.classList.toggle("open", !isAlreadyOpen);
+      trigger.setAttribute("aria-expanded", !isAlreadyOpen ? "true" : "false");
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!links.contains(e.target)) {
+      navDropdowns.forEach(dd => {
+        dd.classList.remove("open");
+        const trig = $(".nav-dropdown-trigger", dd);
+        if (trig) trig.setAttribute("aria-expanded", "false");
+      });
+    }
+  });
 }
 
 // Animated Counters with IntersectionObserver
@@ -180,8 +215,16 @@ $$(".reveal, [data-count]").forEach((el, i) => {
 const spy = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
-      $$("#links a").forEach(a => {
-        a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id);
+      const activeId = "#" + e.target.id;
+      $("#links a").forEach(a => {
+        const isActive = a.getAttribute("href") === activeId;
+        a.classList.toggle("active", isActive);
+      });
+
+      // Highlight parent dropdown group if one of its children is active
+      $(".nav-dropdown").forEach(dd => {
+        const hasActiveChild = !!$(activeId, dd).length;
+        dd.classList.toggle("active", hasActiveChild);
       });
     }
   });

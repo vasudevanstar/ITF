@@ -91,19 +91,116 @@
       </a>
     </div>
 
-    <nav class="links" id="links">
-      <a href="#home" class="active">Home</a>
-      <a href="#about">About</a>
-      <a href="#objectives">Objectives</a>
-      <a href="#what">What We Do</a>
-      <a href="#techx">TECH-X</a>
-      <a href="#events">Events</a>
-      <a href="#achievements">Achievements</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#team">Team</a>
-      <a href="#interactive-hub">Member Hub</a>
-      <a href="#contact">Contact</a>
-      <a class="btn sm join-link" href="https://mkceclub.vercel.app/">Join Club</a>
+    <nav class="links" id="links" aria-label="Primary Navigation">
+      <a href="#home" class="nav-item active">Home</a>
+
+      <!-- Dropdown: About & Mission -->
+      <div class="nav-dropdown" data-dropdown>
+        <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+          <span>About</span>
+          <svg class="dd-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="#about" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">🏛️</span>
+            <div class="dd-text">
+              <strong>About ITF</strong>
+              <small>Mission &amp; Microsoft alignment</small>
+            </div>
+          </a>
+          <a href="#objectives" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">🎯</span>
+            <div class="dd-text">
+              <strong>Objectives</strong>
+              <small>Core targets &amp; technical vision</small>
+            </div>
+          </a>
+          <a href="#what" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">💡</span>
+            <div class="dd-text">
+              <strong>What We Do</strong>
+              <small>Specialized student tech wings</small>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Dropdown: Events & Challenges -->
+      <div class="nav-dropdown" data-dropdown>
+        <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+          <span>Events</span>
+          <svg class="dd-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="#techx" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">⚡</span>
+            <div class="dd-text">
+              <strong>TECH-X 2026</strong>
+              <small>Flagship 6-hr tech marathon</small>
+            </div>
+          </a>
+          <a href="#events" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">📅</span>
+            <div class="dd-text">
+              <strong>Club Events</strong>
+              <small>Upcoming challenges &amp; workshops</small>
+            </div>
+          </a>
+          <a href="#achievements" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">🏆</span>
+            <div class="dd-text">
+              <strong>Achievements</strong>
+              <small>Hackathon wins &amp; milestones</small>
+            </div>
+          </a>
+          <a href="#gallery" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">📸</span>
+            <div class="dd-text">
+              <strong>Event Gallery</strong>
+              <small>Live photos &amp; hackathon moments</small>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Dropdown: Community & Innovation Hub -->
+      <div class="nav-dropdown" data-dropdown>
+        <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+          <span>Hub &amp; Team</span>
+          <svg class="dd-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 6l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="#interactive-hub" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">🪪</span>
+            <div class="dd-text">
+              <strong>Innovation Hub</strong>
+              <small>Domain Quiz &amp; Holographic Pass</small>
+            </div>
+          </a>
+          <a href="#team" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">👥</span>
+            <div class="dd-text">
+              <strong>Executive Team</strong>
+              <small>Faculty mentors &amp; student leads</small>
+            </div>
+          </a>
+          <a href="#contact" class="dropdown-link" role="menuitem">
+            <span class="dd-icon">📬</span>
+            <div class="dd-text">
+              <strong>Contact Us</strong>
+              <small>Get in touch with organizers</small>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <a class="btn sm join-link" href="https://mkceclub.vercel.app/" target="_blank" rel="noopener">Join Club</a>
     </nav>
 
     <div class="nav-actions">
