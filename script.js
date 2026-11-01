@@ -143,7 +143,7 @@ if (burger && links) {
   });
 
   // Setup dropdown accordion in mobile / touch click in desktop
-  const navDropdowns = $(".nav-dropdown", links);
+  const navDropdowns = $$(".nav-dropdown", links);
   navDropdowns.forEach(dd => {
     const trigger = $(".nav-dropdown-trigger", dd);
     if (!trigger) return;
@@ -216,14 +216,14 @@ const spy = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
       const activeId = "#" + e.target.id;
-      $("#links a").forEach(a => {
+      $$("#links a").forEach(a => {
         const isActive = a.getAttribute("href") === activeId;
         a.classList.toggle("active", isActive);
       });
 
       // Highlight parent dropdown group if one of its children is active
-      $(".nav-dropdown").forEach(dd => {
-        const hasActiveChild = !!$(activeId, dd).length;
+      $$(".nav-dropdown").forEach(dd => {
+        const hasActiveChild = !!$$(activeId, dd).length;
         dd.classList.toggle("active", hasActiveChild);
       });
     }
