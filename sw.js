@@ -1,5 +1,5 @@
 // ITF MKCE Progressive Web App Service Worker
-const CACHE_NAME = 'itf-cache-v5';
+const CACHE_NAME = 'itf-cache-v7';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -13,9 +13,7 @@ const STATIC_ASSETS = [
   './assets/mkce-campus.jpg',
   './assets/default-student.jpg',
   './assets/25.jpg',
-  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
 ];
 
 // Install Event: Pre-cache core assets

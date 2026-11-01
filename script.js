@@ -364,6 +364,50 @@ if (countdownEl) {
   setInterval(updateCountdown, 1000);
 }
 
+// --------------------------------------------------------------------------
+// Add Event to Calendar (Google Calendar & .ics Download)
+// --------------------------------------------------------------------------
+const addCalendarBtn = $("#addCalendarBtn");
+if (addCalendarBtn) {
+  addCalendarBtn.addEventListener("click", () => {
+    const title = encodeURIComponent("TECH-X 2026 - Inter-Department Technical Challenge");
+    const details = encodeURIComponent("Innovators Tech Forum (A Microsoft Club @ MKCE) Flagship 6-Hour Challenge featuring Tech Quiz, Logic Puzzle, Tech Games, and Code Sprint!");
+    const location = encodeURIComponent("APJ Block Computer Labs, M. Kumarasamy College of Engineering, Karur");
+    const startIso = "20261115T090000";
+    const endIso = "20261115T150000";
+
+    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startIso}/${endIso}&details=${details}&location=${location}`;
+    
+    // Create an .ics iCalendar file for iOS / Outlook / Android offline calendar
+    const icsContent = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Innovators Tech Forum//TECH-X 2026//EN
+BEGIN:VEVENT
+SUMMARY:TECH-X 2026 - Inter-Department Technical Challenge
+DESCRIPTION:Flagship 6-Hour Challenge organized by ITF - A Microsoft Club @ MKCE.
+LOCATION:APJ Block Labs, M. Kumarasamy College of Engineering
+DTSTART:20261115T090000
+DTEND:20261115T150000
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`.trim();
+
+    // Give choice or open Google Calendar with fallback to .ics
+    if (confirm("Would you like to open Google Calendar? Click 'OK' for Google Calendar, or 'Cancel' to download the Outlook / Apple Calendar (.ics) file.")) {
+      window.open(gcalUrl, "_blank", "noopener,noreferrer");
+    } else {
+      const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "TECH-X-2026.ics";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  });
+}
+
 // Event Details Quick Modal
 const eventModal = $("#event-modal");
 const modalTitle = $("#modal-title");
@@ -535,7 +579,8 @@ window.addEventListener('appinstalled', () => {
       desc: "You thrive at the cutting edge of artificial intelligence, model training, and generative algorithms. In ITF, you will build with Azure OpenAI and GitHub Copilot tools.",
       tech: ["Azure OpenAI", "Python", "Copilot Studio", "HuggingFace"],
       passDomain: "AI Systems",
-      selectVal: "AI Systems"
+      selectVal: "AI Systems",
+      roadmap: "https://learn.microsoft.com/en-us/training/paths/get-started-with-artificial-intelligence/"
     },
     cloud: {
       title: "Cloud & DevOps Architect",
@@ -543,7 +588,8 @@ window.addEventListener('appinstalled', () => {
       desc: "You love scalable infrastructure, continuous integration, and secure distributed cloud architectures powering modern global platforms.",
       tech: ["Microsoft Azure", "Docker", "GitHub Actions", "Kubernetes"],
       passDomain: "Cloud Architect",
-      selectVal: "Cloud Architect"
+      selectVal: "Cloud Architect",
+      roadmap: "https://learn.microsoft.com/en-us/training/paths/azure-fundamentals-describe-azure-architecture-services/"
     },
     dev: {
       title: "Full-Stack Software Engineer",
@@ -551,7 +597,8 @@ window.addEventListener('appinstalled', () => {
       desc: "You are driven by crafting responsive web applications, robust APIs, and interactive digital solutions that users love.",
       tech: ["React / Next.js", "Node.js & TypeScript", "REST APIs", "Modern CSS"],
       passDomain: "Full-Stack Dev",
-      selectVal: "Full-Stack Dev"
+      selectVal: "Full-Stack Dev",
+      roadmap: "https://learn.microsoft.com/en-us/training/paths/build-javascript-applications-nodejs/"
     },
     design: {
       title: "UI/UX & Experience Designer",
@@ -559,7 +606,8 @@ window.addEventListener('appinstalled', () => {
       desc: "You blend human psychology with high-fidelity visual aesthetics, crafting unforgettable interactions, design systems, and product prototypes.",
       tech: ["Figma Design", "Fluent Design", "Micro-animations", "Prototyping"],
       passDomain: "UI/UX Designer",
-      selectVal: "UI/UX Designer"
+      selectVal: "UI/UX Designer",
+      roadmap: "https://fluent2.microsoft.design/"
     },
     lead: {
       title: "Community Lead & Tech Evangelist",
@@ -567,7 +615,8 @@ window.addEventListener('appinstalled', () => {
       desc: "You excel at energizing tech communities, presenting ideas, organizing high-impact hackathons, and inspiring teammates to victory.",
       tech: ["Public Speaking", "Event Management", "Pitch Decks", "DevRel & PR"],
       passDomain: "Community Lead",
-      selectVal: "Community Lead"
+      selectVal: "Community Lead",
+      roadmap: "https://mvp.microsoft.com/en-US/studentambassadors"
     }
   };
 
@@ -632,6 +681,11 @@ window.addEventListener('appinstalled', () => {
     if (resultDesc) resultDesc.textContent = profile.desc;
     if (resultTech) {
       resultTech.innerHTML = profile.tech.map(t => `<span>${t}</span>`).join("");
+    }
+    const resultRoadmapBtn = $("#resultRoadmapBtn");
+    if (resultRoadmapBtn && profile.roadmap) {
+      resultRoadmapBtn.href = profile.roadmap;
+      resultRoadmapBtn.setAttribute("title", `View official learning track for ${profile.title}`);
     }
 
     if (quizResult) {
@@ -1619,13 +1673,38 @@ window.addEventListener('appinstalled', () => {
   // ========================================================================
   // Direct Download: High-Quality Standard ISO CR80 Pass in PDF
   // ========================================================================
+  // On-demand lazy script loader for heavy PDF generation libraries
+  let jspdfLoadingPromise = null;
+  const loadJsPdfLibrary = () => {
+    if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf);
+    if (jspdfLoadingPromise) return jspdfLoadingPromise;
+    jspdfLoadingPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+      script.async = true;
+      script.onload = () => resolve(window.jspdf);
+      script.onerror = (e) => {
+        jspdfLoadingPromise = null;
+        reject(e);
+      };
+      document.head.appendChild(script);
+    });
+    return jspdfLoadingPromise;
+  };
+
   const downloadPdfBtn = $("#downloadPdfBtn");
 
   if (downloadPdfBtn) {
     downloadPdfBtn.addEventListener("click", async () => {
       const origText = downloadPdfBtn.textContent;
-      downloadPdfBtn.textContent = "Generating PDF... ⏳";
+      downloadPdfBtn.textContent = "Loading PDF engine... ⏳";
       downloadPdfBtn.disabled = true;
+
+      try {
+        await loadJsPdfLibrary();
+      } catch (err) {
+        console.warn("Dynamic jsPDF load failed:", err);
+      }
 
       try {
         const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
@@ -1791,6 +1870,21 @@ window.addEventListener('appinstalled', () => {
     } catch (_) {
       showPassStatus("Unable to share pass. Please copy link manually.", false);
     }
+  }
+
+  // 1-Click Direct LinkedIn Share
+  const shareLinkedInBtn = $("#shareLinkedInBtn");
+  if (shareLinkedInBtn) {
+    shareLinkedInBtn.addEventListener("click", () => {
+      const name = (passNameInput && passNameInput.value.trim()) || "Innovator Student";
+      const domain = (passDomainInput && passDomainInput.value) || "AI Systems";
+      const verifyUrl = getVerificationPayloadUrl();
+      const text = encodeURIComponent(
+        `Excited to share my official Innovators Tech Forum (${domain} Domain) Member Pass at M. Kumarasamy College of Engineering! 🚀 #ITFMKCE #MicrosoftClub #TechClub`
+      );
+      const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verifyUrl)}&summary=${text}`;
+      window.open(linkedInUrl, "_blank", "noopener,noreferrer,width=600,height=600");
+    });
   }
 
   if (sharePassBtn) {
