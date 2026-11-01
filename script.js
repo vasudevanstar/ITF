@@ -1,3 +1,4 @@
+document.documentElement.classList.add("js-loaded");
 // Club Join URL Configuration
 const JOIN_URL = "https://mkceclub.vercel.app/";
 const $ = (s, c = document) => c.querySelector(s);
@@ -2011,3 +2012,10 @@ window.addEventListener('appinstalled', () => {
   }
 })();
 
+
+// Universal visibility failsafe: reveal all content if observer doesn't fire
+const revealAllFailsafe = () => {
+  $$(".reveal:not(.in)").forEach(el => el.classList.add("in"));
+};
+setTimeout(revealAllFailsafe, 1200);
+window.addEventListener("load", () => setTimeout(revealAllFailsafe, 600));

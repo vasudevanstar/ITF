@@ -1,5 +1,5 @@
 // ITF MKCE Progressive Web App Service Worker
-const CACHE_NAME = 'itf-cache-v7';
+const CACHE_NAME = 'itf-cache-v8';
 const STATIC_ASSETS = [
   './',
   './index.html',
